@@ -28,5 +28,8 @@ public class OrderDetails {
     @JoinColumn(name = "user_id")
     private UserModel user;
 
+    @OneToMany(mappedBy = "orderDetails")
+    private List<OrderedItems> orderedItems;
+
 
 }

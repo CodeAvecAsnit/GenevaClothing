@@ -40,7 +40,7 @@ public class Items {
     @JsonIgnore
     private GenderTable genderTable;
 
-    @ManyToMany(mappedBy = "itemsList")
+    @OneToMany(mappedBy = "item")
     @JsonIgnore
     private List<OrderedItems> orderedItems;
 

@@ -1,10 +1,6 @@
 package com.ecomm.np.genevaecommerce.Models;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
 
-import java.util.List;
 
 @Entity
 public class OrderedItems {
@@ -12,12 +8,11 @@ public class OrderedItems {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int oId;
 
-    @ManyToMany
-    @JoinTable(name = "order_items",
-    joinColumns = @JoinColumn(name = "o_id"),
-    inverseJoinColumns = @JoinColumn(referencedColumnName = "item_code") )
-    @JsonIgnore
-    private List<Items> itemsList;
+    private int quantity;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name ="item_code")
+    private Items item;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
@@ -26,9 +21,10 @@ public class OrderedItems {
     public OrderedItems() {
     }
 
-    public OrderedItems(int oId, List<Items> itemsList, OrderDetails orderDetails) {
+    public OrderedItems(int oId, int quantity, Items item, OrderDetails orderDetails) {
         this.oId = oId;
-        this.itemsList = itemsList;
+        this.quantity = quantity;
+        this.item = item;
         this.orderDetails = orderDetails;
     }
 
@@ -40,12 +36,20 @@ public class OrderedItems {
         this.oId = oId;
     }
 
-    public List<Items> getItemsList() {
-        return itemsList;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setItemsList(List<Items> itemsList) {
-        this.itemsList = itemsList;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public Items getItem() {
+        return item;
+    }
+
+    public void setItem(Items item) {
+        this.item = item;
     }
 
     public OrderDetails getOrderDetails() {
