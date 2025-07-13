@@ -1,11 +1,13 @@
 package com.ecomm.np.genevaecommerce.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table (name = "ecommerce_users")
@@ -13,11 +15,12 @@ public class UserModel {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private int user_id;
+    @Column(name = "user_id")
+    private int userId;
 
     @Column
             (length = 20,unique = true,nullable = false)
-    private String user_name;
+    private String userName;
 
     @Column (length = 50, unique = true,nullable = false)
     private String email;
@@ -29,6 +32,7 @@ public class UserModel {
 
     @ManyToOne
     @JoinColumn(name ="role_id")
+    @JsonBackReference
     private RoleTable roleTable;
 
     @CreationTimestamp
@@ -39,14 +43,30 @@ public class UserModel {
     private LocalDateTime updatedDate;
 
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetails> userOrders;
+
+    @ManyToMany
+    @JoinTable(name ="cartlist",
+            joinColumns = @JoinColumn(name ="user_id"),
+            inverseJoinColumns = @JoinColumn(referencedColumnName = "item_code")
+    )
+    @JsonBackReference
+    private Set<Items> cartList;
+
+    @ManyToMany
+    @JoinTable(name ="wishlist",
+            joinColumns = @JoinColumn(name ="user_id"),
+            inverseJoinColumns = @JoinColumn(referencedColumnName = "item_code")
+    )
+    @JsonBackReference
+    private Set<Items> wishList;
 
     public UserModel() {
     }
 
     public UserModel(String user_name, String email, String password) {
-        this.user_name = user_name;
+        this.userName = user_name;
         this.email = email;
         this.password = password;
     }
@@ -91,22 +111,37 @@ public class UserModel {
         this.email = email;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public Set<Items> getWishList() {
+        return wishList;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setWishList(Set<Items> wishList) {
+        this.wishList = wishList;
     }
 
+    public Set<Items> getCartList() {
+        return cartList;
+    }
+
+    public void setCartList(Set<Items> cartList) {
+        this.cartList = cartList;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public List<OrderDetails> getUserOrders() {
         return userOrders;

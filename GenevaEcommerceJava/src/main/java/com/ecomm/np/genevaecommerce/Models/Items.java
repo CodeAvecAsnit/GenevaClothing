@@ -1,11 +1,13 @@
 package com.ecomm.np.genevaecommerce.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Items {
@@ -35,10 +37,23 @@ public class Items {
 
     @ManyToOne
     @JoinColumn(name = "gender_id")
+    @JsonIgnore
     private GenderTable genderTable;
 
     @ManyToMany(mappedBy = "itemsList")
+    @JsonIgnore
     private List<OrderedItems> orderedItems;
+
+    @ManyToMany(mappedBy = "wishList")
+    @JsonIgnore
+    private Set<UserModel> wishedUsers;
+
+    @ManyToMany(mappedBy = "cartList")
+    @JsonIgnore
+    private Set<UserModel> cartUsers;
+
+
+
 
     public Items() {
     }

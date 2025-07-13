@@ -1,5 +1,6 @@
 package com.ecomm.np.genevaecommerce.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
 
@@ -15,6 +16,7 @@ public class OrderedItems {
     @JoinTable(name = "order_items",
     joinColumns = @JoinColumn(name = "o_id"),
     inverseJoinColumns = @JoinColumn(referencedColumnName = "item_code") )
+    @JsonIgnore
     private List<Items> itemsList;
 
     @ManyToOne(fetch = FetchType.EAGER)
