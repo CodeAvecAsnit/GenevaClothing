@@ -26,6 +26,11 @@ public class Items {
 
     private float price;
 
+    @ManyToOne
+    @JoinColumn(name = "collection_id")
+    @JsonIgnore
+    private Collection collection;
+
     private int stock;
 
     @CreationTimestamp
@@ -58,17 +63,20 @@ public class Items {
     public Items() {
     }
 
-    public Items(int itemCode, String itemName, String description, String imageLink, float price, int stock, LocalDateTime createdDate, LocalDateTime updatedDate, GenderTable genderTable, List<OrderedItems> orderedItems) {
+    public Items(int itemCode, String itemName, String description, String imageLink, float price, Collection collection, int stock, LocalDateTime createdDate, LocalDateTime updatedDate, GenderTable genderTable, List<OrderedItems> orderedItems, Set<UserModel> wishedUsers, Set<UserModel> cartUsers) {
         this.itemCode = itemCode;
         this.itemName = itemName;
         this.description = description;
         this.imageLink = imageLink;
         this.price = price;
+        this.collection = collection;
         this.stock = stock;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
         this.genderTable = genderTable;
         this.orderedItems = orderedItems;
+        this.wishedUsers = wishedUsers;
+        this.cartUsers = cartUsers;
     }
 
     public int getItemCode() {
@@ -145,6 +153,30 @@ public class Items {
 
     public GenderTable getGenderTable() {
         return genderTable;
+    }
+
+    public Collection getCollection() {
+        return collection;
+    }
+
+    public void setCollection(Collection collection) {
+        this.collection = collection;
+    }
+
+    public Set<UserModel> getCartUsers() {
+        return cartUsers;
+    }
+
+    public void setCartUsers(Set<UserModel> cartUsers) {
+        this.cartUsers = cartUsers;
+    }
+
+    public Set<UserModel> getWishedUsers() {
+        return wishedUsers;
+    }
+
+    public void setWishedUsers(Set<UserModel> wishedUsers) {
+        this.wishedUsers = wishedUsers;
     }
 
     public void setGenderTable(GenderTable genderTable) {

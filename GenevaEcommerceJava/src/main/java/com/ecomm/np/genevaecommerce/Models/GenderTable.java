@@ -10,7 +10,6 @@ import java.util.List;
 @Entity
 public class GenderTable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "gender_id")
     private int genderId;
 
