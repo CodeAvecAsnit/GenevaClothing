@@ -16,6 +16,9 @@ public class Collection {
 
     private String collectionName;
 
+    @Lob
+    private String collection_description;
+
     @OneToMany (mappedBy = "collection")
     private List<Items> collectionItemList;
 
@@ -25,11 +28,13 @@ public class Collection {
     public Collection() {
     }
 
-    public Collection(int collectionId, List<Items> collectionItemList, LocalDateTime launchedDate,String collectionName) {
+    public Collection(int collectionId, List<Items> collectionItemList, LocalDateTime launchedDate,String collectionName,
+    String collectionDescription) {
         this.collectionId = collectionId;
         this.collectionItemList = collectionItemList;
         this.launchedDate = launchedDate;
         this.collectionName = collectionName;
+        this.collection_description = collectionDescription;
     }
 
     public static List<NewCollectionDTO> emptyList() {
@@ -66,5 +71,13 @@ public class Collection {
 
     public void setCollectionName(String collectionName) {
         this.collectionName = collectionName;
+    }
+
+    public String getCollection_description() {
+        return collection_description;
+    }
+
+    public void setCollection_description(String collection_description) {
+        this.collection_description = collection_description;
     }
 }

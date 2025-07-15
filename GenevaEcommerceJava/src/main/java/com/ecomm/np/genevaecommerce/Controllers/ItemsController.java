@@ -1,5 +1,6 @@
 package com.ecomm.np.genevaecommerce.Controllers;
 
+import com.ecomm.np.genevaecommerce.DTO.CollectionDTO;
 import com.ecomm.np.genevaecommerce.DTO.ItemDisplayDTO;
 import com.ecomm.np.genevaecommerce.DTO.ListItemDTO;
 import com.ecomm.np.genevaecommerce.DTO.NewCollectionDTO;
@@ -31,8 +32,20 @@ public class ItemsController {
     }
 
 
-    @GetMapping("/get_by_gender/{gen}")
+    @GetMapping("/get/gender/{gen}")
     public ResponseEntity<List<ItemDisplayDTO>> displayByGender(@PathVariable String gen){
         return ResponseEntity.ok(itemsService.displayItems(gen));
     }
+
+
+    @GetMapping("/get/latest")
+    public ResponseEntity<List<ItemDisplayDTO>> latestItems(){
+        return ResponseEntity.ok(itemsService.displayNewArrivals());
+    }
+
+    @GetMapping("/latest/collection")
+    public ResponseEntity<List<CollectionDTO>> getLatestCollection(){
+        return ResponseEntity.ok(null);
+    }
+
 }

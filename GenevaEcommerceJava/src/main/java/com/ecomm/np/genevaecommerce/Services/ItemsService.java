@@ -1,5 +1,6 @@
 package com.ecomm.np.genevaecommerce.Services;
 
+import com.ecomm.np.genevaecommerce.DTO.CollectionDTO;
 import com.ecomm.np.genevaecommerce.DTO.ItemDisplayDTO;
 import com.ecomm.np.genevaecommerce.DTO.ListItemDTO;
 import com.ecomm.np.genevaecommerce.DTO.NewCollectionDTO;
@@ -17,10 +18,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
 public class ItemsService {
+    private final Random random;
     private Logger logger = LoggerFactory.getLogger(ItemsService.class);
 
     private final ItemsRepository itemsRepository;
@@ -33,10 +36,12 @@ public class ItemsService {
     @Autowired
     public ItemsService(ItemsRepository itemsRepository,
                         GenderTableRepository genderTableRepository,
-                        CollectionRepository collectionRepository) {
+                        CollectionRepository collectionRepository,
+                        Random random) {
         this.collectionRepository = collectionRepository;
         this.genderTableRepository = genderTableRepository;
         this.itemsRepository = itemsRepository;
+        this.random = random;
     }
 
     public Items SaveItem(ListItemDTO item) {
@@ -84,5 +89,27 @@ public class ItemsService {
     return null;
     }
 
+    public List<ItemDisplayDTO> displayNewArrivals(){
+        List<Items> newArrrivalList= itemsRepository.findTop5ByOrderByCreatedDateDesc();
+        return newArrrivalList.stream().
+                map(ItemDisplayDTO::MapByItems).
+                collect(Collectors.toList());
+    }
+
+    public CollectionDTO getLatestCollection(){
+        Collection collection = collectionRepository.findTopByOrderByLaunchedDateDesc();
+        String image = getRandomImage(collection.getCollectionItemList());
+        return CollectionDTO.buildFromCollection(collection,image);
+
+    }
+
+    private String getRandomImage(List<Items> itemList){
+        if(itemList==null ||itemList.isEmpty()){
+            return null;
+        }else{
+            Items item = itemList.get(random.nextInt(itemList.size()));
+            return item.getImageLink();
+        }
+    }
 
 }
