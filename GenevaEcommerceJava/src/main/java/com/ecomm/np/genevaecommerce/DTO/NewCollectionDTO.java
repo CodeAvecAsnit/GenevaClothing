@@ -1,5 +1,7 @@
 package com.ecomm.np.genevaecommerce.DTO;
 
+import com.ecomm.np.genevaecommerce.Models.Items;
+
 public class NewCollectionDTO {
     private String itemName;
     private String description;
@@ -36,5 +38,9 @@ public class NewCollectionDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public static NewCollectionDTO buildFromItem(Items items){
+        return new NewCollectionDTO(items.getItemName(), items.getDescription(), items.getImageLink());
     }
 }

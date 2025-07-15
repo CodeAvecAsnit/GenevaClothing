@@ -1,14 +1,15 @@
 package com.ecomm.np.genevaecommerce.Controllers;
 
+import com.ecomm.np.genevaecommerce.DTO.ItemDisplayDTO;
 import com.ecomm.np.genevaecommerce.DTO.ListItemDTO;
+import com.ecomm.np.genevaecommerce.DTO.NewCollectionDTO;
 import com.ecomm.np.genevaecommerce.Models.Items;
 import com.ecomm.np.genevaecommerce.Services.ItemsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/items")
@@ -18,15 +19,20 @@ public class ItemsController {
     private ItemsService itemsService;
 
 
-    //too lazy to do this via bean
-    @PostMapping
-    public String saveGenders(){
-        itemsService.saveGender();
-        return "Success";
+    @GetMapping("/new_collection")
+    public ResponseEntity<List<NewCollectionDTO>> getNewCollection(){
+        return ResponseEntity.ok(itemsService.findNewCollection());
     }
+
 
     @PostMapping("/post")
     public ResponseEntity<Items> postItem(@RequestBody ListItemDTO itemDTO){
         return ResponseEntity.ok(itemsService.SaveItem(itemDTO));
+    }
+
+
+    @GetMapping("/get_by_gender/{gen}")
+    public ResponseEntity<List<ItemDisplayDTO>> displayByGender(@PathVariable String gen){
+        return ResponseEntity.ok(itemsService.displayItems(gen));
     }
 }

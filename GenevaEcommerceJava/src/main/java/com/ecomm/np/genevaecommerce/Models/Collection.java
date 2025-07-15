@@ -1,7 +1,8 @@
 package com.ecomm.np.genevaecommerce.Models;
 
+import com.ecomm.np.genevaecommerce.DTO.NewCollectionDTO;
 import jakarta.persistence.*;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +19,7 @@ public class Collection {
     @OneToMany (mappedBy = "collection")
     private List<Items> collectionItemList;
 
-    @UpdateTimestamp
+    @CreatedDate
     private LocalDateTime launchedDate;
 
     public Collection() {
@@ -29,6 +30,10 @@ public class Collection {
         this.collectionItemList = collectionItemList;
         this.launchedDate = launchedDate;
         this.collectionName = collectionName;
+    }
+
+    public static List<NewCollectionDTO> emptyList() {
+        return null;
     }
 
     public int getCollectionId() {
