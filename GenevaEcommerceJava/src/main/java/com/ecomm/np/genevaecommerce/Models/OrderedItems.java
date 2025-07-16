@@ -1,4 +1,5 @@
 package com.ecomm.np.genevaecommerce.Models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 
@@ -10,10 +11,16 @@ public class OrderedItems {
 
     private int quantity;
 
+    private  boolean isActive;
+
+    private boolean isProcessed;
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name ="item_code")
     private Items item;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
     private OrderDetails orderDetails;
@@ -21,9 +28,11 @@ public class OrderedItems {
     public OrderedItems() {
     }
 
-    public OrderedItems(int oId, int quantity, Items item, OrderDetails orderDetails) {
+    public OrderedItems(int oId, int quantity, boolean isActive, boolean isProcessed, Items item, OrderDetails orderDetails) {
         this.oId = oId;
         this.quantity = quantity;
+        this.isActive = isActive;
+        this.isProcessed = isProcessed;
         this.item = item;
         this.orderDetails = orderDetails;
     }
@@ -42,6 +51,22 @@ public class OrderedItems {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public boolean isProcessed() {
+        return isProcessed;
+    }
+
+    public void setProcessed(boolean processed) {
+        isProcessed = processed;
     }
 
     public Items getItem() {

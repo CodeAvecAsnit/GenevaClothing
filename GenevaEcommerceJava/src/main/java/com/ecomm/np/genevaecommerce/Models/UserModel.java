@@ -43,8 +43,8 @@ public class UserModel {
     private LocalDateTime updatedDate;
 
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderDetails> userOrders;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private OrderDetails userOrders;
 
     @ManyToMany
     @JoinTable(name ="cartlist",
@@ -143,11 +143,19 @@ public class UserModel {
         this.userName = userName;
     }
 
-    public List<OrderDetails> getUserOrders() {
+    public OrderDetails getUserOrders() {
         return userOrders;
     }
 
-    public void setUserOrders(List<OrderDetails> userOrders) {
+    public void setUserOrders(OrderDetails userOrders) {
         this.userOrders = userOrders;
+    }
+
+    public void addToCart(Items item){
+        cartList.add(item);
+    }
+
+    public void addToWishList(Items item){
+        cartList.add(item);
     }
 }

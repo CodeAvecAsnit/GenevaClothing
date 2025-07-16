@@ -2,8 +2,10 @@ package com.ecomm.np.genevaecommerce.Services;
 
 import com.ecomm.np.genevaecommerce.DTO.UserDTO;
 import com.ecomm.np.genevaecommerce.Enumerations.Role;
+import com.ecomm.np.genevaecommerce.Models.Items;
 import com.ecomm.np.genevaecommerce.Models.RoleTable;
 import com.ecomm.np.genevaecommerce.Models.UserModel;
+import com.ecomm.np.genevaecommerce.Repositories.ItemsRepository;
 import com.ecomm.np.genevaecommerce.Repositories.RoleTableRepository;
 import com.ecomm.np.genevaecommerce.Repositories.UserRepository;
 import org.slf4j.Logger;
@@ -11,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -22,24 +27,65 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final RoleTableRepository roleTableRepository;
+    private final ItemsRepository itemsRepository;
 
     @Autowired
-    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleTableRepository roleTableRepository) {
+    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleTableRepository roleTableRepository, ItemsRepository itemsRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.roleTableRepository = roleTableRepository;
+        this.itemsRepository = itemsRepository;
     }
 
     public UserModel saveUser(UserDTO userDTO) {
-        UserModel appUser = UserDTO.userModelBuild(userDTO);
-        try {
-            Role role = Role.valueOf("USER");
-            roleTableRepository.findByRole(role).ifPresent(appUser::setRoleTable);
-        } catch (IllegalArgumentException ex) {
-            logger.error("Cannot Parse the String. ");
+
+        UserModel userModel = UserDTO.userModelBuild(userDTO);
+        Role role = Role.USER;
+        Optional<RoleTable> roleTable =roleTableRepository.findByRole(role);
+        roleTable.ifPresent(userModel::setRoleTable);
+        userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
+        return userRepository.save(userModel);
+    }
+
+
+
+
+
+    public String itemToCart(int userId, int itemId) {
+        Optional<UserModel> user = userRepository.findById(userId);
+        if(user.isPresent()){
+            UserModel userModel = user.get();
+            Optional<Items> item = itemsRepository.findById(itemId);
+            item.ifPresent(userModel::addToCart);
+            userRepository.save(userModel);
+            return "Item Added to Cart";
         }
-        appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
-        return userRepository.save(appUser);
+
+        return "User Not found";
+    }
+
+    public Set<Items> getCartItems(int user_id){
+        Optional<UserModel> user = userRepository.findById(user_id);
+        return user.map(UserModel::getCartList).orElse(null);
+    }
+
+
+    public String itemToWishList(int userId, int itemId) {
+        Optional<UserModel> user = userRepository.findById(userId);
+        if(user.isPresent()){
+            UserModel userModel = user.get();
+            Optional<Items> item = itemsRepository.findById(itemId);
+            item.ifPresent(userModel::addToWishList);
+            userRepository.save(userModel);
+            return "Item Added to Wishlist";
+        }
+
+        return "User Not found";
+    }
+
+    public Set<Items> getWishListItems(int user_id){
+        Optional<UserModel> user = userRepository.findById(user_id);
+        return user.map(UserModel::getWishList).orElse(null);
     }
 
 }
