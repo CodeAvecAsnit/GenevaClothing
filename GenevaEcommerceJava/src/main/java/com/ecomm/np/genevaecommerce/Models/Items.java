@@ -63,6 +63,12 @@ public class Items {
     public Items() {
     }
 
+    public Items(String itemName,String description,String imageLink){
+        this.itemName = itemName;
+        this.description = description;
+        this.imageLink = imageLink;
+    }
+
     public Items(int itemCode, String itemName, String description, String imageLink, float price, Collection collection, int stock, LocalDateTime createdDate, LocalDateTime updatedDate, GenderTable genderTable, List<OrderedItems> orderedItems, Set<UserModel> wishedUsers, Set<UserModel> cartUsers) {
         this.itemCode = itemCode;
         this.itemName = itemName;

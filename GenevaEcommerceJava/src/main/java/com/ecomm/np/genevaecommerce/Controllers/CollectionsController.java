@@ -1,15 +1,19 @@
 package com.ecomm.np.genevaecommerce.Controllers;
 
 
+import com.ecomm.np.genevaecommerce.DTO.CollectionAndItemsDTO;
+
 import com.ecomm.np.genevaecommerce.DTO.NewCollectionDTO;
+import com.ecomm.np.genevaecommerce.Models.Collection;
 import com.ecomm.np.genevaecommerce.Services.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -24,8 +28,9 @@ public class CollectionsController {
     }
 
     @GetMapping
-    public List<NewCollectionDTO> provideCollection(){
-        return homeService.getALlCollections();
+    public ResponseEntity<CollectionAndItemsDTO> provideCollection(){
+        Collection collection = homeService.saveCollection();
+        return ResponseEntity.ok(CollectionAndItemsDTO.buildFromCollection(collection));
     }
 
 }
