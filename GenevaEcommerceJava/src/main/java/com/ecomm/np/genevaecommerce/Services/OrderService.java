@@ -87,4 +87,31 @@ public class OrderService {
         return null;
     }
 
+
+
+    public void checkOutCart(int user_id) throws Exception {
+        Optional<UserModel> user = userRepository.findById(user_id);
+        if(user.isPresent()){
+            UserModel userModel = user.get();
+            if(userModel.getUserOrders()==null){
+                throw new Exception("No User Information available");
+            }
+            if(userModel.getCartList()==null) {
+                throw new Exception("Cart is empty. Nothing to checkout.");
+            }
+            OrderDetails orderDetails = userModel.getUserOrders();
+            for(Items items : userModel.getCartList()){
+                userModel.getCartList().remove(items);
+                OrderedItems item = new OrderedItems();
+                item.setOrderDetails(orderDetails);
+                item.setActive(true);
+                item.setItem(items);
+                item.setProcessed(false);
+                item.setQuantity(1);
+                orderItemsRepository.save(item);
+            }
+            userRepository.save(userModel);
+        }
+    }
+
 }

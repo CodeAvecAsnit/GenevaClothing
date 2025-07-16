@@ -5,17 +5,17 @@ import com.ecomm.np.genevaecommerce.DTO.UpdateAdressDTO;
 import com.ecomm.np.genevaecommerce.Models.OrderDetails;
 import com.ecomm.np.genevaecommerce.Models.OrderedItems;
 import com.ecomm.np.genevaecommerce.Services.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/order")
 public class OrderController {
 
+    private static final Logger log = LoggerFactory.getLogger(OrderController.class);
     private final OrderService orderService;
 
     @Autowired
@@ -37,5 +37,16 @@ public class OrderController {
         return (or==null)?
                 ResponseEntity.badRequest().build():
                 ResponseEntity.ok(or);
+    }
+
+
+    @PostMapping("/cart/checkout/{id}")
+    public String checkOutCart(@PathVariable int id){
+        try{
+            orderService.checkOutCart(id);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+        return "Success";
     }
 }
