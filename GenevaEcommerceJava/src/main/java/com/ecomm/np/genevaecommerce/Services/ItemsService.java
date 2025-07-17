@@ -90,7 +90,7 @@ public class ItemsService {
     }
 
     public List<ItemDisplayDTO> displayNewArrivals(){
-        List<Items> newArrrivalList= itemsRepository.findTop5ByOrderByCreatedDateDesc();
+        List<Items> newArrrivalList= itemsRepository.findTop10ByOrderByCreatedDateDesc();
         return newArrrivalList.stream().
                 map(ItemDisplayDTO::MapByItems).
                 collect(Collectors.toList());

@@ -2,13 +2,19 @@ package com.ecomm.np.genevaecommerce.Services;
 
 import com.ecomm.np.genevaecommerce.DTO.CollectionAndItemsDTO;
 import com.ecomm.np.genevaecommerce.DTO.NewCollectionDTO;
+import com.ecomm.np.genevaecommerce.Models.BestCollection;
 import com.ecomm.np.genevaecommerce.Models.Collection;
 import com.ecomm.np.genevaecommerce.Models.Items;
 import com.ecomm.np.genevaecommerce.Repositories.CollectionRepository;
 import com.ecomm.np.genevaecommerce.Repositories.ItemsRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.jdi.InternalException;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +24,9 @@ public class HomeService {
 
     private final CollectionRepository collectionRepository;
     private final ItemsRepository itemsRepository;
+    private final String path = "collection.json";
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final File file = new File(path);
 
     public HomeService(CollectionRepository collectionRepository, ItemsRepository itemsRepository) {
         this.collectionRepository = collectionRepository;
@@ -92,8 +101,21 @@ public class HomeService {
 //        return opt.orElse(null);
 //    }
 
-
     public Collection saveCollection(){
         return collectionRepository.findTopByOrderByLaunchedDateDesc();
     }
+
+    public BestCollection bestCollection() throws IOException {
+        if (!file.exists()) {
+            throw new FileNotFoundException("Could not locate the file: " + file.getAbsolutePath());
+        }
+        return objectMapper.readValue(file, BestCollection.class);
+    }
+
+    public String updateBestCollection(BestCollection collection) throws IOException {
+        objectMapper.writeValue(file, collection);
+        return "Success";
+    }
+
+
 }

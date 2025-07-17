@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/items")
 public class ItemsController {
@@ -47,5 +48,4 @@ public class ItemsController {
     public ResponseEntity<List<CollectionDTO>> getLatestCollection(){
         return ResponseEntity.ok(null);
     }
-
 }
