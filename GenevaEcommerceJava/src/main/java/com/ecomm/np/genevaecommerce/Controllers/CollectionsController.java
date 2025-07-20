@@ -1,7 +1,14 @@
 package com.ecomm.np.genevaecommerce.Controllers;
 
+<<<<<<< HEAD
 import com.ecomm.np.genevaecommerce.DTO.CollectionAndItemsDTO;
 import com.ecomm.np.genevaecommerce.Mail.MailService;
+=======
+
+import com.ecomm.np.genevaecommerce.DTO.CollectionAndItemsDTO;
+
+
+>>>>>>> 9f256d61dc9a90092f4457cfedfe66a540c77636
 import com.ecomm.np.genevaecommerce.Models.BestCollection;
 import com.ecomm.np.genevaecommerce.Models.Collection;
 import com.ecomm.np.genevaecommerce.Services.HomeService;
@@ -9,8 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
+=======
+>>>>>>> 9f256d61dc9a90092f4457cfedfe66a540c77636
 
 
 @CrossOrigin(origins = "*")
@@ -19,12 +29,19 @@ import java.util.List;
 public class CollectionsController {
 
     private final HomeService homeService;
+<<<<<<< HEAD
     private final MailService mailService;
 
     @Autowired
     public CollectionsController(HomeService homeService,MailService mailService){
         this.homeService = homeService;
         this.mailService = mailService;
+=======
+
+    @Autowired
+    public CollectionsController(HomeService homeService){
+        this.homeService = homeService;
+>>>>>>> 9f256d61dc9a90092f4457cfedfe66a540c77636
     }
 
     @GetMapping
@@ -42,7 +59,11 @@ public class CollectionsController {
         }
     }
 
+<<<<<<< HEAD
     @PostMapping("/post/best")
+=======
+    @PostMapping
+>>>>>>> 9f256d61dc9a90092f4457cfedfe66a540c77636
     public ResponseEntity<String> updateBest(@RequestBody BestCollection collection){
         try{
             return ResponseEntity.ok(homeService.updateBestCollection(collection));
@@ -50,6 +71,7 @@ public class CollectionsController {
             return ResponseEntity.badRequest().body("Cannot update");
         }
     }
+<<<<<<< HEAD
 
     @GetMapping("/code")
     public ResponseEntity<Integer> sendCode(@RequestBody String email){
@@ -67,4 +89,6 @@ public class CollectionsController {
         mailService.sendPromotionalEmail(mailList,title,body);
         return 1;
     }
+=======
+>>>>>>> 9f256d61dc9a90092f4457cfedfe66a540c77636
 }

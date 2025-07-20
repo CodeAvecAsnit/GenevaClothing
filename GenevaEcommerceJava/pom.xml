@@ -35,12 +35,15 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
+<<<<<<< HEAD
 		<!--Mail Sender>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
+=======
+>>>>>>> 9f256d61dc9a90092f4457cfedfe66a540c77636
 		<!-- Hibernate Core -->
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
