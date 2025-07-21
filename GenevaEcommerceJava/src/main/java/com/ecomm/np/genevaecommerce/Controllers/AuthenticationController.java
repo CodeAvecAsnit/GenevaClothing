@@ -45,7 +45,8 @@ public class AuthenticationController {
 
     @PostMapping("/sign_up")
     public ResponseEntity<String> SignUp(@RequestBody SignUpDTO signUpDTO) {
-        return ResponseEntity.ok(authService.signUp(signUpDTO));
+        authService.signUp(signUpDTO);
+        return ResponseEntity.ok("Verification Code has been sent to : "+signUpDTO.getEmail());
     }
 
 

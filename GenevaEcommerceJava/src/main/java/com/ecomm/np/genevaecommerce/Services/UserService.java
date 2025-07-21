@@ -38,17 +38,13 @@ public class UserService {
     }
 
     public UserModel saveUser(UserDTO userDTO) {
-
         UserModel userModel = UserDTO.userModelBuild(userDTO);
         Role role = Role.USER;
-        Optional<RoleTable> roleTable =roleTableRepository.findByRole(role);
-        roleTable.ifPresent(userModel::setRoleTable);
+        RoleTable roleTable =roleTableRepository.findByRole(role);
+        userModel.setRoleTable(roleTable);
         userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
         return userRepository.save(userModel);
     }
-
-
-
 
 
     public String itemToCart(int userId, int itemId) {

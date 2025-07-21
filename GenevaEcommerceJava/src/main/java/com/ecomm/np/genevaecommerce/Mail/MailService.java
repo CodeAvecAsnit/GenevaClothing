@@ -25,6 +25,7 @@ public class MailService {
         this.secureRandom = secureRandom;
     }
 
+
     public int generateAndSend(String email){
         int code = secureRandom.nextInt(100000,1000000);
         sendVerificationCode(email,code);

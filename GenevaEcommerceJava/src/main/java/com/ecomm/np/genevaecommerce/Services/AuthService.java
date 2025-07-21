@@ -1,8 +1,10 @@
 package com.ecomm.np.genevaecommerce.Services;
 
 import com.ecomm.np.genevaecommerce.DTO.*;
+import com.ecomm.np.genevaecommerce.Enumerations.Role;
 import com.ecomm.np.genevaecommerce.Mail.MailService;
 import com.ecomm.np.genevaecommerce.Models.UserModel;
+import com.ecomm.np.genevaecommerce.Repositories.RoleTableRepository;
 import com.ecomm.np.genevaecommerce.Repositories.UserRepository;
 import com.ecomm.np.genevaecommerce.Security.CustomUserService;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -11,6 +13,7 @@ import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,13 +38,16 @@ public class AuthService {
 
     private final MailService mailService;
 
+    private final RoleTableRepository roleTableRepository;
+
 
     @Autowired
-    public AuthService(CustomUserService customUserService, UserRepository userRepository, PasswordEncoder passwordEncoder, MailService mailService) {
+    public AuthService(CustomUserService customUserService, UserRepository userRepository, PasswordEncoder passwordEncoder, MailService mailService, RoleTableRepository roleTableRepository) {
         this.customUserService = customUserService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailService = mailService;
+        this.roleTableRepository = roleTableRepository;
     }
 
 
@@ -65,16 +71,16 @@ public class AuthService {
         }
     }
 
-    public String signUp(SignUpDTO signUpDTO){
+    @Async
+    public void signUp(SignUpDTO signUpDTO){
         String mailAddress = signUpDTO.getEmail();
         UserModel ux = userRepository.findByEmail(mailAddress);
-        if(ux!=null) return "User already exists";
+        if(ux!=null) return;
         UserModel ui = userRepository.findByUserName(signUpDTO.getUsername());
-        if(ui!=null) return "User with this username already exists btw";
+        if(ui!=null) return ;
         int code = mailService.generateAndSend(mailAddress);
         codes.put(mailAddress,new SignUpAttempt(code));
         accounts.put(mailAddress,signUpDTO);
-        return "Verification code has been sent to "+signUpDTO.getEmail();
     }
 
     public LoginResponseDTO verify(VerificationDTO verificationDTO) throws Exception{
@@ -88,6 +94,8 @@ public class AuthService {
         }else if(returnCode == 1){
             SignUpDTO userDTO = accounts.getIfPresent(email);
             UserModel user = SignUpDTO.build(userDTO);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setRoleTable(roleTableRepository.findByRole(Role.USER));
             userRepository.save(user);
             codes.invalidate(email);
             accounts.invalidate(email);
