@@ -25,21 +25,27 @@ public class MailService {
         this.secureRandom = secureRandom;
     }
 
-    public int sendVerificationCode(String email){
+    public int generateAndSend(String email){
+        int code = secureRandom.nextInt(100000,1000000);
+        sendVerificationCode(email,code);
+        return code;
+    }
+
+
+
+    @Async
+    protected void sendVerificationCode(String email,int code){
         SimpleMailMessage message = new SimpleMailMessage();
         try{
             message.setFrom("furnituremandu@gmail.com");
             message.setTo(email);
             message.setSubject("Verification Code for Geneva Clothing");
-            int code = secureRandom.nextInt(100000,1000000);
             String body = "The verification code is "+code+". Please do not share this code.";
             message.setText(body);
             javaMailSender.send(message);
-            return code;
         }catch (Exception ex){
             logger.error("Some Error occurred while sending the email "+ ex.getMessage());
         }
-        return -1;
     }
 
     @Async
