@@ -8,6 +8,7 @@ import com.ecomm.np.genevaecommerce.Models.Items;
 import com.ecomm.np.genevaecommerce.Services.ItemsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/items")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class ItemsController {
 
     @Autowired

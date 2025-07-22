@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.Mail;
+package com.ecomm.np.genevaecommerce.Services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,34 +8,23 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.util.List;
 
 @Service
 public class MailService {
+
     private final Logger logger = LoggerFactory.getLogger(MailService.class);
 
-    private final SecureRandom secureRandom;
 
     private final JavaMailSender javaMailSender;
 
 
-    public MailService(JavaMailSender javaMailSender, SecureRandom secureRandom) {
+    public MailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
-        this.secureRandom = secureRandom;
     }
-
-
-    public int generateAndSend(String email){
-        int code = secureRandom.nextInt(100000,1000000);
-        sendVerificationCode(email,code);
-        return code;
-    }
-
-
 
     @Async
-    protected void sendVerificationCode(String email,int code){
+    public void sendVerificationCode(String email,int code){
         SimpleMailMessage message = new SimpleMailMessage();
         try{
             message.setFrom("furnituremandu@gmail.com");

@@ -33,10 +33,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO>LoginUser(@RequestBody LoginDTO loginDTO){
         try{
-            if(authService.Login(loginDTO)){
-                return ResponseEntity.ok(new LoginResponseDTO(200,"Login Successful","Dummy jwt token"));
-            }else return ResponseEntity.ok(new LoginResponseDTO(403,"Invalid UserName or Password","No token"));
-
+           return ResponseEntity.ok(authService.login(loginDTO));
         }catch (Exception ex){
             logger.error(ex.getMessage());
             return ResponseEntity.ok(new LoginResponseDTO(403,"Invalid UserName or Password","No token"));

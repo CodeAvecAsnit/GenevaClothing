@@ -2,11 +2,12 @@ package com.ecomm.np.genevaecommerce.Services;
 
 import com.ecomm.np.genevaecommerce.DTO.*;
 import com.ecomm.np.genevaecommerce.Enumerations.Role;
-import com.ecomm.np.genevaecommerce.Mail.MailService;
 import com.ecomm.np.genevaecommerce.Models.UserModel;
 import com.ecomm.np.genevaecommerce.Repositories.RoleTableRepository;
 import com.ecomm.np.genevaecommerce.Repositories.UserRepository;
+import com.ecomm.np.genevaecommerce.Security.CustomUser;
 import com.ecomm.np.genevaecommerce.Security.CustomUserService;
+import com.ecomm.np.genevaecommerce.Security.JwtUtils;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import jakarta.annotation.PostConstruct;
@@ -14,10 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
 
 
@@ -40,14 +42,20 @@ public class AuthService {
 
     private final RoleTableRepository roleTableRepository;
 
+    private final JwtUtils jwtUtils;
+
+    private final SecureRandom secureRandom;
+
 
     @Autowired
-    public AuthService(CustomUserService customUserService, UserRepository userRepository, PasswordEncoder passwordEncoder, MailService mailService, RoleTableRepository roleTableRepository) {
+    public AuthService(CustomUserService customUserService, UserRepository userRepository, PasswordEncoder passwordEncoder, MailService mailService, RoleTableRepository roleTableRepository, JwtUtils jwtUtils, SecureRandom secureRandom) {
         this.customUserService = customUserService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailService = mailService;
         this.roleTableRepository = roleTableRepository;
+        this.jwtUtils = jwtUtils;
+        this.secureRandom = secureRandom;
     }
 
 
@@ -58,16 +66,35 @@ public class AuthService {
     }
 
 
-    private boolean checkPassWord(String ps1,String ps2){
+    private boolean checkPassword(String ps1,String ps2){
         return (passwordEncoder.matches(ps1,ps2));
     }
 
-    public boolean Login(LoginDTO loginDTO ) throws Exception{
-        try{
-            UserDetails user = customUserService.loadUserByUsername(loginDTO.getEmail());
-            return checkPassWord(loginDTO.getPassword(),user.getPassword());
-        }catch (UsernameNotFoundException ex){
-            throw new UsernameNotFoundException("Invalid UserName or Password");
+    public LoginResponseDTO login(LoginDTO loginDTO) {
+        try {
+            // Load the user by email
+            CustomUser user = (CustomUser) customUserService.loadUserByUsername(loginDTO.getEmail());
+
+            // Check if the password matches the stored hash
+            if (checkPassword(loginDTO.getPassword(), user.getPassword())) {
+                String jwt = jwtUtils.generateJwtTokens(user);
+
+                // Log the successful login (you might choose to log at a different level, e.g., INFO)
+                logger.info("User {} logged in successfully", loginDTO.getEmail());
+
+                return new LoginResponseDTO(200, "Logged in successfully", jwt);
+            } else {
+                logger.warn("Invalid login attempt for user: {}", loginDTO.getEmail());
+                return new LoginResponseDTO(403, "Invalid Username or Password", "");
+            }
+        } catch (UsernameNotFoundException ex) {
+            // Log the error for user not found
+            logger.error("User not found: {}", loginDTO.getEmail(), ex);
+            throw new UsernameNotFoundException("Invalid Username or Password");
+        } catch (Exception ex) {
+            // Log unexpected errors
+            logger.error("Unexpected error during login", ex);
+            throw new RuntimeException("An unexpected error occurred", ex);  // Return appropriate message to user
         }
     }
 
@@ -78,7 +105,8 @@ public class AuthService {
         if(ux!=null) return;
         UserModel ui = userRepository.findByUserName(signUpDTO.getUsername());
         if(ui!=null) return ;
-        int code = mailService.generateAndSend(mailAddress);
+        int code = secureRandom.nextInt(100000,1000000);
+        mailService.sendVerificationCode(mailAddress,code);
         codes.put(mailAddress,new SignUpAttempt(code));
         accounts.put(mailAddress,signUpDTO);
     }
@@ -96,10 +124,11 @@ public class AuthService {
             UserModel user = SignUpDTO.build(userDTO);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setRoleTable(roleTableRepository.findByRole(Role.USER));
-            userRepository.save(user);
+            UserModel savedUser = userRepository.save(user);
             codes.invalidate(email);
             accounts.invalidate(email);
-            return new LoginResponseDTO(200,"User has been successfully verified","dummy jwt");
+            String jwt = jwtUtils.generateJwtTokens(CustomUser.build(savedUser));
+            return new LoginResponseDTO(200,"User has been successfully verified",jwt);
         }else{
             throw new Exception("Unreachable State");
         }
