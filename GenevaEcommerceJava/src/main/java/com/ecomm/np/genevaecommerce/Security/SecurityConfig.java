@@ -23,9 +23,12 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
 
+    private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
+
     @Autowired
-    public SecurityConfig(JwtFilter jwtFilter) {
+    public SecurityConfig(JwtFilter jwtFilter, CustomOAuth2SuccessHandler customOAuth2SuccessHandler) {
         this.jwtFilter = jwtFilter;
+        this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
     }
 
     @Bean
@@ -35,6 +38,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/oauth2/**",
                                 "/login/oauth2/code/github",
                                 "/login/oauth2/code/google",
                                 "/api/v1/auth/**",
@@ -57,7 +61,9 @@ public class SecurityConfig {
                             response.setContentType("application/json");
                             response.getWriter().write("{\"error\": \"Unauthorized\"}");
                         })
-                ).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                ).oauth2Login(oauth2 -> oauth2
+                .successHandler(customOAuth2SuccessHandler)).
+                addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

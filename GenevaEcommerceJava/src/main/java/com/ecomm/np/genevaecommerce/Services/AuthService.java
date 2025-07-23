@@ -72,14 +72,9 @@ public class AuthService {
 
     public LoginResponseDTO login(LoginDTO loginDTO) {
         try {
-            // Load the user by email
             CustomUser user = (CustomUser) customUserService.loadUserByUsername(loginDTO.getEmail());
-
-            // Check if the password matches the stored hash
             if (checkPassword(loginDTO.getPassword(), user.getPassword())) {
                 String jwt = jwtUtils.generateJwtTokens(user);
-
-                // Log the successful login (you might choose to log at a different level, e.g., INFO)
                 logger.info("User {} logged in successfully", loginDTO.getEmail());
 
                 return new LoginResponseDTO(200, "Logged in successfully", jwt);
@@ -88,13 +83,11 @@ public class AuthService {
                 return new LoginResponseDTO(403, "Invalid Username or Password", "");
             }
         } catch (UsernameNotFoundException ex) {
-            // Log the error for user not found
             logger.error("User not found: {}", loginDTO.getEmail(), ex);
             throw new UsernameNotFoundException("Invalid Username or Password");
         } catch (Exception ex) {
-            // Log unexpected errors
             logger.error("Unexpected error during login", ex);
-            throw new RuntimeException("An unexpected error occurred", ex);  // Return appropriate message to user
+            throw new RuntimeException("An unexpected error occurred", ex);
         }
     }
 

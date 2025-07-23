@@ -5,11 +5,15 @@ import com.ecomm.np.genevaecommerce.DTO.LoginResponseDTO;
 import com.ecomm.np.genevaecommerce.DTO.SignUpDTO;
 import com.ecomm.np.genevaecommerce.DTO.VerificationDTO;
 import com.ecomm.np.genevaecommerce.Services.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+
 
 
 @CrossOrigin(origins = "*")
@@ -31,9 +35,15 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO>LoginUser(@RequestBody LoginDTO loginDTO){
+    public ResponseEntity<LoginResponseDTO>LoginUser(@RequestBody LoginDTO loginDTO,HttpServletResponse response){
         try{
-           return ResponseEntity.ok(authService.login(loginDTO));
+            LoginResponseDTO loginAttempt = authService.login(loginDTO);
+            if(loginAttempt.getResponseCode()==200){
+                setJwtCookie(response,loginAttempt.getJwtToken());
+                return ResponseEntity.ok(loginAttempt);
+            }else{
+                return ResponseEntity.notFound().build();
+            }
         }catch (Exception ex){
             logger.error(ex.getMessage());
             return ResponseEntity.ok(new LoginResponseDTO(403,"Invalid UserName or Password","No token"));
@@ -48,11 +58,14 @@ public class AuthenticationController {
 
 
     @PostMapping("/sign_up/verify")
-    public ResponseEntity<LoginResponseDTO> verify(@RequestBody VerificationDTO verificationDTO){
+    public ResponseEntity<LoginResponseDTO> verify(@RequestBody VerificationDTO verificationDTO,HttpServletResponse response){
         try{
-            LoginResponseDTO login = authService.verify(verificationDTO);
-            if(login.getResponseCode()==200) return ResponseEntity.ok(login);
-            else return ResponseEntity.status(403).body(login);
+            LoginResponseDTO verifyAttempt = authService.verify(verificationDTO);
+            if(verifyAttempt.getResponseCode()==200) {
+                setJwtCookie(response,verifyAttempt.getJwtToken());
+                return ResponseEntity.ok(verifyAttempt);
+            }
+            else return ResponseEntity.status(403).body(verifyAttempt);
         }catch (Exception ex){
             logger.error(ex.getMessage());
             LoginResponseDTO dto = new LoginResponseDTO();
@@ -61,5 +74,17 @@ public class AuthenticationController {
             dto.setResponseCode(429);
             return ResponseEntity.status(400).body(dto);
         }
+    }
+
+    private void setJwtCookie(HttpServletResponse response, String jwt) {
+        ResponseCookie cookie = ResponseCookie.from("access_token", jwt)
+                .httpOnly(true)
+                .secure(false) // Set to false if testing on localhost without HTTPS
+                .path("/")
+                .maxAge(86400) // 1 day
+                .sameSite("None") // Change to "None" if frontend and backend are on different domains
+                .build();
+
+        response.setHeader("Set-Cookie", cookie.toString());
     }
    }
