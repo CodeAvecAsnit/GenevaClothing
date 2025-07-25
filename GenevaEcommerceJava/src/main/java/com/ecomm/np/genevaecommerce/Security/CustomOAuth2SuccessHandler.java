@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -55,10 +56,10 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         String provider = extractProvider(request.getRequestURI());
         logger.info("OAuth2 login via: {}", provider);
 
-        // Get user info from OAuth attributes
         String username = (String) attributes.getOrDefault("login", attributes.get("id"));
         String name = (String) attributes.getOrDefault("name", username);
         String email = (String) attributes.get("email");
+        String jwt;
 
         if (username == null || username.isEmpty()) {
             username = "user" + PasswordGenerator.GenerateNums();
@@ -69,14 +70,12 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         if (email == null || email.isEmpty()) {
             email = username + "@" + provider + "-oauth.local";
         }
-
         try {
             CustomUser user = (CustomUser) customUserService.loadUserByUsername(email);
-            String jwt = jwtService.generateJwtTokens(user);
+            jwt = jwtService.generateJwtTokens(user);
             setJwtCookie(response, jwt);
             logger.info("Existing OAuth2 user logged in: {}", email);
         } catch (UsernameNotFoundException ex) {
-            // Register new OAuth2 user
             RoleTable roleTable = roleTableRepository.findByRole(Role.USER);
             UserModel userAccount = new UserModel();
             userAccount.setEmail(email);
@@ -86,16 +85,16 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
             userAccount = userRepository.save(userAccount);
 
             CustomUser newUser = CustomUser.build(userAccount);
-            String jwt = jwtService.generateJwtTokens(newUser);
+            jwt = jwtService.generateJwtTokens(newUser);
             setJwtCookie(response, jwt);
             logger.info("New OAuth2 user created: {}", email);
         } catch (Exception ex) {
             logger.error("OAuth2 login error: {}", ex.getMessage());
-            response.sendRedirect("http://localhost:5500/oauth-error.html");
+            response.sendRedirect("http://localhost:5500/index.html");
             return;
         }
 
-        response.sendRedirect("http://localhost:5500/index.html");
+        response.sendRedirect("http://localhost:5500/index.html?token="+jwt);
     }
 
     private String extractProvider(String uri) {
@@ -107,12 +106,11 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
     private void setJwtCookie(HttpServletResponse response, String jwt) {
         ResponseCookie cookie = ResponseCookie.from("access_token", jwt)
                 .httpOnly(true)
-                .secure(false) // Set to false if testing on localhost without HTTPS
+                .secure(false)
                 .path("/")
-                .maxAge(86400) // 1 day
-                .sameSite("None") // Change to "None" if frontend and backend are on different domains
+                .maxAge(86400)
+                .sameSite("Lax")
                 .build();
-
-        response.setHeader("Set-Cookie", cookie.toString());
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 }

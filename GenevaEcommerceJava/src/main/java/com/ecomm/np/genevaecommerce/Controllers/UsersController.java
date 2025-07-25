@@ -3,21 +3,31 @@ package com.ecomm.np.genevaecommerce.Controllers;
 import com.ecomm.np.genevaecommerce.DTO.UserDTO;
 import com.ecomm.np.genevaecommerce.Models.Items;
 import com.ecomm.np.genevaecommerce.Models.UserModel;
+import com.ecomm.np.genevaecommerce.Security.CustomUser;
 import com.ecomm.np.genevaecommerce.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/user")
 public class UsersController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
+    @Autowired
+    public UsersController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<Boolean> responseEntity(@AuthenticationPrincipal CustomUser customUser){
+        Boolean isAdmin = customUser.getAuthorities().stream().anyMatch(auth->auth.getAuthority().equals("ADMIN"));
+        return ResponseEntity.ok(isAdmin);
+    }
 
     @PostMapping("/post")
     public ResponseEntity<UserModel> putUser(@RequestBody UserDTO userDTO){
@@ -44,8 +54,4 @@ public class UsersController {
         return ResponseEntity.ok(userService.getWishListItems(user_id));
     }
 
-    @GetMapping("/check")
-    public String user(){
-        return "userOnly";
-    }
 }

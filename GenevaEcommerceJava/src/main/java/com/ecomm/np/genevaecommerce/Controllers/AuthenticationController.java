@@ -9,14 +9,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
 
-
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
@@ -79,12 +78,11 @@ public class AuthenticationController {
     private void setJwtCookie(HttpServletResponse response, String jwt) {
         ResponseCookie cookie = ResponseCookie.from("access_token", jwt)
                 .httpOnly(true)
-                .secure(false) // Set to false if testing on localhost without HTTPS
+                .secure(false)
                 .path("/")
                 .maxAge(86400) // 1 day
-                .sameSite("None") // Change to "None" if frontend and backend are on different domains
+                .sameSite("Lax")
                 .build();
-
-        response.setHeader("Set-Cookie", cookie.toString());
+                response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
    }
