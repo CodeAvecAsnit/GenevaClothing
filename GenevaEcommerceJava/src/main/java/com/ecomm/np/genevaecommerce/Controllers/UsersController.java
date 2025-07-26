@@ -53,5 +53,4 @@ public class UsersController {
     public ResponseEntity<Set<Items>> DisplayWishList(@RequestParam int user_id){
         return ResponseEntity.ok(userService.getWishListItems(user_id));
     }
-
 }

@@ -7,6 +7,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import static org.hibernate.sql.ast.Clause.FETCH;
+
 @Entity
 @Table (name = "ecommerce_users")
 public class UserModel {
@@ -41,7 +43,7 @@ public class UserModel {
     private LocalDateTime updatedDate;
 
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private OrderDetails userOrders;
 
     @ManyToMany

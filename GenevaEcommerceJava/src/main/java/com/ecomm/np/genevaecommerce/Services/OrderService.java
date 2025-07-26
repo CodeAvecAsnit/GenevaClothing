@@ -1,7 +1,7 @@
 package com.ecomm.np.genevaecommerce.Services;
 
+import com.ecomm.np.genevaecommerce.DTO.AddressDTO;
 import com.ecomm.np.genevaecommerce.DTO.OrderDTO;
-import com.ecomm.np.genevaecommerce.DTO.UpdateAdressDTO;
 import com.ecomm.np.genevaecommerce.Models.Items;
 import com.ecomm.np.genevaecommerce.Models.OrderDetails;
 import com.ecomm.np.genevaecommerce.Models.OrderedItems;
@@ -67,25 +67,7 @@ public class OrderService {
     }
 
 
-    public OrderDetails updateAddress(UpdateAdressDTO updateAdressDTO){
-        Optional<UserModel> userModel = userRepository.findById(updateAdressDTO.getUserId());
-        if(userModel.isPresent()){
-            UserModel userApp = userModel.get();
-            OrderDetails orderDetails = userApp.getUserOrders();
-            if(orderDetails==null){
-                orderDetails = new OrderDetails();
-                orderDetails.setUser(userApp);
-            }
-            orderDetails.setDeliveryLocation(updateAdressDTO.getAddress());
-            OrderDetails or = orderDetailsRepository.save(orderDetails);
-            userApp.setUserOrders(orderDetails);
-            userRepository.save(userApp);
-            return or;
-        }else{
-            logger.error("User Not found");
-        }
-        return null;
-    }
+
 
 
 
@@ -114,4 +96,33 @@ public class OrderService {
         }
     }
 
+    public AddressDTO getAddress(int id)throws Exception{
+        Optional<UserModel> optional = userRepository.findById(id);
+        if(optional.isEmpty()) throw new NullPointerException("The User does not exist");
+        UserModel user = optional.get();
+        try{
+            OrderDetails od = user.getUserOrders();
+            return AddressDTO.buildFromModel(od);
+        }catch (NullPointerException ex){
+            throw ex;
+        }catch (Exception ex){
+            return null;
+        }
+    }
+
+    public AddressDTO addOrUpdateAddress(int id,AddressDTO addressDTO){
+        Optional<UserModel> user = userRepository.findById(id);
+        if(user.isEmpty()) return null;
+        UserModel userModel = user.get();
+        OrderDetails od = userModel.getUserOrders();
+        if(od==null){
+            od = new OrderDetails();
+            od.setUser(userModel);
+        }
+        od.setCity(addressDTO.getCity());
+        od.setDeliveryLocation(addressDTO.getStreetName());
+        od.setProvince(addressDTO.getProvince());
+        OrderDetails orderDetails = orderDetailsRepository.save(od);
+        return AddressDTO.buildFromModel(orderDetails);
+    }
 }

@@ -13,6 +13,12 @@ public class OrderDetails {
     @Lob
     private String deliveryLocation;
 
+    private String city;
+
+    private String province;
+
+//    private String country; Add only if international currently we are based in Nepal so i dont think this field is important.
+
     @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -20,6 +26,16 @@ public class OrderDetails {
 
     @OneToMany(mappedBy = "orderDetails")
     private List<OrderedItems> orderedItems;
+
+
+    public OrderDetails(long orderId, String deliveryLocation, String city, String province, UserModel user, List<OrderedItems> orderedItems) {
+        this.orderId = orderId;
+        this.deliveryLocation = deliveryLocation;
+        this.city = city;
+        this.province = province;
+        this.user = user;
+        this.orderedItems = orderedItems;
+    }
 
     public OrderDetails(long orderId, String deliveryLocation, UserModel user, List<OrderedItems> orderedItems) {
         this.orderId = orderId;
@@ -55,6 +71,24 @@ public class OrderDetails {
     public void setUser(UserModel user) {
         this.user = user;
     }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+
 
     public List<OrderedItems> getOrderedItems() {
         return orderedItems;
