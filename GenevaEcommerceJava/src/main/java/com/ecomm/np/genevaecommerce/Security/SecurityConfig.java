@@ -47,6 +47,7 @@ public class SecurityConfig {
                                 "/login/oauth2/code/github",
                                 "/login/oauth2/code/google",
                                 "/api/v1/auth/**",
+                                "/api/v1/auth/sign_up/",
                                 "/api/v1/auth/verify",
                                 "/api/v1/auth/login",
                                 "/api/v1/home/best",

@@ -69,9 +69,10 @@ public class JwtFilter extends OncePerRequestFilter {
             logger.debug("JWT extracted from Authorization header: {}", jwt);
             return jwt;
         }
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("access_token".equals(cookie.getName())) {
+        Cookie[] cookies = request.getCookies();
+        if ( cookies!= null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("access_token")) {
                     logger.debug("JWT extracted from Cookie: {}", cookie.getValue());
                     return cookie.getValue();
                 }

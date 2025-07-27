@@ -1,5 +1,6 @@
 package com.ecomm.np.genevaecommerce.Controllers;
 
+import com.ecomm.np.genevaecommerce.DTO.PasswordDTO;
 import com.ecomm.np.genevaecommerce.DTO.UserDTO;
 import com.ecomm.np.genevaecommerce.Models.Items;
 import com.ecomm.np.genevaecommerce.Models.UserModel;
@@ -43,6 +44,16 @@ public class UsersController {
     public ResponseEntity<Set<Items>> DisplayCart(@RequestParam int user_id){
         return ResponseEntity.ok(userService.getCartItems(user_id));
     }
+
+//    @PutMapping("/update/password")
+//    public ResponseEntity<UserModel> updatePassword(@AuthenticationPrincipal CustomUser customUser,@RequestBody PasswordDTO passwordDTO){
+//        try{
+//
+//        }catch (Exception ex){
+//
+//        }
+//    }
+
 
     @PutMapping("/wishlist")
     public ResponseEntity<String> addToWishList(@RequestParam int user_id,@RequestParam int item_id){

@@ -3,6 +3,7 @@ package com.ecomm.np.genevaecommerce.DTO;
 public class SignUpAttempt {
     private int code;
     private int attempts;
+    private int mailsSent;
 
     public SignUpAttempt() {
     }
@@ -10,6 +11,7 @@ public class SignUpAttempt {
     public SignUpAttempt(int code) {
         this.code = code;
         this.attempts = 0;
+        this.mailsSent = 0;
     }
 
     private boolean check(int verificationCode){
@@ -39,4 +41,13 @@ public class SignUpAttempt {
     public void setAttempts(int attempts) {
         this.attempts = attempts;
     }
+
+
+    public boolean canSendMail(){
+        if(this.mailsSent>=5){
+            return false;
+        }else ++attempts;
+        return true;
+    }
+
 }

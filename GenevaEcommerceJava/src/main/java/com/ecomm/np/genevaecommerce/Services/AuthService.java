@@ -15,11 +15,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.CredentialException;
 import java.security.SecureRandom;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
@@ -58,13 +62,11 @@ public class AuthService {
         this.secureRandom = secureRandom;
     }
 
-
     @PostConstruct
     public void init(){
-        this.codes = Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).maximumSize(1000).build();
-        this.accounts = Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).maximumSize(1000).build();
+        this.codes = Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).maximumSize(1000).build();
+        this.accounts = Caffeine.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).maximumSize(1000).build();
     }
-
 
     private boolean checkPassword(String ps1,String ps2){
         return (passwordEncoder.matches(ps1,ps2));
@@ -104,6 +106,22 @@ public class AuthService {
         accounts.put(mailAddress,signUpDTO);
     }
 
+    @Async
+    public void resendEmail(String email)throws Exception{
+        SignUpAttempt attempt = codes.getIfPresent(email);
+        if(attempt==null)
+        {
+            throw new Exception("Expired,Try signing up again");
+        }
+        if(attempt.canSendMail()){
+            int code = secureRandom.nextInt(100000,1000000);
+            mailService.sendVerificationCode(email,code);
+            attempt.setCode(code);
+        }else{
+            throw new Exception("Max attempts reached,Sign up after 5 minutes");
+        }
+    }
+
     public LoginResponseDTO verify(VerificationDTO verificationDTO) throws Exception{
         String email = verificationDTO.getEmail();
         SignUpAttempt attempt = codes.getIfPresent(email);
@@ -126,4 +144,29 @@ public class AuthService {
             throw new Exception("Unreachable State");
         }
     }
+
+    public String changePassword(PasswordDTO newPass, String email) {
+        if (newPass.getNewPassword().equals(newPass.getOldPassword())) {
+            throw new BadCredentialsException("New password cannot be the same as the old password.");
+        }
+
+        UserModel user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found ");
+        }
+
+        if (!checkPassword(newPass.getOldPassword(), user.getPassword())) {
+            throw new BadCredentialsException("Incorrect old password.");
+        }
+
+        String encodedPassword = passwordEncoder.encode(newPass.getNewPassword());
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+
+        logger.info("Password changed successfully for user: {}", email);
+        return "Password changed successfully";
+    }
+
+
+
 }

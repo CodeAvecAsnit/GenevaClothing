@@ -1,17 +1,19 @@
 package com.ecomm.np.genevaecommerce.Controllers;
 
-import com.ecomm.np.genevaecommerce.DTO.LoginDTO;
-import com.ecomm.np.genevaecommerce.DTO.LoginResponseDTO;
-import com.ecomm.np.genevaecommerce.DTO.SignUpDTO;
-import com.ecomm.np.genevaecommerce.DTO.VerificationDTO;
+import com.ecomm.np.genevaecommerce.DTO.*;
+import com.ecomm.np.genevaecommerce.Security.CustomUser;
 import com.ecomm.np.genevaecommerce.Services.AuthService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -38,7 +40,15 @@ public class AuthenticationController {
         try{
             LoginResponseDTO loginAttempt = authService.login(loginDTO);
             if(loginAttempt.getResponseCode()==200){
-                setJwtCookie(response,loginAttempt.getJwtToken());
+
+                setJwtCookie(response,loginAttempt.getJwtToken()); // asnit
+                Cookie cookie = new Cookie("token", "abd");
+                cookie.setHttpOnly(true);
+                cookie.setSecure(false);
+                cookie.setPath("/");
+                cookie.setMaxAge(86400);
+
+                response.addCookie(cookie);
                 return ResponseEntity.ok(loginAttempt);
             }else{
                 return ResponseEntity.notFound().build();
@@ -46,6 +56,19 @@ public class AuthenticationController {
         }catch (Exception ex){
             logger.error(ex.getMessage());
             return ResponseEntity.ok(new LoginResponseDTO(403,"Invalid UserName or Password","No token"));
+        }
+    }
+
+
+    @PostMapping("/sign_up/resend")
+    public ResponseEntity<BasicDT0> resendCode(@RequestBody String email) {
+        try {
+            authService.resendEmail(email);
+            return ResponseEntity.ok(new BasicDT0("Verification code has been resent."));
+        } catch (Exception ex) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new BasicDT0(ex.getMessage()));
         }
     }
 
@@ -75,14 +98,32 @@ public class AuthenticationController {
         }
     }
 
+
+    @PutMapping("/update/password")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody PasswordDTO passwordDTO,
+                                            @AuthenticationPrincipal CustomUser userDetails) {
+        try {
+            String message = authService.changePassword(passwordDTO, userDetails.getEmail());
+            return ResponseEntity.ok(new BasicDT0(message));
+        } catch (BadCredentialsException ex){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new BasicDT0("Password doesn't match"));
+        }
+        catch (UsernameNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new BasicDT0(ex.getMessage()));
+        } catch (Exception ex) {
+            logger.error("Internal error during password change", ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new BasicDT0("Something went wrong. Please try again later."));
+        }
+    }
+
     private void setJwtCookie(HttpServletResponse response, String jwt) {
-        ResponseCookie cookie = ResponseCookie.from("access_token", jwt)
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(86400) // 1 day
-                .sameSite("Lax")
-                .build();
-                response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        Cookie cookie = new Cookie("access_token", jwt);
+                cookie.setHttpOnly(true);
+                cookie.setSecure(false);
+                cookie.setPath("/");
+                cookie.setMaxAge(86400);
+                response.addCookie(cookie);
     }
    }
