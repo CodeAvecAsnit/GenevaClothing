@@ -11,6 +11,7 @@ import com.ecomm.np.genevaecommerce.Security.JwtUtils;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import jakarta.annotation.PostConstruct;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import javax.security.auth.login.CredentialException;
 import java.security.SecureRandom;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 
@@ -100,22 +102,26 @@ public class AuthService {
         if(ux!=null) return;
         UserModel ui = userRepository.findByUserName(signUpDTO.getUsername());
         if(ui!=null) return ;
+        if(codes.getIfPresent(mailAddress)!=null){
+            return;
+        }
         int code = secureRandom.nextInt(100000,1000000);
         mailService.sendVerificationCode(mailAddress,code);
         codes.put(mailAddress,new SignUpAttempt(code));
         accounts.put(mailAddress,signUpDTO);
     }
 
-    @Async
+
     public void resendEmail(String email)throws Exception{
         SignUpAttempt attempt = codes.getIfPresent(email);
+        SignUpDTO user =accounts.getIfPresent(email); //resetting for extending its life
         if(attempt==null)
         {
-            throw new Exception("Expired,Try signing up again");
+            throw new UsernameNotFoundException("Email may have expired please try signing in again.");
         }
         if(attempt.canSendMail()){
             int code = secureRandom.nextInt(100000,1000000);
-            mailService.sendVerificationCode(email,code);
+            CompletableFuture.runAsync(() -> mailService.sendVerificationCode(email,code));
             attempt.setCode(code);
         }else{
             throw new Exception("Max attempts reached,Sign up after 5 minutes");

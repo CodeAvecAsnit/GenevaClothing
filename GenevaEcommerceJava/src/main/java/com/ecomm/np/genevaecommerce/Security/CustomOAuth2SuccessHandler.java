@@ -94,7 +94,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
             return;
         }
 
-        response.sendRedirect("http://localhost:5500/index.html?token="+jwt);
+        response.sendRedirect("http://localhost:5500/login.html?jwt="+jwt);
     }
 
     private String extractProvider(String uri) {

@@ -37,4 +37,5 @@ public class LoginResponseDTO {
     public void setJwtToken(String jwtToken) {
         this.jwtToken = jwtToken;
     }
+
 }

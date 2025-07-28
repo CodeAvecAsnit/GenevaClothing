@@ -39,9 +39,9 @@ public class AuthenticationController {
     public ResponseEntity<LoginResponseDTO>LoginUser(@RequestBody LoginDTO loginDTO,HttpServletResponse response){
         try{
             LoginResponseDTO loginAttempt = authService.login(loginDTO);
-            if(loginAttempt.getResponseCode()==200){
+            if(loginAttempt.getResponseCode()==200) {
 
-                setJwtCookie(response,loginAttempt.getJwtToken()); // asnit
+                setJwtCookie(response, loginAttempt.getJwtToken()); // asnit
                 Cookie cookie = new Cookie("token", "abd");
                 cookie.setHttpOnly(true);
                 cookie.setSecure(false);
@@ -50,7 +50,9 @@ public class AuthenticationController {
 
                 response.addCookie(cookie);
                 return ResponseEntity.ok(loginAttempt);
-            }else{
+            } else if (loginAttempt.getResponseCode()==403) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginAttempt);
+        }else{
                 return ResponseEntity.notFound().build();
             }
         }catch (Exception ex){
@@ -61,9 +63,9 @@ public class AuthenticationController {
 
 
     @PostMapping("/sign_up/resend")
-    public ResponseEntity<BasicDT0> resendCode(@RequestBody String email) {
+    public ResponseEntity<BasicDT0> resendCode(@Valid@RequestBody BasicDT0 basicDT0) {
         try {
-            authService.resendEmail(email);
+            authService.resendEmail(basicDT0.getMessage());
             return ResponseEntity.ok(new BasicDT0("Verification code has been resent."));
         } catch (Exception ex) {
             return ResponseEntity
