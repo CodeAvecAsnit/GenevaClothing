@@ -14,8 +14,9 @@ import com.ecomm.np.genevaecommerce.Repositories.ItemsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -43,6 +44,33 @@ public class ItemsService {
         this.itemsRepository = itemsRepository;
         this.random = random;
     }
+
+
+    public Page<ItemDisplayDTO> findAll(Pageable pageable){
+        Page<Items> page = itemsRepository.findAll(pageable);
+        return page.map(ItemDisplayDTO::MapByItems);
+    }
+
+    public Page<ItemDisplayDTO> findAll(Pageable pageable, String genderStr) throws Exception {
+        Gender gender;
+        try {
+            gender = Gender.valueOf(genderStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new Exception("Invalid gender value: " + genderStr);
+        }
+
+        Optional<GenderTable> genderTableOpt = genderTableRepository.findByGender(gender);
+        if (genderTableOpt.isEmpty()) {
+            throw new Exception("Gender not found: " + genderStr);
+        }
+
+        GenderTable genderTable = genderTableOpt.get();
+
+        Page<Items> page = itemsRepository.findByGenderTable(genderTable, pageable);
+        return page.map(ItemDisplayDTO::MapByItems);
+    }
+
+
 
     public Items SaveItem(ListItemDTO item) {
         Items items = ListItemDTO.ItemsMapper(item);
