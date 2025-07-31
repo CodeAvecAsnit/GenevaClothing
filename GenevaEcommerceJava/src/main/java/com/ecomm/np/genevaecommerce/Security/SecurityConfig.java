@@ -54,9 +54,9 @@ public class SecurityConfig {
                                 "/api/v1/home/best",
                                 "/api/v1/home",
                                 "/api/v1/home/**",
-                                "/api/v1/items",
-                                "/api/v1/items/**",
+                                "/api/v1/items/get/*",
                                 "/swagger-ui.html",
+                                "/api/v1/items",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
