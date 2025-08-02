@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.Models;
+package com.ecomm.np.genevaecommerce.DTO;
 
 public class Checkers {
     private Boolean hasInCart;
