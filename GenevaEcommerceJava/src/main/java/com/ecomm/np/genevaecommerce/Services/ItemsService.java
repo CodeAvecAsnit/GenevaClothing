@@ -186,6 +186,35 @@ public class ItemsService {
         }
     }
 
+
+    public String removeFromCart(int userId,int itemId)throws Exception{
+        UserModel user = getUserOrThrow(userId);
+        Items item = getItemOrThrow(itemId);
+        Set<Items> itemSet = user.getCartList();
+        itemSet.remove(item);
+        userRepository.save(user);
+        return "Item removed from the cart";
+    }
+
+    public String removeFromWishList(int userId,int itemId)throws Exception{
+        UserModel user = getUserOrThrow(userId);
+        Items item = getItemOrThrow(itemId);
+        Set<Items> itemSet = user.getWishList();
+        itemSet.remove(item);
+        userRepository.save(user);
+        return "Item removed from the cart";
+    }
+
+
+    public String removeWishList(int userId,int itemId)throws Exception{
+        UserModel user = getUserOrThrow(userId);
+        Items item = getItemOrThrow(itemId);
+        Set<Items> itemSet = user.getCartList();
+        itemSet.remove(item);
+        userRepository.save(user);
+        return "Item removed from the cart";
+    }
+
     public String addItemToCart(int userId, int itemId) throws Exception {
         UserModel user = getUserOrThrow(userId);
         Items item = getItemOrThrow(itemId);

@@ -1,5 +1,6 @@
 package com.ecomm.np.genevaecommerce.Services;
 
+import com.ecomm.np.genevaecommerce.DTO.ItemDisplayDTO;
 import com.ecomm.np.genevaecommerce.DTO.UserDTO;
 import com.ecomm.np.genevaecommerce.Enumerations.Role;
 import com.ecomm.np.genevaecommerce.Models.Items;
@@ -11,11 +12,13 @@ import com.ecomm.np.genevaecommerce.Repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -60,9 +63,14 @@ public class UserService {
         return "User Not found";
     }
 
-    public Set<Items> getCartItems(int user_id){
+    public Set<ItemDisplayDTO> getCartItems(int user_id) throws UsernameNotFoundException {
         Optional<UserModel> user = userRepository.findById(user_id);
-        return user.map(UserModel::getCartList).orElse(null);
+        if(user.isEmpty()){
+            throw new UsernameNotFoundException("User with this id not found");
+        }
+        Set<Items> userItems = user.get().getCartList();
+        return userItems.stream().map(ItemDisplayDTO::MapByItems).collect(Collectors.toSet());
+
     }
 
 
@@ -79,10 +87,14 @@ public class UserService {
         return "User Not found";
     }
 
-    public Set<Items> getWishListItems(int user_id){
-        Optional<UserModel> user = userRepository.findById(user_id);
-        return user.map(UserModel::getWishList).orElse(null);
-    }
+    public Set<ItemDisplayDTO> getWishListItems(int user_id) throws UsernameNotFoundException {
+            Optional<UserModel> user = userRepository.findById(user_id);
+            if(user.isEmpty()){
+                throw new UsernameNotFoundException("User with this id not found");
+            }
+            Set<Items> userItems = user.get().getWishList();
+            return userItems.stream().map(ItemDisplayDTO::MapByItems).collect(Collectors.toSet());
+        }
 
 }
 
