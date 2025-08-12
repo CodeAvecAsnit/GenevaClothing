@@ -2,6 +2,7 @@ package com.ecomm.np.genevaecommerce.Controllers;
 
 import com.ecomm.np.genevaecommerce.DTO.ItemDisplayDTO;
 import com.ecomm.np.genevaecommerce.DTO.UserDTO;
+import com.ecomm.np.genevaecommerce.DTO.WishListDTO;
 import com.ecomm.np.genevaecommerce.Models.UserModel;
 import com.ecomm.np.genevaecommerce.Security.CustomUser;
 import com.ecomm.np.genevaecommerce.Services.UserService;
@@ -41,7 +42,12 @@ public class UsersController {
 
     @PutMapping("/cart")
     public ResponseEntity<String> addToCart(@RequestParam int user_id,@RequestParam int item_id){
-        return ResponseEntity.ok(userService.itemToCart(user_id,item_id));
+        try {
+            return ResponseEntity.ok(userService.itemToCart(user_id, item_id));
+        }catch (Exception ex){
+            log.warn(ex.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
     @GetMapping("/cart/items")
     public ResponseEntity<Set<ItemDisplayDTO>> displayCart(@AuthenticationPrincipal CustomUser customUser) {
@@ -73,6 +79,22 @@ public class UsersController {
         } catch (Exception ex) {
             log.error("Unexpected error while retrieving cart items for User ID: {}", customUser.getId(), ex);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    @GetMapping("/wishlist-page/get-all")
+    public ResponseEntity<Set<WishListDTO>> getWishList(@AuthenticationPrincipal CustomUser customUser){
+        if (customUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        try{
+            return ResponseEntity.ok(userService.getWishListFromUser(customUser.getId()));
+        }
+        catch (UsernameNotFoundException ex){
+            return ResponseEntity.notFound().build();
+        }catch (Exception except){
+            return ResponseEntity.internalServerError().build();
         }
     }
 }
