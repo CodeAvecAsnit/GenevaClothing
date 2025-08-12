@@ -6,7 +6,7 @@ import com.ecomm.np.genevaecommerce.DTO.Checkers;
 import com.ecomm.np.genevaecommerce.Models.Items;
 import com.ecomm.np.genevaecommerce.Security.CustomUser;
 import com.ecomm.np.genevaecommerce.Services.ItemsService;
-
+import com.ecomm.np.genevaecommerce.Services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +15,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -27,8 +29,12 @@ public class ItemsController {
 
     private static Logger logger = LoggerFactory.getLogger(ItemsController.class);
 
+    private final ItemsService itemsService;
+
     @Autowired
-    private ItemsService itemsService;
+    public ItemsController(ItemsService itemsService) {
+        this.itemsService = itemsService;
+    }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<ItemDisplayDTO> getItemDisplayById(@PathVariable int id) {
@@ -71,7 +77,6 @@ public class ItemsController {
             return ResponseEntity.badRequest().build();
         }
     }
-
 
     @GetMapping("/get/latest")
     public ResponseEntity<List<ItemDisplayDTO>> latestItems() {
@@ -139,4 +144,6 @@ public class ItemsController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
 }
