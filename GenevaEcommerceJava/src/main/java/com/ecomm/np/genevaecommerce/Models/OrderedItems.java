@@ -9,6 +9,9 @@ public class OrderedItems {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int oId;
 
+    @Column(length = 5)
+    private String size;
+
     private int quantity;
 
     private  boolean isActive;
@@ -28,8 +31,9 @@ public class OrderedItems {
     public OrderedItems() {
     }
 
-    public OrderedItems(int oId, int quantity, boolean isActive, boolean isProcessed, Items item, OrderDetails orderDetails) {
+    public OrderedItems(int oId, String size, int quantity, boolean isActive, boolean isProcessed, Items item, OrderDetails orderDetails) {
         this.oId = oId;
+        this.size = size;
         this.quantity = quantity;
         this.isActive = isActive;
         this.isProcessed = isProcessed;
@@ -83,5 +87,13 @@ public class OrderedItems {
 
     public void setOrderDetails(OrderDetails orderDetails) {
         this.orderDetails = orderDetails;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 }
