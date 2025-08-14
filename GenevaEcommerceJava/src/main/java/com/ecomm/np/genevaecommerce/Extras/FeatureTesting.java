@@ -1,15 +1,10 @@
-package com.ecomm.np.genevaecommerce.Controllers;
+package com.ecomm.np.genevaecommerce.Extras;
 
-import com.ecomm.np.genevaecommerce.Enumerations.Role;
 import com.ecomm.np.genevaecommerce.Models.BestCollection;
-import com.ecomm.np.genevaecommerce.Models.RoleTable;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class FeatureTesting {
     public static void main(String[] args) throws IOException {

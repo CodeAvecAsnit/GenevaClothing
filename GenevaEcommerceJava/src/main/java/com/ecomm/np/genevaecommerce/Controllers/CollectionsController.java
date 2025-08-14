@@ -3,12 +3,16 @@ package com.ecomm.np.genevaecommerce.Controllers;
 import com.ecomm.np.genevaecommerce.DTO.CollectionAndItemsDTO;
 import com.ecomm.np.genevaecommerce.Models.BestCollection;
 import com.ecomm.np.genevaecommerce.Models.Collection;
+import com.ecomm.np.genevaecommerce.Security.CustomUser;
 import com.ecomm.np.genevaecommerce.Services.HomeService;
+import com.ecomm.np.genevaecommerce.Services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.io.IOException;
 
@@ -20,10 +24,12 @@ public class CollectionsController {
     private static final Logger log = LoggerFactory.getLogger(CollectionsController.class);
 
     private final HomeService homeService;
+    private final UserService userService;
 
     @Autowired
-    public CollectionsController(HomeService homeService) {
+    public CollectionsController(HomeService homeService, UserService userService) {
         this.homeService = homeService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -53,4 +59,8 @@ public class CollectionsController {
         }
     }
 
+    @GetMapping("/cart/count")
+    public ResponseEntity<Integer> findCartCount(@AuthenticationPrincipal CustomUser customUser){
+        return ResponseEntity.ok(userService.findNoOfItemsInCart(customUser.getId()));
+    }
 }

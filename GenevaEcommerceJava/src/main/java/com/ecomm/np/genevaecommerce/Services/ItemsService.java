@@ -1,5 +1,12 @@
 package com.ecomm.np.genevaecommerce.Services;
 
+
+<<<<<<< HEAD
+// your local main code
+        =======
+        // code from redis_implementation
+        >>>>>>> redis_implementation
+
 import com.ecomm.np.genevaecommerce.DTO.CollectionDTO;
 import com.ecomm.np.genevaecommerce.DTO.ItemDisplayDTO;
 import com.ecomm.np.genevaecommerce.DTO.ListItemDTO;
@@ -18,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -59,8 +65,8 @@ public class ItemsService {
         }
         Items items = optionalItem.get();
         return ItemDisplayDTO.MapByItems(items);
-
     }
+
     public Page<ItemDisplayDTO> findAll(Pageable pageable){
         Page<Items> page = itemsRepository.findAll(pageable);
         return page.map(ItemDisplayDTO::MapByItems);
@@ -185,6 +191,26 @@ public class ItemsService {
             return false;
         }
     }
+
+
+    public String removeFromCart(int userId,int itemId)throws Exception{
+        UserModel user = getUserOrThrow(userId);
+        Items item = getItemOrThrow(itemId);
+        Set<Items> itemSet = user.getCartList();
+        itemSet.remove(item);
+        userRepository.save(user);
+        return "Item removed from the cart";
+    }
+
+    public String removeFromWishList(int userId,int itemId)throws Exception{
+        UserModel user = getUserOrThrow(userId);
+        Items item = getItemOrThrow(itemId);
+        Set<Items> itemSet = user.getWishList();
+        itemSet.remove(item);
+        userRepository.save(user);
+        return "Item removed from the cart";
+    }
+
 
     public String addItemToCart(int userId, int itemId) throws Exception {
         UserModel user = getUserOrThrow(userId);
