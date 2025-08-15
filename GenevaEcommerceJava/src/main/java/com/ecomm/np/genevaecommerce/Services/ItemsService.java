@@ -1,11 +1,7 @@
 package com.ecomm.np.genevaecommerce.Services;
 
 
-<<<<<<< HEAD
-// your local main code
-        =======
-        // code from redis_implementation
-        >>>>>>> redis_implementation
+
 
 import com.ecomm.np.genevaecommerce.DTO.CollectionDTO;
 import com.ecomm.np.genevaecommerce.DTO.ItemDisplayDTO;

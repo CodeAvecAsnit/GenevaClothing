@@ -7,7 +7,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import static org.hibernate.sql.ast.Clause.FETCH;
 
 @Entity
 @Table (name = "ecommerce_users")

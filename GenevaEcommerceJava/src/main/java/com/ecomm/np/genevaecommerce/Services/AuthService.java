@@ -80,7 +80,6 @@ public class AuthService {
             if (checkPassword(loginDTO.getPassword(), user.getPassword())) {
                 String jwt = jwtUtils.generateJwtTokens(user);
                 logger.info("User {} logged in successfully", loginDTO.getEmail());
-
                 return new LoginResponseDTO(200, "Logged in successfully", jwt);
             } else {
                 logger.warn("Invalid login attempt for user: {}", loginDTO.getEmail());

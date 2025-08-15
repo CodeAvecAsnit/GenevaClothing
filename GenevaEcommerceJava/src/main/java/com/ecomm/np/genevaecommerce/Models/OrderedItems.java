@@ -1,6 +1,10 @@
 package com.ecomm.np.genevaecommerce.Models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -9,19 +13,22 @@ public class OrderedItems {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int oId;
 
-    @Column(length = 5)
-    private String size;
+    @UpdateTimestamp
+    private LocalDateTime orderInitiatedDate;
 
-    private int quantity;
+    @UpdateTimestamp
+    private LocalDateTime orderUpdatedDate;
 
-    private  boolean isActive;
+    private  boolean isMainActive;
 
     private boolean isProcessed;
 
+    private float totalPrice;
+
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name ="item_code")
-    private Items item;
+    @OneToMany
+    private List<OrderItemAudit> orderItemAuditList;
+
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
@@ -31,14 +38,23 @@ public class OrderedItems {
     public OrderedItems() {
     }
 
-    public OrderedItems(int oId, String size, int quantity, boolean isActive, boolean isProcessed, Items item, OrderDetails orderDetails) {
+    public OrderedItems(int oId, LocalDateTime orderInitiatedDate, LocalDateTime orderUpdatedDate, boolean isMainActive, boolean isProcessed, float totalPrice, List<OrderItemAudit> orderItemAuditList, OrderDetails orderDetails) {
         this.oId = oId;
-        this.size = size;
-        this.quantity = quantity;
-        this.isActive = isActive;
+        this.orderInitiatedDate = orderInitiatedDate;
+        this.orderUpdatedDate = orderUpdatedDate;
+        this.isMainActive = isMainActive;
         this.isProcessed = isProcessed;
-        this.item = item;
+        this.totalPrice = totalPrice;
+        this.orderItemAuditList = orderItemAuditList;
         this.orderDetails = orderDetails;
+    }
+
+    public List<OrderItemAudit> getOrderItemAuditList() {
+        return orderItemAuditList;
+    }
+
+    public void setOrderItemAuditList(List<OrderItemAudit> orderItemAuditList) {
+        this.orderItemAuditList = orderItemAuditList;
     }
 
     public int getoId() {
@@ -49,20 +65,13 @@ public class OrderedItems {
         this.oId = oId;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 
     public boolean isActive() {
-        return isActive;
+        return isMainActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setMainActive(boolean active) {
+        isMainActive = active;
     }
 
     public boolean isProcessed() {
@@ -73,12 +82,12 @@ public class OrderedItems {
         isProcessed = processed;
     }
 
-    public Items getItem() {
-        return item;
+    public float getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setItem(Items item) {
-        this.item = item;
+    public void setTotalPrice(float totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public OrderDetails getOrderDetails() {
@@ -89,11 +98,46 @@ public class OrderedItems {
         this.orderDetails = orderDetails;
     }
 
-    public String getSize() {
-        return size;
+    public LocalDateTime getOrderInitiatedDate() {
+        return orderInitiatedDate;
     }
 
-    public void setSize(String size) {
-        this.size = size;
+    public void setOrderInitiatedDate(LocalDateTime orderInitiatedDate) {
+        this.orderInitiatedDate = orderInitiatedDate;
+    }
+
+    public LocalDateTime getOrderUpdatedDate() {
+        return orderUpdatedDate;
+    }
+
+    public void setOrderUpdatedDate(LocalDateTime orderUpdatedDate) {
+        this.orderUpdatedDate = orderUpdatedDate;
+    }
+
+    public boolean findProcessed(){
+        boolean x = true;
+        for(OrderItemAudit oa : this.orderItemAuditList){
+            x=x && oa.isActive();
+        }
+        isProcessed = x;
+        return isProcessed;
+    }
+
+    public boolean findActive(){
+        boolean x = false;
+        for(OrderItemAudit oa : this.orderItemAuditList){
+            x= x || oa.isActive();
+        }
+        isMainActive = x;
+        return isMainActive;
+    }
+
+    public float findTotalOrderPrice(){
+        float sum = 0f;
+        for(OrderItemAudit oa : this.orderItemAuditList){
+            sum+=oa.setTotalPrice();
+        }
+        totalPrice = sum;
+        return totalPrice;
     }
 }

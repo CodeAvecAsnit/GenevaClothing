@@ -17,6 +17,8 @@ public class OrderDetails {
 
     private String province;
 
+    private String phoneNumber;
+
 //    private String country; Add only if international currently we are based in Nepal so i dont think this field is important.
 
     @JsonIgnore
@@ -27,6 +29,15 @@ public class OrderDetails {
     @OneToMany(mappedBy = "orderDetails")
     private List<OrderedItems> orderedItems;
 
+    public OrderDetails(long orderId, String deliveryLocation, String city, String province, String phoneNumber, UserModel user, List<OrderedItems> orderedItems) {
+        this.orderId = orderId;
+        this.deliveryLocation = deliveryLocation;
+        this.city = city;
+        this.province = province;
+        this.phoneNumber = phoneNumber;
+        this.user = user;
+        this.orderedItems = orderedItems;
+    }
 
     public OrderDetails(long orderId, String deliveryLocation, String city, String province, UserModel user, List<OrderedItems> orderedItems) {
         this.orderId = orderId;
@@ -88,7 +99,13 @@ public class OrderDetails {
         this.province = province;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public List<OrderedItems> getOrderedItems() {
         return orderedItems;
@@ -97,4 +114,6 @@ public class OrderDetails {
     public void setOrderedItems(List<OrderedItems> orderedItems) {
         this.orderedItems = orderedItems;
     }
+
+
 }

@@ -1,7 +1,9 @@
 package com.ecomm.np.genevaecommerce.Services;
 
 import com.ecomm.np.genevaecommerce.DTO.AddressDTO;
+import com.ecomm.np.genevaecommerce.DTO.ItemQuantity;
 import com.ecomm.np.genevaecommerce.DTO.OrderDTO;
+import com.ecomm.np.genevaecommerce.Extras.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.Models.Items;
 import com.ecomm.np.genevaecommerce.Models.OrderDetails;
 import com.ecomm.np.genevaecommerce.Models.OrderedItems;
@@ -15,7 +17,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -53,10 +58,8 @@ public class OrderService {
             orderDetailsRepository.save(orderDetails);
 
             OrderedItems orderedItem = new OrderedItems();
-            orderedItem.setQuantity(orderDTO.getQuantity());
             orderedItem.setProcessed(false);
-            orderedItem.setActive(true);
-            orderedItem.setItem(item);
+            orderedItem.setMainActive(true);
             orderedItem.setOrderDetails(orderDetails);
 
             return orderItemsRepository.save(orderedItem);
@@ -86,15 +89,45 @@ public class OrderService {
                 userModel.getCartList().remove(items);
                 OrderedItems item = new OrderedItems();
                 item.setOrderDetails(orderDetails);
-                item.setActive(true);
-                item.setItem(items);
+                item.setMainActive(true);
                 item.setProcessed(false);
-                item.setQuantity(1);
                 orderItemsRepository.save(item);
             }
             userRepository.save(userModel);
         }
     }
+
+    public float LiveCalculator2(List<ItemQuantity> iqList){
+        float sum = 0f;
+        try {
+            for (ItemQuantity iq : iqList) {
+                sum += itemsRepository.findTotalPrice(iq.getQuantity(), iq.getItemCode());
+            }
+            return sum;
+        }catch (Exception ex){
+            logger.warn(ex.getMessage());
+            throw new RuntimeException();
+        }
+    }
+
+    private Items findItemById(int id){
+        return itemsRepository.findById(id).orElseThrow(
+                ()->new ResourceNotFoundException("Cannot find item with the id :"+id)
+        );
+    }
+
+    public float LiveCalculator1(List<ItemQuantity> itemQuantities) {
+        float sum = 0;
+        for (ItemQuantity itemQuantity : itemQuantities) {
+            Items items = findItemById(itemQuantity.getItemCode());
+            if (items.getStock() > itemQuantity.getQuantity()) {
+                sum += items.getPrice() * itemQuantity.getQuantity();
+            }
+        }
+        return sum;
+    }
+
+
 
     public AddressDTO getAddress(int id)throws Exception{
         Optional<UserModel> optional = userRepository.findById(id);

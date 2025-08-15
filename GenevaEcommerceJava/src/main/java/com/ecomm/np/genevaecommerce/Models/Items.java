@@ -6,7 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,10 +44,6 @@ public class Items {
     @JsonIgnore
     private GenderTable genderTable;
 
-    @OneToMany(mappedBy = "item")
-    @JsonIgnore
-    private List<OrderedItems> orderedItems;
-
     @ManyToMany(mappedBy = "wishList")
     @JsonIgnore
     private Set<UserModel> wishedUsers;
@@ -69,7 +64,7 @@ public class Items {
         this.imageLink = imageLink;
     }
 
-    public Items(int itemCode, String itemName, String description, String imageLink, float price, Collection collection, int stock, LocalDateTime createdDate, LocalDateTime updatedDate, GenderTable genderTable, List<OrderedItems> orderedItems, Set<UserModel> wishedUsers, Set<UserModel> cartUsers) {
+    public Items(int itemCode, String itemName, String description, String imageLink, float price, Collection collection, int stock, LocalDateTime createdDate, LocalDateTime updatedDate, GenderTable genderTable, Set<UserModel> wishedUsers, Set<UserModel> cartUsers) {
         this.itemCode = itemCode;
         this.itemName = itemName;
         this.description = description;
@@ -80,7 +75,6 @@ public class Items {
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
         this.genderTable = genderTable;
-        this.orderedItems = orderedItems;
         this.wishedUsers = wishedUsers;
         this.cartUsers = cartUsers;
     }
@@ -147,14 +141,6 @@ public class Items {
 
     public void setUpdatedDate(LocalDateTime updatedDate) {
         this.updatedDate = updatedDate;
-    }
-
-    public List<OrderedItems> getOrderedItems() {
-        return orderedItems;
-    }
-
-    public void setOrderedItems(List<OrderedItems> orderedItems) {
-        this.orderedItems = orderedItems;
     }
 
     public GenderTable getGenderTable() {
