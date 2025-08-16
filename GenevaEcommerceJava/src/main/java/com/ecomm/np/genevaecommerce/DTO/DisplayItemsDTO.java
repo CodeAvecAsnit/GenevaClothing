@@ -25,7 +25,9 @@ public class DisplayItemsDTO {
         this.ItemName = item.getItemName();
         this.price = item.getPrice();
         this.quantity=quantity;
-        this.totalItemPrice = this.quantity*this.price;
+        float rawTotal = this.quantity * this.price;
+        this.totalItemPrice = (float) Math.ceil(rawTotal * 100) / 100;
+
     }
 
     public int getItemId() {

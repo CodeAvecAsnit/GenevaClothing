@@ -61,7 +61,6 @@ public class CheckoutService {
             if(item==null){
                 throw new ResourceNotFoundException("The Item was not found so cannot process the request");
             }
-
                 if(itemQuantity.getQuantity()==0){
                     itemQuantities.remove(itemQuantity);
                 }
@@ -74,6 +73,8 @@ public class CheckoutService {
         itemQuantityMap.put(code,itemQuantities);
         return code;
     }
+
+
 
 
     private Map<Integer,Items> getItemMap(List<ItemQuantity> itemQuantities){
@@ -102,6 +103,20 @@ public class CheckoutService {
         return sum;
     }
 
+    public int processSingleItem(int itemId,int quantity){
+        Items item = itemsRepository.findById(itemId).
+                orElseThrow(()->new ResourceNotFoundException("Server could not find the item"));
+        if(item.getStock()<quantity){
+            throw new OutOfStockException(item.getItemName()+" is out of stock.");
+        }
+        ItemQuantity iq = new ItemQuantity(itemId,quantity);
+        List<ItemQuantity> iqLists = new ArrayList<>();
+        iqLists.add(iq);
+        int code = secureRandom.nextInt(10000,1000000);
+        itemQuantityMap.put(code,iqLists);
+        return code;
+    }
+
     private UserModel findUserById(int userId){
         return userRepository.findById(userId).orElseThrow(()->
                 new UsernameNotFoundException("User was not found."));
@@ -110,7 +125,6 @@ public class CheckoutService {
     private List<DisplayItemsDTO> findItemDisplayList(List<ItemQuantity> itemQuantityList) {
         Map<Integer, Items> itemMap = getItemMap(itemQuantityList);
         List<DisplayItemsDTO> displayItems = new ArrayList<>();
-
         if (itemMap == null || itemMap.isEmpty()) {
             return displayItems;
         }

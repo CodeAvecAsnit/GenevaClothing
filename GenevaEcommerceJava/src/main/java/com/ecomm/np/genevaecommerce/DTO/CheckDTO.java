@@ -1,5 +1,9 @@
 package com.ecomm.np.genevaecommerce.DTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 public class CheckDTO {
@@ -8,13 +12,13 @@ public class CheckDTO {
     private String province;
     private String phoneNumber;
     private List<DisplayItemsDTO> displayItemsDTOList;
-    private float totalOrderPrice;
+    private BigDecimal totalOrderPrice;
 
 
     public CheckDTO() {
     }
 
-    public CheckDTO(String deliveryLocation, String city, String province, String phoneNumber, List<DisplayItemsDTO> displayItemsDTOList, float totalOrderPrice) {
+    public CheckDTO(String deliveryLocation, String city, String province, String phoneNumber, List<DisplayItemsDTO> displayItemsDTOList, BigDecimal totalOrderPrice) {
         this.deliveryLocation = deliveryLocation;
         this.city = city;
         this.province = province;
@@ -63,16 +67,22 @@ public class CheckDTO {
         this.displayItemsDTOList = displayItemsDTOList;
     }
 
-    public float getTotalOrderPrice() {
+    public BigDecimal getTotalOrderPrice() {
         return totalOrderPrice;
     }
 
-    public void setTotalOrderPrice(float totalOrderPrice) {
+    public void setTotalOrderPrice(BigDecimal totalOrderPrice) {
         this.totalOrderPrice = totalOrderPrice;
     }
 
-    public float findTotalPrice(){
-        this.totalOrderPrice = displayItemsDTOList.stream().map(DisplayItemsDTO::getPrice).reduce(0f,Float::sum);
-        return this.totalOrderPrice;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#0.00")
+    public void findTotalPrice(){
+
+        BigDecimal total = displayItemsDTOList.stream()
+                .map(item -> BigDecimal.valueOf(item.getTotalItemPrice()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        this.totalOrderPrice = total.setScale(2, RoundingMode.CEILING);
+
     }
 }

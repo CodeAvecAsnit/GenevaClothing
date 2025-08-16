@@ -9,6 +9,7 @@ import com.ecomm.np.genevaecommerce.Models.OrderedItems;
 import com.ecomm.np.genevaecommerce.Security.CustomUser;
 import com.ecomm.np.genevaecommerce.Services.CheckoutService;
 import com.ecomm.np.genevaecommerce.Services.OrderService;
+import org.hibernate.validator.constraints.pl.REGON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +109,7 @@ public class OrderController {
     }
 
     @GetMapping("/checkout/price")
-    private ResponseEntity<BasicDT0> respondGivePrice(@RequestBody List<ItemQuantity> itemQuantityList) {
+    public ResponseEntity<BasicDT0> respondGivePrice(@RequestBody List<ItemQuantity> itemQuantityList) {
         try {
             float code = checkoutService.liveCalculator(itemQuantityList);
             BasicDT0 basicDT0 = new BasicDT0();
@@ -126,5 +127,23 @@ public class OrderController {
         }
     }
 
-
+    @PostMapping("/checkout/item")
+    public ResponseEntity<BasicDT0> orderSingleItem(
+                 @RequestParam int id,@RequestParam int quantity,
+                            @AuthenticationPrincipal CustomUser customUser)
+    {
+        try{
+            int code = checkoutService.processSingleItem(id,quantity);
+            code+=customUser.getId();
+            return ResponseEntity.ok(new BasicDT0(String.valueOf(code)));
+        }catch (ResourceNotFoundException rEx){
+            return ResponseEntity.status(404).body(new BasicDT0(rEx.getMessage()));
+        }catch (OutOfStockException oEx){
+            log.warn("Item with id : "+id+" is out of stock");
+            return ResponseEntity.status(409).body(new BasicDT0(oEx.getMessage()));
+        }catch (Exception ex){
+            log.error(ex.getMessage());
+            return ResponseEntity.internalServerError().body(new BasicDT0("Some Internal Error occurred."));
+        }
+    }
 }
