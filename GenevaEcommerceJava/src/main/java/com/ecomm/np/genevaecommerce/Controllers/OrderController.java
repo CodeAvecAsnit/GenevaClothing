@@ -9,7 +9,7 @@ import com.ecomm.np.genevaecommerce.Models.OrderedItems;
 import com.ecomm.np.genevaecommerce.Security.CustomUser;
 import com.ecomm.np.genevaecommerce.Services.CheckoutService;
 import com.ecomm.np.genevaecommerce.Services.OrderService;
-import org.hibernate.validator.constraints.pl.REGON;
+import jakarta.validation.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,11 +129,11 @@ public class OrderController {
 
     @PostMapping("/checkout/item")
     public ResponseEntity<BasicDT0> orderSingleItem(
-                 @RequestParam int id,@RequestParam int quantity,
-                            @AuthenticationPrincipal CustomUser customUser)
+            @RequestParam int id, @RequestParam int quantity, @NotBlank@RequestParam String size,
+            @AuthenticationPrincipal CustomUser customUser)
     {
         try{
-            int code = checkoutService.processSingleItem(id,quantity);
+            int code = checkoutService.processSingleItem(id,quantity,size);
             code+=customUser.getId();
             return ResponseEntity.ok(new BasicDT0(String.valueOf(code)));
         }catch (ResourceNotFoundException rEx){
@@ -145,5 +145,9 @@ public class OrderController {
             log.error(ex.getMessage());
             return ResponseEntity.internalServerError().body(new BasicDT0("Some Internal Error occurred."));
         }
+    }
+
+    public ResponseEntity<BasicDT0> registerOrder(){
+        return null;
     }
 }

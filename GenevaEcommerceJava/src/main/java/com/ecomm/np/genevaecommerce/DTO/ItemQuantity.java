@@ -2,10 +2,14 @@ package com.ecomm.np.genevaecommerce.DTO;
 
 public class ItemQuantity {
     private int itemCode;
+    private String size;
     private int quantity;
 
-    public ItemQuantity(int itemCode, int quantity) {
+
+    public ItemQuantity(){}
+    public ItemQuantity(int itemCode, String size, int quantity) {
         this.itemCode = itemCode;
+        this.size = size;
         this.quantity = quantity;
     }
 
@@ -23,5 +27,13 @@ public class ItemQuantity {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 }

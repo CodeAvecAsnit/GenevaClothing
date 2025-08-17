@@ -3,6 +3,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,7 +25,8 @@ public class OrderedItems {
 
     private boolean isProcessed;
 
-    private float totalPrice;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal totalPrice;
 
     @JsonIgnore
     @OneToMany
@@ -38,7 +41,7 @@ public class OrderedItems {
     public OrderedItems() {
     }
 
-    public OrderedItems(int oId, LocalDateTime orderInitiatedDate, LocalDateTime orderUpdatedDate, boolean isMainActive, boolean isProcessed, float totalPrice, List<OrderItemAudit> orderItemAuditList, OrderDetails orderDetails) {
+    public OrderedItems(int oId, LocalDateTime orderInitiatedDate, LocalDateTime orderUpdatedDate, boolean isMainActive, boolean isProcessed, BigDecimal totalPrice, List<OrderItemAudit> orderItemAuditList, OrderDetails orderDetails) {
         this.oId = oId;
         this.orderInitiatedDate = orderInitiatedDate;
         this.orderUpdatedDate = orderUpdatedDate;
@@ -82,11 +85,11 @@ public class OrderedItems {
         isProcessed = processed;
     }
 
-    public float getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(float totalPrice) {
+    public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
 
@@ -132,12 +135,17 @@ public class OrderedItems {
         return isMainActive;
     }
 
-    public float findTotalOrderPrice(){
-        float sum = 0f;
-        for(OrderItemAudit oa : this.orderItemAuditList){
-            sum+=oa.setTotalPrice();
+    public BigDecimal findTotalOrderPrice() {
+        BigDecimal sum = BigDecimal.ZERO;
+
+        for (OrderItemAudit oa : this.orderItemAuditList) {
+            float itemTotal = oa.setTotalPrice();
+            BigDecimal itemTotalBD = BigDecimal.valueOf(itemTotal);
+            sum = sum.add(itemTotalBD);
         }
-        totalPrice = sum;
+
+        sum = sum.setScale(2, RoundingMode.HALF_UP);
+        this.totalPrice = sum;
         return totalPrice;
     }
 }

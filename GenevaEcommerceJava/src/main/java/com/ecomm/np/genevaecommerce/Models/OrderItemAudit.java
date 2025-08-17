@@ -3,6 +3,8 @@ package com.ecomm.np.genevaecommerce.Models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 public class OrderItemAudit {
 

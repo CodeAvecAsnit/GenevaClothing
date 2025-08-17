@@ -7,14 +7,12 @@ import com.ecomm.np.genevaecommerce.DTO.ItemQuantity;
 import com.ecomm.np.genevaecommerce.Extras.CodeErrorException;
 import com.ecomm.np.genevaecommerce.Extras.OutOfStockException;
 import com.ecomm.np.genevaecommerce.Extras.ResourceNotFoundException;
-import com.ecomm.np.genevaecommerce.Models.Items;
-import com.ecomm.np.genevaecommerce.Models.OrderDetails;
-import com.ecomm.np.genevaecommerce.Models.UserModel;
-import com.ecomm.np.genevaecommerce.Repositories.ItemsRepository;
-import com.ecomm.np.genevaecommerce.Repositories.UserRepository;
+import com.ecomm.np.genevaecommerce.Models.*;
+import com.ecomm.np.genevaecommerce.Repositories.*;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import jakarta.annotation.PostConstruct;
+import org.aspectj.weaver.ast.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,19 +31,29 @@ import java.util.stream.Collectors;
 public class CheckoutService {
 
     private final Logger logger = LoggerFactory.getLogger(CheckoutService.class);
+
     private final UserRepository userRepository;
 
     private final ItemsRepository itemsRepository;
+
+    private final OrderDetailsRepository orderDetailsRepository;
 
     private Cache<Integer,List<ItemQuantity>> itemQuantityMap;
 
     private final SecureRandom secureRandom;
 
+    private final OrderItemAuditRepository orderItemAuditRepository;
+
+    private final OrderItemsRepository orderItemsRepository;
+
     @Autowired
-    public CheckoutService(ItemsRepository itemsRepository, SecureRandom secureRandom, UserRepository userRepository){
+    public CheckoutService(ItemsRepository itemsRepository, SecureRandom secureRandom, UserRepository userRepository, OrderItemAuditRepository orderItemAuditRepository, OrderDetailsRepository orderDetailsRepository, OrderItemsRepository orderItemsRepository){
         this.itemsRepository = itemsRepository;
         this.secureRandom = secureRandom;
         this.userRepository = userRepository;
+        this.orderItemAuditRepository = orderItemAuditRepository;
+        this.orderDetailsRepository = orderDetailsRepository;
+        this.orderItemsRepository = orderItemsRepository;
     }
 
     @PostConstruct
@@ -103,13 +111,13 @@ public class CheckoutService {
         return sum;
     }
 
-    public int processSingleItem(int itemId,int quantity){
+    public int processSingleItem(int itemId,int quantity,String size){
         Items item = itemsRepository.findById(itemId).
                 orElseThrow(()->new ResourceNotFoundException("Server could not find the item"));
         if(item.getStock()<quantity){
             throw new OutOfStockException(item.getItemName()+" is out of stock.");
         }
-        ItemQuantity iq = new ItemQuantity(itemId,quantity);
+        ItemQuantity iq = new ItemQuantity(itemId,size,quantity);
         List<ItemQuantity> iqLists = new ArrayList<>();
         iqLists.add(iq);
         int code = secureRandom.nextInt(10000,1000000);
@@ -136,7 +144,7 @@ public class CheckoutService {
             if (item.getStock() < iq.getQuantity()) {
                 throw new OutOfStockException(item.getItemName() + " is out of stock");
             }
-            displayItems.add(new DisplayItemsDTO(item, iq.getQuantity()));
+            displayItems.add(new DisplayItemsDTO(item, iq.getQuantity(),iq.getSize()));
         }
         return displayItems;
     }
@@ -165,5 +173,59 @@ public class CheckoutService {
         checkDTO.setDisplayItemsDTOList(findItemDisplayList(iqList));
         checkDTO.findTotalPrice();
         return checkDTO;
+    }
+
+    public boolean Checkout(CheckDTO checkDTO,int userId){
+        UserModel userModel = userRepository.findById(userId).orElseThrow(()->new UsernameNotFoundException("User not found"));
+        try {
+            OrderDetails od = userModel.getUserOrders();
+            if (od == null) {
+                od = new OrderDetails();
+                od.setUser(userModel);
+            }
+            od.setProvince(checkDTO.getProvince());
+            od.setPhoneNumber(checkDTO.getPhoneNumber());
+            od.setCity(checkDTO.getCity());
+            od.setDeliveryLocation(checkDTO.getDeliveryLocation());
+
+            OrderedItems orderedItems = new OrderedItems();
+            orderedItems.setMainActive(true);
+            orderedItems.setOrderDetails(od);
+            orderedItems.setProcessed(false);
+            orderedItems.setTotalPrice(checkDTO.findTotalPrice());
+            Map<Integer, Items> itemsMap = findAlInBatch(checkDTO.getDisplayItemsDTOList());
+            List<OrderItemAudit> orderItemAudits = new ArrayList<>();
+            for (DisplayItemsDTO dto : checkDTO.getDisplayItemsDTOList()) {
+                Items item = itemsMap.get(dto.getItemId());
+                OrderItemAudit orderItemAudit = new OrderItemAudit();
+                orderItemAudit.setActive(true);
+                orderItemAudit.setPacked(false);
+                orderedItems.setProcessed(false);
+                orderItemAudit.setQuantity(dto.getQuantity());
+                orderItemAudit.setTotalPrice();
+                orderItemAudit.setItem(item);
+                orderItemAudit.setOrderedItems(orderedItems);
+                orderItemAudits.add(orderItemAudit);
+            }
+            orderedItems.setOrderItemAuditList(orderItemAudits);
+            List<OrderedItems> oList = od.getOrderedItems();
+            if (oList == null) {
+                oList = new ArrayList<>();
+            }
+            oList.add(orderedItems);
+            orderItemAuditRepository.saveAll(orderItemAudits);
+            orderDetailsRepository.save(od);
+            orderItemsRepository.save(orderedItems);
+            return true;
+
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+            return false;
+        }
+    }
+
+    private Map<Integer,Items> findAlInBatch(List<DisplayItemsDTO> dtoList){
+        List<Integer> idList =  dtoList.stream().map(DisplayItemsDTO::getItemId).toList();
+        return itemsRepository.findAllById(idList).stream().collect(Collectors.toMap(Items::getItemCode,m->m));
     }
 }

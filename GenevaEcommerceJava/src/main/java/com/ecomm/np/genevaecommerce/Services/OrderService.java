@@ -18,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -46,7 +44,6 @@ public class OrderService {
 
         if (userOpt.isPresent() && itemOpt.isPresent()) {
             UserModel user = userOpt.get();
-            Items item = itemOpt.get();
 
             OrderDetails orderDetails = user.getUserOrders();
             if (orderDetails == null) {

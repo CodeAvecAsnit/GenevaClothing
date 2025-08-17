@@ -76,7 +76,7 @@ public class CheckDTO {
     }
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#0.00")
-    public void findTotalPrice(){
+    public BigDecimal findTotalPrice(){
 
         BigDecimal total = displayItemsDTOList.stream()
                 .map(item -> BigDecimal.valueOf(item.getTotalItemPrice()))
@@ -84,5 +84,6 @@ public class CheckDTO {
 
         this.totalOrderPrice = total.setScale(2, RoundingMode.CEILING);
 
+        return this.totalOrderPrice;
     }
 }
