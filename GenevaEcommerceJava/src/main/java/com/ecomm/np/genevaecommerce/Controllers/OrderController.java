@@ -18,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.DocFlavor;
 import java.util.List;
 
 
@@ -147,7 +148,14 @@ public class OrderController {
         }
     }
 
-    public ResponseEntity<BasicDT0> registerOrder(){
-        return null;
+    @PostMapping("/checkout/register")
+    public ResponseEntity<BasicDT0> registerOrder(@RequestBody CheckDTO dto,@AuthenticationPrincipal CustomUser customUser){
+        try{
+            if (checkoutService.checkoutOrder(dto,customUser.getId())) {
+                return ResponseEntity.ok(new BasicDT0("Success"));
+            }else return ResponseEntity.badRequest().build();
+        }catch (Exception ex){
+            return ResponseEntity.internalServerError().body(new BasicDT0("Something went wrong"));
+        }
     }
 }

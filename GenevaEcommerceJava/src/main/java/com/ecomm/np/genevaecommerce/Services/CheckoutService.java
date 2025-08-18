@@ -175,7 +175,7 @@ public class CheckoutService {
         return checkDTO;
     }
 
-    public boolean Checkout(CheckDTO checkDTO,int userId){
+    public boolean checkoutOrder(CheckDTO checkDTO,int userId){
         UserModel userModel = userRepository.findById(userId).orElseThrow(()->new UsernameNotFoundException("User not found"));
         try {
             OrderDetails od = userModel.getUserOrders();
@@ -202,8 +202,8 @@ public class CheckoutService {
                 orderItemAudit.setPacked(false);
                 orderedItems.setProcessed(false);
                 orderItemAudit.setQuantity(dto.getQuantity());
-                orderItemAudit.setTotalPrice();
                 orderItemAudit.setItem(item);
+                orderItemAudit.setTotalPrice();
                 orderItemAudit.setOrderedItems(orderedItems);
                 orderItemAudits.add(orderItemAudit);
             }
