@@ -2,6 +2,7 @@ package com.ecomm.np.genevaecommerce.Services;
 
 
 import com.ecomm.np.genevaecommerce.DTO.CheckDTO;
+import com.ecomm.np.genevaecommerce.DTO.CheckoutIncDTO;
 import com.ecomm.np.genevaecommerce.DTO.DisplayItemsDTO;
 import com.ecomm.np.genevaecommerce.DTO.ItemQuantity;
 import com.ecomm.np.genevaecommerce.Extras.CodeErrorException;
@@ -12,7 +13,6 @@ import com.ecomm.np.genevaecommerce.Repositories.*;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import jakarta.annotation.PostConstruct;
-import org.aspectj.weaver.ast.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 
+import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -197,27 +198,25 @@ public class CheckoutService {
             List<OrderItemAudit> orderItemAudits = new ArrayList<>();
             for (DisplayItemsDTO dto : checkDTO.getDisplayItemsDTOList()) {
                 Items item = itemsMap.get(dto.getItemId());
-                OrderItemAudit orderItemAudit = new OrderItemAudit();
-                orderItemAudit.setActive(true);
-                orderItemAudit.setPacked(false);
-                orderedItems.setProcessed(false);
-                orderItemAudit.setQuantity(dto.getQuantity());
-                orderItemAudit.setItem(item);
-                orderItemAudit.setTotalPrice();
-                orderItemAudit.setOrderedItems(orderedItems);
-                orderItemAudits.add(orderItemAudit);
+                OrderItemAudit audit = new OrderItemAudit();
+                audit.setActive(true);
+                audit.setPacked(false);
+                audit.setQuantity(dto.getQuantity());
+                audit.setItem(item);
+                audit.setTotalPrice();
+                audit.setOrderedItems(orderedItems);
+                orderItemAudits.add(audit);
             }
-            orderedItems.setOrderItemAuditList(orderItemAudits);
             List<OrderedItems> oList = od.getOrderedItems();
             if (oList == null) {
                 oList = new ArrayList<>();
             }
             oList.add(orderedItems);
-            orderItemAuditRepository.saveAll(orderItemAudits);
-            orderDetailsRepository.save(od);
+            OrderDetails orderDetails = orderDetailsRepository.save(od);
+            orderedItems.setOrderDetails(orderDetails);
             orderItemsRepository.save(orderedItems);
+            orderItemAuditRepository.saveAll(orderItemAudits);
             return true;
-
         }catch (Exception ex){
             logger.error(ex.getMessage());
             return false;
@@ -227,5 +226,56 @@ public class CheckoutService {
     private Map<Integer,Items> findAlInBatch(List<DisplayItemsDTO> dtoList){
         List<Integer> idList =  dtoList.stream().map(DisplayItemsDTO::getItemId).toList();
         return itemsRepository.findAllById(idList).stream().collect(Collectors.toMap(Items::getItemCode,m->m));
+    }
+
+    public boolean checkoutOrder1(CheckoutIncDTO checkDTO, int userId){
+        UserModel userModel = userRepository.findById(userId).orElseThrow(()->new UsernameNotFoundException("User not found"));
+        try {
+            OrderDetails od = userModel.getUserOrders();
+            if (od == null) {
+                od = new OrderDetails();
+                od.setUser(userModel);
+            }
+            od.setProvince(checkDTO.getProvince());
+            od.setPhoneNumber(checkDTO.getPhoneNumber());
+            od.setCity(checkDTO.getCity());
+            od.setDeliveryLocation(checkDTO.getDeliveryLocation());
+
+            OrderedItems orderedItems = new OrderedItems();
+            orderedItems.setMainActive(true);
+            orderedItems.setOrderDetails(od);
+            orderedItems.setProcessed(false);
+            Map<Integer, Items> itemsMap = getItemMap(checkDTO.getQuantities());
+            List<OrderItemAudit> orderItemAudits = new ArrayList<>();
+        for (ItemQuantity dto : checkDTO.getQuantities()) {
+                Items item = itemsMap.get(dto.getItemCode());
+                OrderItemAudit audit = new OrderItemAudit();
+                audit.setActive(true);
+                audit.setPacked(false);
+                audit.setSize(dto.getSize());
+                audit.setQuantity(dto.getQuantity());
+                audit.setItem(item);
+                audit.setTotalPrice();
+                audit.setOrderedItems(orderedItems);
+                orderItemAudits.add(audit);
+            }
+            orderedItems.setPaidPrice(BigDecimal.valueOf(0));
+            List<OrderedItems> oList = od.getOrderedItems();
+            if (oList == null) {
+                oList = new ArrayList<>();
+            }
+            oList.add(orderedItems);
+            OrderDetails orderDetails = orderDetailsRepository.save(od);
+            orderedItems.setOrderDetails(orderDetails);
+            OrderedItems oi = orderItemsRepository.save(orderedItems);
+            List<OrderItemAudit> orderAuditL = orderItemAuditRepository.saveAll(orderItemAudits);
+            oi.setOrderItemAuditList(orderAuditL);
+            oi.findTotalOrderPrice();
+            orderItemsRepository.save(oi);
+            return true;
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+            return false;
+        }
     }
 }

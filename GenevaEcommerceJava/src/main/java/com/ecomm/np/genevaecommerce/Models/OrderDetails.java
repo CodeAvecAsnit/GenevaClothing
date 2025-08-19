@@ -2,6 +2,10 @@ package com.ecomm.np.genevaecommerce.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,7 +31,7 @@ public class OrderDetails {
     private UserModel user;
 
     @OneToMany(mappedBy = "orderDetails")
-    private List<OrderedItems> orderedItems;
+    private List<OrderedItems> orderedItems = new ArrayList<>();
 
     public OrderDetails(long orderId, String deliveryLocation, String city, String province, String phoneNumber, UserModel user, List<OrderedItems> orderedItems) {
         this.orderId = orderId;
@@ -114,6 +118,4 @@ public class OrderDetails {
     public void setOrderedItems(List<OrderedItems> orderedItems) {
         this.orderedItems = orderedItems;
     }
-
-
 }

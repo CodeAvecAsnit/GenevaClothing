@@ -149,9 +149,9 @@ public class OrderController {
     }
 
     @PostMapping("/checkout/register")
-    public ResponseEntity<BasicDT0> registerOrder(@RequestBody CheckDTO dto,@AuthenticationPrincipal CustomUser customUser){
+    public ResponseEntity<BasicDT0> registerOrder(@RequestBody CheckoutIncDTO dto,@AuthenticationPrincipal CustomUser customUser){
         try{
-            if (checkoutService.checkoutOrder(dto,customUser.getId())) {
+            if (checkoutService.checkoutOrder1(dto,customUser.getId())) {
                 return ResponseEntity.ok(new BasicDT0("Success"));
             }else return ResponseEntity.badRequest().build();
         }catch (Exception ex){

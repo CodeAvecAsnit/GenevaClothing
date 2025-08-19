@@ -20,25 +20,28 @@ public class OrderItemAudit {
 
     private int quantity;
 
+    private String size;
+
     private float itemPrice;
 
     @ManyToOne
     private OrderedItems orderedItems;
 
     @JsonIgnore
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "item_code")
     private Items items;
 
-    public OrderItemAudit(int orderTracerCode, boolean isActive, boolean isPacked, boolean isDelivered, int quantity, float itemPrice, OrderedItems orderedItems, Items item) {
+    public OrderItemAudit(int orderTracerCode, boolean isActive, boolean isPacked, boolean isDelivered, int quantity, String size, float itemPrice, OrderedItems orderedItems, Items items) {
         this.orderTracerCode = orderTracerCode;
         this.isActive = isActive;
         this.isPacked = isPacked;
         this.isDelivered = isDelivered;
         this.quantity = quantity;
+        this.size = size;
         this.itemPrice = itemPrice;
         this.orderedItems = orderedItems;
-        this.items = item;
+        this.items = items;
     }
 
     public OrderItemAudit() {
@@ -75,6 +78,22 @@ public class OrderItemAudit {
 
     public void setDelivered(boolean delivered) {
         isDelivered = delivered;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public Items getItems() {
+        return items;
+    }
+
+    public void setItems(Items items) {
+        this.items = items;
     }
 
     public int getQuantity() {

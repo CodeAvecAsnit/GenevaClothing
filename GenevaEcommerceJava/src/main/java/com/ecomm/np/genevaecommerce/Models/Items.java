@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -52,6 +53,9 @@ public class Items {
     @JsonIgnore
     private Set<UserModel> cartUsers;
 
+    @OneToMany
+    private List<OrderItemAudit> orderItemAudit;
+
 
 
 
@@ -64,7 +68,7 @@ public class Items {
         this.imageLink = imageLink;
     }
 
-    public Items(int itemCode, String itemName, String description, String imageLink, float price, Collection collection, int stock, LocalDateTime createdDate, LocalDateTime updatedDate, GenderTable genderTable, Set<UserModel> wishedUsers, Set<UserModel> cartUsers) {
+    public Items(int itemCode, String itemName, String description, String imageLink, float price, Collection collection, int stock, LocalDateTime createdDate, LocalDateTime updatedDate, GenderTable genderTable, Set<UserModel> wishedUsers, Set<UserModel> cartUsers, List<OrderItemAudit> orderItemAudit) {
         this.itemCode = itemCode;
         this.itemName = itemName;
         this.description = description;
@@ -77,6 +81,7 @@ public class Items {
         this.genderTable = genderTable;
         this.wishedUsers = wishedUsers;
         this.cartUsers = cartUsers;
+        this.orderItemAudit = orderItemAudit;
     }
 
     public int getItemCode() {
@@ -173,5 +178,13 @@ public class Items {
 
     public void setGenderTable(GenderTable genderTable) {
         this.genderTable = genderTable;
+    }
+
+    public List<OrderItemAudit> getOrderItemAudit() {
+        return orderItemAudit;
+    }
+
+    public void setOrderItemAudit(List<OrderItemAudit> orderItemAudit) {
+        this.orderItemAudit = orderItemAudit;
     }
 }

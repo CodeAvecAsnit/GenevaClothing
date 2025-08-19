@@ -6,6 +6,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,9 +29,13 @@ public class OrderedItems {
     @Column(precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal paidPrice;
+
     @JsonIgnore
     @OneToMany
-    private List<OrderItemAudit> orderItemAuditList;
+    private List<OrderItemAudit> orderItemAuditList = new ArrayList<>();
 
 
     @JsonIgnore
@@ -41,13 +46,14 @@ public class OrderedItems {
     public OrderedItems() {
     }
 
-    public OrderedItems(int oId, LocalDateTime orderInitiatedDate, LocalDateTime orderUpdatedDate, boolean isMainActive, boolean isProcessed, BigDecimal totalPrice, List<OrderItemAudit> orderItemAuditList, OrderDetails orderDetails) {
+    public OrderedItems(int oId, LocalDateTime orderInitiatedDate, LocalDateTime orderUpdatedDate, boolean isMainActive, boolean isProcessed, BigDecimal totalPrice, BigDecimal paidPrice, List<OrderItemAudit> orderItemAuditList, OrderDetails orderDetails) {
         this.oId = oId;
         this.orderInitiatedDate = orderInitiatedDate;
         this.orderUpdatedDate = orderUpdatedDate;
         this.isMainActive = isMainActive;
         this.isProcessed = isProcessed;
         this.totalPrice = totalPrice;
+        this.paidPrice = paidPrice;
         this.orderItemAuditList = orderItemAuditList;
         this.orderDetails = orderDetails;
     }
@@ -135,7 +141,7 @@ public class OrderedItems {
         return isMainActive;
     }
 
-    public BigDecimal findTotalOrderPrice() {
+    public void findTotalOrderPrice() {
         BigDecimal sum = BigDecimal.ZERO;
 
         for (OrderItemAudit oa : this.orderItemAuditList) {
@@ -143,9 +149,19 @@ public class OrderedItems {
             BigDecimal itemTotalBD = BigDecimal.valueOf(itemTotal);
             sum = sum.add(itemTotalBD);
         }
-
         sum = sum.setScale(2, RoundingMode.HALF_UP);
         this.totalPrice = sum;
-        return totalPrice;
+    }
+
+    public boolean isMainActive() {
+        return isMainActive;
+    }
+
+    public BigDecimal getPaidPrice() {
+        return paidPrice;
+    }
+
+    public void setPaidPrice(BigDecimal paidPrice) {
+        this.paidPrice = paidPrice;
     }
 }
