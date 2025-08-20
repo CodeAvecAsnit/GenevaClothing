@@ -34,7 +34,7 @@ public class OrderedItems {
     private BigDecimal paidPrice;
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany(mappedBy = "orderedItems", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItemAudit> orderItemAuditList = new ArrayList<>();
 
 

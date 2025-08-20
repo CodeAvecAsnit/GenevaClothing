@@ -86,4 +86,16 @@ public class CheckDTO {
 
         return this.totalOrderPrice;
     }
+
+    @Override
+    public String toString() {
+        return "CheckDTO{" +
+                "deliveryLocation='" + deliveryLocation + '\'' +
+                ", city='" + city + '\'' +
+                ", province='" + province + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", displayItemsDTOList=" + displayItemsDTOList.toString() +
+                ", totalOrderPrice=" + totalOrderPrice +
+                '}';
+    }
 }

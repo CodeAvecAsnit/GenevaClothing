@@ -3,7 +3,6 @@ package com.ecomm.np.genevaecommerce.Models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,8 @@ public class OrderDetails {
     @JoinColumn(name = "user_id")
     private UserModel user;
 
-    @OneToMany(mappedBy = "orderDetails")
+    @OneToMany(mappedBy = "orderDetails",cascade = CascadeType.ALL,orphanRemoval = true)
+
     private List<OrderedItems> orderedItems = new ArrayList<>();
 
     public OrderDetails(long orderId, String deliveryLocation, String city, String province, String phoneNumber, UserModel user, List<OrderedItems> orderedItems) {

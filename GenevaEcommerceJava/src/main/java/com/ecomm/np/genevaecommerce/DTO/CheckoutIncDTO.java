@@ -7,13 +7,18 @@ public class CheckoutIncDTO {
     private String city;
     private String province;
     private String phoneNumber;
+    private String paymentMethod;
     private List<ItemQuantity> quantities;
 
-    public CheckoutIncDTO(String deliveryLocation, String city, String province, String phoneNumber, List<ItemQuantity> quantities) {
+    public CheckoutIncDTO() {
+    }
+
+    public CheckoutIncDTO(String deliveryLocation, String city, String province, String phoneNumber, String paymentMethod, List<ItemQuantity> quantities) {
         this.deliveryLocation = deliveryLocation;
         this.city = city;
         this.province = province;
         this.phoneNumber = phoneNumber;
+        this.paymentMethod = paymentMethod;
         this.quantities = quantities;
     }
 
@@ -55,5 +60,13 @@ public class CheckoutIncDTO {
 
     public void setQuantities(List<ItemQuantity> quantities) {
         this.quantities = quantities;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }

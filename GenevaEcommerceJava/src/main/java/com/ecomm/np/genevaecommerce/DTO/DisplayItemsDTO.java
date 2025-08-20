@@ -3,7 +3,7 @@ package com.ecomm.np.genevaecommerce.DTO;
 import com.ecomm.np.genevaecommerce.Models.Items;
 
 public class DisplayItemsDTO {
-    private int itemId;
+    private int itemCode;
     private String ItemName;
     private String imageLink;
     private float price;
@@ -14,8 +14,8 @@ public class DisplayItemsDTO {
     public DisplayItemsDTO() {
     }
 
-    public DisplayItemsDTO(int itemId, String itemName, String imageLink, float price, int quantity, String size, float totalItemPrice) {
-        this.itemId = itemId;
+    public DisplayItemsDTO(int itemCode, String itemName, String imageLink, float price, int quantity, String size, float totalItemPrice) {
+        this.itemCode = itemCode;
         ItemName = itemName;
         this.imageLink = imageLink;
         this.price = price;
@@ -26,7 +26,7 @@ public class DisplayItemsDTO {
     }
 
     public DisplayItemsDTO(Items item, int quantity, String size){
-        this.itemId=item.getItemCode();
+        this.itemCode=item.getItemCode();
         this.ItemName = item.getItemName();
         this.price = item.getPrice();
         this.quantity=quantity;
@@ -37,12 +37,12 @@ public class DisplayItemsDTO {
 
     }
 
-    public int getItemId() {
-        return itemId;
+    public int getItemCode() {
+        return itemCode;
     }
 
-    public void setItemId(int itemId) {
-        this.itemId = itemId;
+    public void setItemCode(int itemCode) {
+        this.itemCode = itemCode;
     }
 
     public String getItemName() {
