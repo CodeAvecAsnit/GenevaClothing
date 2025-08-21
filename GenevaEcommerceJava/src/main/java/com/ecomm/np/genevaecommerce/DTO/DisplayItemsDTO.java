@@ -1,6 +1,8 @@
 package com.ecomm.np.genevaecommerce.DTO;
 
 import com.ecomm.np.genevaecommerce.Models.Items;
+import com.ecomm.np.genevaecommerce.Models.OrderItemAudit;
+import com.ecomm.np.genevaecommerce.Models.OrderedItems;
 
 public class DisplayItemsDTO {
     private int itemCode;
@@ -91,5 +93,17 @@ public class DisplayItemsDTO {
 
     public void setImageLink(String imageLink) {
         this.imageLink = imageLink;
+    }
+
+    public static DisplayItemsDTO buildFromOrderAudit(OrderItemAudit audit){
+        DisplayItemsDTO dto = new DisplayItemsDTO();
+        Items item = audit.getItem();
+        dto.setImageLink(item.getImageLink());
+        dto.setItemCode(item.getItemCode());
+        dto.setPrice(item.getPrice());
+        dto.setQuantity(audit.getQuantity());
+        dto.setSize(audit.getSize());
+        dto.setTotalItemPrice(audit.getItemPrice());
+        return dto;
     }
 }

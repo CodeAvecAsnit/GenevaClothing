@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.Services;
+package com.ecomm.np.genevaecommerce.services;
 
 import com.ecomm.np.genevaecommerce.DTO.*;
 import com.ecomm.np.genevaecommerce.Enumerations.Role;
@@ -11,20 +11,16 @@ import com.ecomm.np.genevaecommerce.Security.JwtUtils;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import jakarta.annotation.PostConstruct;
-import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.security.auth.login.CredentialException;
 import java.security.SecureRandom;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 

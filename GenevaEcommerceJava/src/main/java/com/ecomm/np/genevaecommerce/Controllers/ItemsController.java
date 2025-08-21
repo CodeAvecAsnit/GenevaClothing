@@ -4,7 +4,7 @@ package com.ecomm.np.genevaecommerce.Controllers;
 import com.ecomm.np.genevaecommerce.DTO.*;
 import com.ecomm.np.genevaecommerce.Models.Items;
 import com.ecomm.np.genevaecommerce.Security.CustomUser;
-import com.ecomm.np.genevaecommerce.Services.ItemsService;
+import com.ecomm.np.genevaecommerce.services.ItemsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

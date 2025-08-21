@@ -5,7 +5,7 @@ import com.ecomm.np.genevaecommerce.DTO.UserDTO;
 import com.ecomm.np.genevaecommerce.DTO.WishListDTO;
 import com.ecomm.np.genevaecommerce.Models.UserModel;
 import com.ecomm.np.genevaecommerce.Security.CustomUser;
-import com.ecomm.np.genevaecommerce.Services.UserService;
+import com.ecomm.np.genevaecommerce.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

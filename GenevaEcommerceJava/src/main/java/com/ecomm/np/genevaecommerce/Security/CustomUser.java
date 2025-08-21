@@ -1,8 +1,6 @@
 package com.ecomm.np.genevaecommerce.Security;
 
 import com.ecomm.np.genevaecommerce.Models.UserModel;
-import com.ecomm.np.genevaecommerce.Repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +10,7 @@ import java.util.List;
 
 public class CustomUser implements UserDetails {
 
-    private int id;
+    private int userId;
     private String email;
     private String password;
     private Collection<?extends GrantedAuthority> authorities;
@@ -20,19 +18,19 @@ public class CustomUser implements UserDetails {
     public CustomUser() {
     }
 
-    public CustomUser(int id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
+    public CustomUser(int userId, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.userId = userId;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
     }
 
     public int getId() {
-        return id;
+        return userId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.userId = id;
     }
 
     public String getEmail() {

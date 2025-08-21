@@ -2,7 +2,7 @@ package com.ecomm.np.genevaecommerce.Controllers;
 
 import com.ecomm.np.genevaecommerce.DTO.*;
 import com.ecomm.np.genevaecommerce.Security.CustomUser;
-import com.ecomm.np.genevaecommerce.Services.AuthService;
+import com.ecomm.np.genevaecommerce.services.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;

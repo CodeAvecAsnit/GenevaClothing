@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.Services;
+package com.ecomm.np.genevaecommerce.services;
 
 import com.ecomm.np.genevaecommerce.DTO.AddressDTO;
 import com.ecomm.np.genevaecommerce.DTO.ItemQuantity;

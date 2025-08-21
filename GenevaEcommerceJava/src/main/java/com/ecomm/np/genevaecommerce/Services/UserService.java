@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.Services;
+package com.ecomm.np.genevaecommerce.services;
 
 import com.ecomm.np.genevaecommerce.DTO.ItemDisplayDTO;
 import com.ecomm.np.genevaecommerce.DTO.UserDTO;
@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,7 +31,10 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final RoleTableRepository roleTableRepository;
+
     private final ItemsRepository itemsRepository;
+
+
 
     @Autowired
     public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleTableRepository roleTableRepository, ItemsRepository itemsRepository) {
@@ -103,6 +106,10 @@ public class UserService {
                         return dto;
                     })
                     .collect(Collectors.toSet());
+    }
+
+    public UserModel findUserById(int userId){
+        return userRepository.findById(userId).orElseThrow(()->new UsernameNotFoundException("The requested User was not found"));
     }
 }
 

@@ -7,8 +7,8 @@ import com.ecomm.np.genevaecommerce.Extras.OutOfStockException;
 import com.ecomm.np.genevaecommerce.Extras.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.Models.OrderedItems;
 import com.ecomm.np.genevaecommerce.Security.CustomUser;
-import com.ecomm.np.genevaecommerce.Services.CheckoutService;
-import com.ecomm.np.genevaecommerce.Services.OrderService;
+import com.ecomm.np.genevaecommerce.services.CheckoutService;
+import com.ecomm.np.genevaecommerce.services.OrderService;
 import jakarta.validation.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.DocFlavor;
 import java.util.List;
 
 

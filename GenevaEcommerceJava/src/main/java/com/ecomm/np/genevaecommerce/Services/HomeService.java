@@ -1,23 +1,15 @@
-package com.ecomm.np.genevaecommerce.Services;
+package com.ecomm.np.genevaecommerce.services;
 
-import com.ecomm.np.genevaecommerce.DTO.CollectionAndItemsDTO;
-import com.ecomm.np.genevaecommerce.DTO.NewCollectionDTO;
 import com.ecomm.np.genevaecommerce.Models.BestCollection;
 import com.ecomm.np.genevaecommerce.Models.Collection;
-import com.ecomm.np.genevaecommerce.Models.Items;
 import com.ecomm.np.genevaecommerce.Repositories.CollectionRepository;
 import com.ecomm.np.genevaecommerce.Repositories.ItemsRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.jdi.InternalException;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class HomeService {

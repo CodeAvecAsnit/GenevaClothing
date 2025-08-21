@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.Services;
+package com.ecomm.np.genevaecommerce.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

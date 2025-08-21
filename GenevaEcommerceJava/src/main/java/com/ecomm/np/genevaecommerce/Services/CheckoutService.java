@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.Services;
+package com.ecomm.np.genevaecommerce.services;
 
 
 import com.ecomm.np.genevaecommerce.DTO.CheckDTO;
@@ -43,23 +43,19 @@ public class CheckoutService {
 
     private final SecureRandom secureRandom;
 
-    private final OrderItemAuditRepository orderItemAuditRepository;
 
-    private final OrderItemsRepository orderItemsRepository;
 
     @Autowired
-    public CheckoutService(ItemsRepository itemsRepository, SecureRandom secureRandom, UserRepository userRepository, OrderItemAuditRepository orderItemAuditRepository, OrderDetailsRepository orderDetailsRepository, OrderItemsRepository orderItemsRepository){
+    public CheckoutService(ItemsRepository itemsRepository, SecureRandom secureRandom, UserRepository userRepository, OrderDetailsRepository orderDetailsRepository){
         this.itemsRepository = itemsRepository;
         this.secureRandom = secureRandom;
         this.userRepository = userRepository;
-        this.orderItemAuditRepository = orderItemAuditRepository;
         this.orderDetailsRepository = orderDetailsRepository;
-        this.orderItemsRepository = orderItemsRepository;
     }
 
     @PostConstruct
     public void init(){
-        this.itemQuantityMap = Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).build();
+        this.itemQuantityMap = Caffeine.newBuilder().expireAfterWrite(60, TimeUnit.MINUTES).build();
     }
 
     public int processAndSaveRequest(List<ItemQuantity> itemQuantities)throws OutOfStockException,Exception{
@@ -221,4 +217,6 @@ public class CheckoutService {
             return false;
         }
     }
+
+
 }

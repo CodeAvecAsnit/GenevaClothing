@@ -2,7 +2,7 @@ package com.ecomm.np.genevaecommerce.Controllers;
 
 import com.ecomm.np.genevaecommerce.DTO.WishListDTO;
 import com.ecomm.np.genevaecommerce.Security.CustomUser;
-import com.ecomm.np.genevaecommerce.Services.UserService;
+import com.ecomm.np.genevaecommerce.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -19,7 +19,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.security.SecureRandom;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -100,5 +102,23 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/api/**", config);
         return source;
+    }
+
+    @Bean
+    public Map<Integer,String> monthMap(){
+        Map<Integer,String> map = new HashMap<>();
+        map.put(1,"Jan");
+        map.put(2,"Feb");
+        map.put(3,"Mar");
+        map.put(4,"Apr");
+        map.put(5,"May");
+        map.put(6,"June");
+        map.put(7,"July");
+        map.put(8,"Aug");
+        map.put(9,"Sept");
+        map.put(10,"Oct");
+        map.put(11,"Nov");
+        map.put(12,"Dec");
+        return map;
     }
 }
