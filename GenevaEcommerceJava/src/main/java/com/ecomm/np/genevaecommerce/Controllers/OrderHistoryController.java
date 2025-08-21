@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +32,7 @@ public class OrderHistoryController {
 
     @GetMapping("/past/orders")
     public ResponseEntity<Page<HistoryDTO>> getPageHistory(@AuthenticationPrincipal CustomUser customUser,@RequestParam(defaultValue = "0") int page){
-        int pageSize = 5;
+        int pageSize = 8;
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "orderInitiatedDate"));
         try{
             return ResponseEntity.ok(orderHistoryService.findUserHistory(customUser.getId(),pageable));
@@ -54,4 +54,16 @@ public class OrderHistoryController {
     }
 
 
+   @GetMapping("/admin/orders")
+   @PreAuthorize("hasAuthority('ADMIN')")
+   public ResponseEntity<Page<HistoryDTO>> getHistoryForUser(@RequestParam(defaultValue = "0") int page,@AuthenticationPrincipal CustomUser customUser){
+       int pageSize = 20;
+       Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "orderInitiatedDate"));
+       try{
+           return ResponseEntity.ok(orderHistoryService.findAllPagesForAdmin(pageable));
+       }catch (Exception ex){
+           log.error(ex.getMessage());
+           return  ResponseEntity.badRequest().build();
+       }
+   }
 }

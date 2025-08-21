@@ -36,18 +36,8 @@ public class OrderHistoryService {
     public Page<HistoryDTO> findUserHistory(int userId, Pageable pageable) {
         UserModel userModel = userService.findUserById(userId);
         OrderDetails orderDetails = userModel.getUserOrders();
-
         Page<OrderedItems> orderedItemsPage = orderItemsRepository.findByOrderDetails(orderDetails, pageable);
-
-
-        return orderedItemsPage.map(ot -> {    log.debug("Mapping OrderedItem: {}", ot);
-            log.debug("OrderInitiatedDate: {}", ot.getOrderInitiatedDate());
-            log.debug("Building DTO...");
-            HistoryDTO dto = HistoryDTO.buildFromOrderItems(ot);
-            log.debug("Setting order date...");
-            dto.setOrderDate(buildDate(ot.getOrderInitiatedDate()));
-            return dto;
-        });
+        return transform(orderedItemsPage);
     }
 
     public String buildDate(LocalDateTime localDateTime) {
@@ -84,4 +74,18 @@ public class OrderHistoryService {
         dto.setOrderDate(buildDate(orderedItems.getOrderInitiatedDate()));
         return dto;
     }
+
+    public Page<HistoryDTO> findAllPagesForAdmin(Pageable pageable){
+        Page<OrderedItems> orderedItemsPage = orderItemsRepository.findAll(pageable);
+        return transform(orderedItemsPage);
+    }
+
+    private Page<HistoryDTO> transform(Page<OrderedItems> orderedItemsPage){
+        return orderedItemsPage.map(ot -> {
+            HistoryDTO dto = HistoryDTO.buildFromOrderItems(ot);
+            dto.setOrderDate(buildDate(ot.getOrderInitiatedDate()));
+            return dto;
+        });
+    }
+
 }

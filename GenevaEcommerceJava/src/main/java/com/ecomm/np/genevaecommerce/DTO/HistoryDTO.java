@@ -8,8 +8,8 @@ public class HistoryDTO {
     private int orderId;
     private BigDecimal remainingPrice;
     private String orderDate;
-    private boolean isActive;
-    private boolean isProcessed;
+    private boolean isActive;// if passive means order is devlivered show deliverd and grey color prolly
+    private boolean isProcessed;//this states that order is packed or not color if packed green otherwise a bit dark yellow
 
     public HistoryDTO() {
     }
