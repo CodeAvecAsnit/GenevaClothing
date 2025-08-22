@@ -13,4 +13,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderItemsRepository extends JpaRepository<OrderedItems,Integer> {
     Page<OrderedItems> findByOrderDetails(OrderDetails orderDetails, Pageable page);
+    Page<OrderedItems> findByActive(boolean isActive,Pageable page);
 }

@@ -75,10 +75,6 @@ public class OrderHistoryService {
         return dto;
     }
 
-    public Page<HistoryDTO> findAllPagesForAdmin(Pageable pageable){
-        Page<OrderedItems> orderedItemsPage = orderItemsRepository.findAll(pageable);
-        return transform(orderedItemsPage);
-    }
 
     private Page<HistoryDTO> transform(Page<OrderedItems> orderedItemsPage){
         return orderedItemsPage.map(ot -> {
@@ -86,6 +82,17 @@ public class OrderHistoryService {
             dto.setOrderDate(buildDate(ot.getOrderInitiatedDate()));
             return dto;
         });
+    }
+
+
+    public Page<HistoryDTO> findAllPagesForAdmin(Pageable pageable){
+        Page<OrderedItems> orderedItemsPage = orderItemsRepository.findAll(pageable);
+        return transform(orderedItemsPage);
+    }
+
+    public Page<HistoryDTO> findAllPagesForAdmin(Pageable pageable,boolean isActive){
+        Page<OrderedItems> orderedItemsPage = orderItemsRepository.findByActive(isActive,pageable);
+        return transform(orderedItemsPage);
     }
 
 }

@@ -49,7 +49,6 @@ public class CollectionsController {
     }
 
 
-
     @PostMapping("/post/best")
     public ResponseEntity<String> updateBest(@RequestBody BestCollection collection) {
         try {
