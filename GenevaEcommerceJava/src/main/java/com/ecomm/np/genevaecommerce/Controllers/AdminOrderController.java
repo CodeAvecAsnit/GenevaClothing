@@ -1,6 +1,10 @@
 package com.ecomm.np.genevaecommerce.Controllers;
 
+
+import com.ecomm.np.genevaecommerce.DTO.BasicDT0;
 import com.ecomm.np.genevaecommerce.DTO.HistoryDTO;
+import com.ecomm.np.genevaecommerce.DTO.OrderDataDTO;
+import com.ecomm.np.genevaecommerce.Extras.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.services.OrderHistoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
@@ -13,10 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -30,6 +32,11 @@ public class AdminOrderController {
     @Autowired
     public AdminOrderController(OrderHistoryService orderHistoryService){
         this.orderHistoryService = orderHistoryService;
+    }
+
+    @GetMapping
+    public String verifyAdmin(){
+        return "Success";
     }
 
     @GetMapping("/orders/history")
@@ -53,9 +60,37 @@ public class AdminOrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    @GetMapping("/orders/history/{id}")
+    public ResponseEntity<OrderDataDTO> getOrderDataAdmin(@PathVariable int id){
+        try{
+            return ResponseEntity.ok(orderHistoryService.findOrderDataAdmin(id));
+        }catch (ResourceNotFoundException rEx){
+            return ResponseEntity.notFound().build();
+        }
+        catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
+    @PostMapping("/pack/item/{tracer}")
+    public ResponseEntity<BasicDT0> setOrderItemPacked(@PathVariable int tracer){
+        try{
+           if( orderHistoryService.setPackedByAdmin(tracer)){
+               return ResponseEntity.ok(new BasicDT0("Item has been packed"));
+           }else return ResponseEntity.badRequest().build();
+        }catch (Exception ex){
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 
-
-
-
+    @PostMapping("/pack/order/{order}")
+    public ResponseEntity<BasicDT0> setOrderPacked(@PathVariable int order){
+        try{
+            if( orderHistoryService.setAllPackedAdmin(order)){
+                return ResponseEntity.ok(new BasicDT0("Order has been packed"));
+            }else return ResponseEntity.badRequest().build();
+        }catch (Exception ex){
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

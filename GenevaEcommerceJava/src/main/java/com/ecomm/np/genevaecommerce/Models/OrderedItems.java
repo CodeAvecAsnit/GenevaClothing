@@ -1,7 +1,9 @@
 package com.ecomm.np.genevaecommerce.Models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -16,15 +18,16 @@ public class OrderedItems {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int oId;
 
-    @UpdateTimestamp
+    @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime orderInitiatedDate;
 
     @UpdateTimestamp
     private LocalDateTime orderUpdatedDate;
 
-    private  boolean isMainActive;
+    private  boolean mainActive;
 
-    private boolean isProcessed;
+    private boolean processed;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal totalPrice;
@@ -46,12 +49,12 @@ public class OrderedItems {
     public OrderedItems() {
     }
 
-    public OrderedItems(int oId, LocalDateTime orderInitiatedDate, LocalDateTime orderUpdatedDate, boolean isMainActive, boolean isProcessed, BigDecimal totalPrice, BigDecimal paidPrice, List<OrderItemAudit> orderItemAuditList, OrderDetails orderDetails) {
+    public OrderedItems(int oId, LocalDateTime orderInitiatedDate, LocalDateTime orderUpdatedDate, boolean mainActive, boolean processed, BigDecimal totalPrice, BigDecimal paidPrice, List<OrderItemAudit> orderItemAuditList, OrderDetails orderDetails) {
         this.oId = oId;
         this.orderInitiatedDate = orderInitiatedDate;
         this.orderUpdatedDate = orderUpdatedDate;
-        this.isMainActive = isMainActive;
-        this.isProcessed = isProcessed;
+        this.mainActive = mainActive;
+        this.processed = processed;
         this.totalPrice = totalPrice;
         this.paidPrice = paidPrice;
         this.orderItemAuditList = orderItemAuditList;
@@ -76,19 +79,19 @@ public class OrderedItems {
 
 
     public boolean isActive() {
-        return isMainActive;
+        return mainActive;
     }
 
     public void setMainActive(boolean active) {
-        isMainActive = active;
+        mainActive = active;
     }
 
     public boolean isProcessed() {
-        return isProcessed;
+        return processed;
     }
 
     public void setProcessed(boolean processed) {
-        isProcessed = processed;
+        this.processed = processed;
     }
 
     public BigDecimal getTotalPrice() {
@@ -128,8 +131,8 @@ public class OrderedItems {
         for(OrderItemAudit oa : this.orderItemAuditList){
             x=x && oa.isActive();
         }
-        isProcessed = x;
-        return isProcessed;
+        processed = x;
+        return processed;
     }
 
     public boolean findActive(){
@@ -137,8 +140,8 @@ public class OrderedItems {
         for(OrderItemAudit oa : this.orderItemAuditList){
             x= x || oa.isActive();
         }
-        isMainActive = x;
-        return isMainActive;
+        mainActive = x;
+        return mainActive;
     }
 
     public void findTotalOrderPrice() {
@@ -154,7 +157,7 @@ public class OrderedItems {
     }
 
     public boolean isMainActive() {
-        return isMainActive;
+        return mainActive;
     }
 
     public BigDecimal getPaidPrice() {

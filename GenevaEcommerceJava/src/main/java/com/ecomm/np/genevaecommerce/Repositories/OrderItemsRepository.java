@@ -7,11 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-
-
-
 @Repository
 public interface OrderItemsRepository extends JpaRepository<OrderedItems,Integer> {
     Page<OrderedItems> findByOrderDetails(OrderDetails orderDetails, Pageable page);
-    Page<OrderedItems> findByActive(boolean isActive,Pageable page);
+    Page<OrderedItems> findByMainActive(boolean mainActive, Pageable page);
 }
