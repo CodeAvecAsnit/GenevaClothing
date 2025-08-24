@@ -3,7 +3,6 @@ package com.ecomm.np.genevaecommerce.Controllers;
 
 import com.ecomm.np.genevaecommerce.DTO.*;
 import com.ecomm.np.genevaecommerce.Security.CustomUser;
-import com.ecomm.np.genevaecommerce.services.CloudinaryService;
 import com.ecomm.np.genevaecommerce.services.ItemsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/items")
-//@PreAuthorize("hasAuthority('ADMIN')")
 public class ItemsController {
 
     private static Logger logger = LoggerFactory.getLogger(ItemsController.class);
@@ -45,7 +43,6 @@ public class ItemsController {
     public ResponseEntity<List<NewCollectionDTO>> getNewCollection() {
         return ResponseEntity.ok(itemsService.findNewCollection());
     }
-
 
 
     @GetMapping("/get/gender/{gen}")

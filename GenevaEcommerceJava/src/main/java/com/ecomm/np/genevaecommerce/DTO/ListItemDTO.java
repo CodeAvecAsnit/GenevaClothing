@@ -1,7 +1,6 @@
 package com.ecomm.np.genevaecommerce.DTO;
 
 import com.ecomm.np.genevaecommerce.Models.Items;
-import org.springframework.web.multipart.MultipartFile;
 
 public class ListItemDTO {
     private String itemName;
@@ -70,13 +69,14 @@ public class ListItemDTO {
     public void setGender(String gender) {this.gender = gender;
     }
 
-    public static Items ItemsMapper(ListItemDTO listItemDTO,String imageUrl){
+    public static Items ItemsMapper(ListItemDTO listItemDTO,String imageUrl,String imageId){
         Items item = new Items();
         item.setItemName(listItemDTO.getItemName());
         item.setDescription(listItemDTO.getDescription());
         item.setImageLink(imageUrl);
         item.setPrice(listItemDTO.getPrice());
         item.setStock(listItemDTO.getStock());
+        item.setImageId(imageId);
         return item;
     }
 }

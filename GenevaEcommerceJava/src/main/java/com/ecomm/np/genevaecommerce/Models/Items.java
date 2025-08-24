@@ -24,6 +24,8 @@ public class Items {
 
     private String imageLink;
 
+    private String imageId;
+
     private float price;
 
     @ManyToOne
@@ -32,6 +34,8 @@ public class Items {
     private Collection collection;
 
     private int stock;
+
+    private boolean deleted=false;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -59,29 +63,25 @@ public class Items {
 
 
 
+    public Items(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Items(String itemName, String description, String imageLink){
+        this.itemName = itemName;
+        this.description = description;
+        this.imageLink = imageLink;
+    }
+
     public Items() {
     }
 
-    public Items(String itemName,String description,String imageLink){
-        this.itemName = itemName;
-        this.description = description;
-        this.imageLink = imageLink;
+    public String getImageId() {
+        return imageId;
     }
 
-    public Items(int itemCode, String itemName, String description, String imageLink, float price, Collection collection, int stock, LocalDateTime createdDate, LocalDateTime updatedDate, GenderTable genderTable, Set<UserModel> wishedUsers, Set<UserModel> cartUsers, List<OrderItemAudit> orderItemAudit) {
-        this.itemCode = itemCode;
-        this.itemName = itemName;
-        this.description = description;
-        this.imageLink = imageLink;
-        this.price = price;
-        this.collection = collection;
-        this.stock = stock;
-        this.createdDate = createdDate;
-        this.updatedDate = updatedDate;
-        this.genderTable = genderTable;
-        this.wishedUsers = wishedUsers;
-        this.cartUsers = cartUsers;
-        this.orderItemAudit = orderItemAudit;
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
     }
 
     public int getItemCode() {
@@ -187,4 +187,13 @@ public class Items {
     public void setOrderItemAudit(List<OrderItemAudit> orderItemAudit) {
         this.orderItemAudit = orderItemAudit;
     }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
 }
