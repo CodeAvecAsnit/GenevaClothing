@@ -1,11 +1,7 @@
 package com.ecomm.np.genevaecommerce.services;
 
-
-
-
 import com.ecomm.np.genevaecommerce.DTO.CollectionDTO;
 import com.ecomm.np.genevaecommerce.DTO.ItemDisplayDTO;
-import com.ecomm.np.genevaecommerce.DTO.ListItemDTO;
 import com.ecomm.np.genevaecommerce.DTO.NewCollectionDTO;
 import com.ecomm.np.genevaecommerce.Enumerations.Gender;
 import com.ecomm.np.genevaecommerce.Models.Collection;
@@ -87,23 +83,6 @@ public class ItemsService {
         return page.map(ItemDisplayDTO::MapByItems);
     }
 
-
-
-    public Items SaveItem(ListItemDTO item) {
-        Items items = ListItemDTO.ItemsMapper(item);
-        Optional<Collection> collectionOptional = collectionRepository.findByCollectionName(item.getCollection());
-        collectionOptional.ifPresent(items::setCollection);
-        try {
-            Gender gender = Gender.valueOf(item.getGender());
-            Optional<GenderTable> genderTable = genderTableRepository.findByGender(gender);
-            genderTable.ifPresent(items::setGenderTable);
-        }catch (IllegalArgumentException ex){
-            logger.error(item.getGender() + "is not a Gender in GenderTable"+ex.getMessage());
-        }catch (Exception except){
-            logger.error(except.getMessage());
-        }
-        return itemsRepository.save(items);
-    }
 
 
     public List<NewCollectionDTO> findNewCollection() {

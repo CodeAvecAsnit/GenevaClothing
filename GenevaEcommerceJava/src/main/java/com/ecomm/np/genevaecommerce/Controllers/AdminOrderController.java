@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.DocFlavor;
+
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -60,6 +62,8 @@ public class AdminOrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+
     @GetMapping("/orders/history/{id}")
     public ResponseEntity<OrderDataDTO> getOrderDataAdmin(@PathVariable int id){
         try{
@@ -78,15 +82,32 @@ public class AdminOrderController {
            if( orderHistoryService.setPackedByAdmin(tracer)){
                return ResponseEntity.ok(new BasicDT0("Item has been packed"));
            }else return ResponseEntity.badRequest().build();
+        }catch (ResourceNotFoundException rEx){
+            return ResponseEntity.notFound().build();
         }catch (Exception ex){
             return ResponseEntity.internalServerError().build();
         }
     }
 
-    @PostMapping("/pack/order/{order}")
-    public ResponseEntity<BasicDT0> setOrderPacked(@PathVariable int order){
+    @PostMapping("/deliver/order/{order}")
+    public ResponseEntity<BasicDT0> setOrderDelivered(@PathVariable int order){
         try{
-            if( orderHistoryService.setAllPackedAdmin(order)){
+            if( orderHistoryService.setDeliveredAdmin(order)){
+                return ResponseEntity.ok(new BasicDT0("Item has been delivered"));
+            }else return ResponseEntity.badRequest().build();
+        }catch (ResourceNotFoundException rEx){
+            return ResponseEntity.notFound().build();
+        }catch (RuntimeException rEr){
+            return ResponseEntity.badRequest().body(new BasicDT0(rEr.getMessage()));
+        }catch (Exception ex){
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("/pack/order/{order_id}")
+    public ResponseEntity<BasicDT0> setOrderPacked(@PathVariable int order_id){
+        try{
+            if( orderHistoryService.setAllPackedAdmin(order_id)){
                 return ResponseEntity.ok(new BasicDT0("Order has been packed"));
             }else return ResponseEntity.badRequest().build();
         }catch (Exception ex){

@@ -78,10 +78,21 @@ public class OrderHistoryService {
     }
 
     public OrderDataDTO findOrderDataAdmin(int orderId){
-        OrderedItems orderedItems = orderItemsRepository.findById(orderId).orElseThrow(()-> new ResourceNotFoundException("Requested order was not found"));
+        OrderedItems orderedItems = findOrderedItem(orderId);
         OrderDataDTO dto = OrderDataDTO.buildFromOrderItems(orderedItems);
         dto.setOrderDate(buildDate(orderedItems.getOrderInitiatedDate()));
         return dto;
+    }
+
+    public boolean setDeliveredAdmin(int orderId){
+        OrderedItems orderedItems = findOrderedItem(orderId);
+        if(!orderedItems.isProcessed()){
+            throw new RuntimeException("Cannot set delivered because order is yet to be packed");
+        }
+        if(!orderedItems.isMainActive()){throw new RuntimeException("Order has already been delivered");}
+        orderedItems.setMainActive(false);
+        orderItemsRepository.save(orderedItems);
+        return true;
     }
 
     public boolean setPackedByAdmin(int orderItemCode){

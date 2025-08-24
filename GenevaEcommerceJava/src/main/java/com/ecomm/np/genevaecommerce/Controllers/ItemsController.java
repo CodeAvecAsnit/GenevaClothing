@@ -2,8 +2,8 @@ package com.ecomm.np.genevaecommerce.Controllers;
 
 
 import com.ecomm.np.genevaecommerce.DTO.*;
-import com.ecomm.np.genevaecommerce.Models.Items;
 import com.ecomm.np.genevaecommerce.Security.CustomUser;
+import com.ecomm.np.genevaecommerce.services.CloudinaryService;
 import com.ecomm.np.genevaecommerce.services.ItemsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
 
 
 @RestController
@@ -27,6 +25,7 @@ public class ItemsController {
     private static Logger logger = LoggerFactory.getLogger(ItemsController.class);
 
     private final ItemsService itemsService;
+
 
     @Autowired
     public ItemsController(ItemsService itemsService) {
@@ -47,11 +46,6 @@ public class ItemsController {
         return ResponseEntity.ok(itemsService.findNewCollection());
     }
 
-
-    @PostMapping("/post")
-    public ResponseEntity<Items> postItem(@RequestBody ListItemDTO itemDTO) {
-        return ResponseEntity.ok(itemsService.SaveItem(itemDTO));
-    }
 
 
     @GetMapping("/get/gender/{gen}")
@@ -141,6 +135,4 @@ public class ItemsController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
 }

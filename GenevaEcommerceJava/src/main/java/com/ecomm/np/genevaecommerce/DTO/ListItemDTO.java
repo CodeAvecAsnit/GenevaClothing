@@ -1,11 +1,11 @@
 package com.ecomm.np.genevaecommerce.DTO;
 
 import com.ecomm.np.genevaecommerce.Models.Items;
+import org.springframework.web.multipart.MultipartFile;
 
 public class ListItemDTO {
     private String itemName;
     private String description;
-    private String imageLink;
     private float price;
     private String collection;
     private String gender;
@@ -14,10 +14,9 @@ public class ListItemDTO {
     public ListItemDTO() {
     }
 
-    public ListItemDTO(String itemName, String description, String imageLink, float price, String collection, String gender,int stock) {
+    public ListItemDTO(String itemName, String description, float price, String collection, String gender, int stock) {
         this.itemName = itemName;
         this.description = description;
-        this.imageLink = imageLink;
         this.price = price;
         this.collection = collection;
         this.gender = gender;
@@ -48,14 +47,6 @@ public class ListItemDTO {
         this.description = description;
     }
 
-    public String getImageLink() {
-        return imageLink;
-    }
-
-    public void setImageLink(String imageLink) {
-        this.imageLink = imageLink;
-    }
-
     public float getPrice() {
         return price;
     }
@@ -79,11 +70,11 @@ public class ListItemDTO {
     public void setGender(String gender) {this.gender = gender;
     }
 
-    public static Items ItemsMapper(ListItemDTO listItemDTO){
+    public static Items ItemsMapper(ListItemDTO listItemDTO,String imageUrl){
         Items item = new Items();
         item.setItemName(listItemDTO.getItemName());
         item.setDescription(listItemDTO.getDescription());
-        item.setImageLink(listItemDTO.getImageLink());
+        item.setImageLink(imageUrl);
         item.setPrice(listItemDTO.getPrice());
         item.setStock(listItemDTO.getStock());
         return item;
