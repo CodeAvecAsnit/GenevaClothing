@@ -23,11 +23,11 @@ public class OrderItemAudit {
 
     private float itemPrice;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private OrderedItems orderedItems;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_code")
     private Items items;
 

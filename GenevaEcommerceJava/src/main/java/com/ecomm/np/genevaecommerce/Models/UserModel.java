@@ -42,10 +42,10 @@ public class UserModel {
     private LocalDateTime updatedDate;
 
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private OrderDetails userOrders;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name ="cartlist",
             joinColumns = @JoinColumn(name ="user_id"),
             inverseJoinColumns = @JoinColumn(referencedColumnName = "item_code")
@@ -53,7 +53,7 @@ public class UserModel {
     @JsonBackReference
     private Set<Items> cartList;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name ="wishlist",
             joinColumns = @JoinColumn(name ="user_id"),
             inverseJoinColumns = @JoinColumn(referencedColumnName = "item_code")

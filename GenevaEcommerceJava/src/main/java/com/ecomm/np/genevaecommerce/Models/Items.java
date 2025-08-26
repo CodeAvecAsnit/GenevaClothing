@@ -2,14 +2,14 @@ package com.ecomm.np.genevaecommerce.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
 @Entity
+@SQLDelete(sql = "UPDATE items SET deleted = true WHERE item_code = ?")
 public class Items {
 
     @Id
@@ -49,15 +49,16 @@ public class Items {
     @JsonIgnore
     private GenderTable genderTable;
 
-    @ManyToMany(mappedBy = "wishList")
+    @ManyToMany(mappedBy = "wishList",fetch = FetchType.LAZY )
     @JsonIgnore
     private Set<UserModel> wishedUsers;
 
-    @ManyToMany(mappedBy = "cartList")
+    @ManyToMany(mappedBy = "cartList",fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<UserModel> cartUsers;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY,mappedBy ="items")
+    @JsonIgnore
     private List<OrderItemAudit> orderItemAudit;
 
 

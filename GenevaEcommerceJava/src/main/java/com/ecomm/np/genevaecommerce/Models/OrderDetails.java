@@ -29,8 +29,7 @@ public class OrderDetails {
     @JoinColumn(name = "user_id")
     private UserModel user;
 
-    @OneToMany(mappedBy = "orderDetails",cascade = CascadeType.ALL,orphanRemoval = true)
-
+    @OneToMany(mappedBy = "orderDetails",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<OrderedItems> orderedItems = new ArrayList<>();
 
     public OrderDetails(long orderId, String deliveryLocation, String city, String province, String phoneNumber, UserModel user, List<OrderedItems> orderedItems) {

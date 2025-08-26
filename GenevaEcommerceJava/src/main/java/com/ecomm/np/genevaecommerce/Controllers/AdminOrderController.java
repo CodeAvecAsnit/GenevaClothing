@@ -1,6 +1,5 @@
 package com.ecomm.np.genevaecommerce.Controllers;
 
-
 import com.ecomm.np.genevaecommerce.DTO.BasicDT0;
 import com.ecomm.np.genevaecommerce.DTO.HistoryDTO;
 import com.ecomm.np.genevaecommerce.DTO.OrderDataDTO;
@@ -18,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @RequestMapping("/api/v1/admin")

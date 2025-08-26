@@ -19,7 +19,7 @@ public class Collection {
     @Lob
     private String collection_description;
 
-    @OneToMany (mappedBy = "collection")
+    @OneToMany (mappedBy = "collection",fetch = FetchType.LAZY)
     private List<Items> collectionItemList;
 
     @CreatedDate

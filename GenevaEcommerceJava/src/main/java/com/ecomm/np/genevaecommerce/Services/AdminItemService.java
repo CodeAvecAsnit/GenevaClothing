@@ -6,10 +6,10 @@ import com.ecomm.np.genevaecommerce.Enumerations.Gender;
 import com.ecomm.np.genevaecommerce.Extras.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.Models.Collection;
 import com.ecomm.np.genevaecommerce.Models.Items;
-import com.ecomm.np.genevaecommerce.Models.OrderItemAudit;
 import com.ecomm.np.genevaecommerce.Repositories.CollectionRepository;
 import com.ecomm.np.genevaecommerce.Repositories.GenderTableRepository;
 import com.ecomm.np.genevaecommerce.Repositories.ItemsRepository;
+import com.ecomm.np.genevaecommerce.Repositories.OrderItemAuditRepository;
 import io.jsonwebtoken.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,14 +28,16 @@ public class AdminItemService {
     private final CollectionRepository collectionRepository;
     private final GenderTableRepository genderTableRepository;
     private final OrderHistoryService orderHistoryService;
+    private final OrderItemAuditRepository orderItemAuditRepository;
 
     @Autowired
-    public AdminItemService(CloudinaryService cloudinaryService, ItemsRepository itemsRepository, CollectionRepository collectionRepository, GenderTableRepository genderTableRepository, OrderHistoryService orderHistoryService) {
+    public AdminItemService(CloudinaryService cloudinaryService, ItemsRepository itemsRepository, CollectionRepository collectionRepository, GenderTableRepository genderTableRepository, OrderHistoryService orderHistoryService, OrderItemAuditRepository orderItemAuditRepository) {
         this.cloudinaryService = cloudinaryService;
         this.itemsRepository = itemsRepository;
         this.collectionRepository = collectionRepository;
         this.genderTableRepository = genderTableRepository;
         this.orderHistoryService = orderHistoryService;
+        this.orderItemAuditRepository = orderItemAuditRepository;
     }
 
     private Collection findCollectionByName(String name) {
@@ -82,8 +84,7 @@ public class AdminItemService {
         dto.setWishCount(item.getWishedUsers().size());
         dto.setCreatedDate(orderHistoryService.buildDate(item.getCreatedDate()));
         dto.setUpdatedDate(orderHistoryService.buildDate(item.getUpdatedDate()));
-        dto.setTotalOrders(item.getOrderItemAudit().stream()
-                .mapToInt(OrderItemAudit::getQuantity).sum());
+        dto.setTotalOrders(orderItemAuditRepository.totalOrders(id));
         return dto;
     }
 
