@@ -90,4 +90,15 @@ public class AdminItemController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @PostMapping("/collection")
+    public ResponseEntity<?> addNewCollection(@RequestParam("name") String collectionName,
+                                              @RequestParam("description") String collectionDescription){
+        try{
+            adminItemService.createNewCollection(collectionName,collectionDescription);
+            return ResponseEntity.ok().build();
+        }catch (Exception ex){
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

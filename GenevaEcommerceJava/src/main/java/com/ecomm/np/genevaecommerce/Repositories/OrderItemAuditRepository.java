@@ -30,6 +30,6 @@ public interface OrderItemAuditRepository extends JpaRepository<OrderItemAudit,I
     )
     List<Integer> findTopSellingItemCodes();
 
-    @Query(value = "select count(is_packed)from order_item_audit where is_packed=:val" , nativeQuery = true)
+    @Query(value = "select coalesce(sum(quantity),0)from order_item_audit where is_packed=:val" , nativeQuery = true)
     Integer findTotalItemsPacked(@Param("val") boolean packed);
 }

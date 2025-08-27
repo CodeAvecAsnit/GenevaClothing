@@ -83,8 +83,6 @@ public class ItemsService {
         return page.map(ItemDisplayDTO::MapByItems);
     }
 
-
-
     public List<NewCollectionDTO> findNewCollection() {
         Collection collection = collectionRepository.findTopByOrderByLaunchedDateDesc();
 
@@ -118,22 +116,6 @@ public class ItemsService {
         return newArrrivalList.stream().
                 map(ItemDisplayDTO::MapByItems).
                 collect(Collectors.toList());
-    }
-
-    public CollectionDTO getLatestCollection(){
-        Collection collection = collectionRepository.findTopByOrderByLaunchedDateDesc();
-        String image = getRandomImage(collection.getCollectionItemList());
-        return CollectionDTO.buildFromCollection(collection,image);
-
-    }
-
-    private String getRandomImage(List<Items> itemList){
-        if(itemList==null ||itemList.isEmpty()){
-            return null;
-        }else{
-            Items item = itemList.get(random.nextInt(itemList.size()));
-            return item.getImageLink();
-        }
     }
 
     private UserModel getUserOrThrow(int userId) throws Exception {

@@ -138,4 +138,12 @@ public class AdminItemService {
         return itemsRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException("The requested item as not found"));
     }
+
+    public void createNewCollection(String name, String description){
+        Collection collection = new Collection();
+        collection.setCollectionName(name);
+        collection.setCollection_description(description);
+        collectionRepository.save(collection);
+    }
+
 }

@@ -138,7 +138,7 @@ public class AdminStatsDTO {
         this.packedItems = packedItems;
     }
 
-    public int getItemsToBePacked(int i) {
+    public int getItemsToBePacked() {
         return itemsToBePacked;
     }
 

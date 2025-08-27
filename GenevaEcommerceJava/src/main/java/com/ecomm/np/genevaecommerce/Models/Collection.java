@@ -3,14 +3,16 @@ package com.ecomm.np.genevaecommerce.Models;
 import com.ecomm.np.genevaecommerce.DTO.NewCollectionDTO;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Collection {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "collection_id")
     private int collectionId;
 
@@ -23,6 +25,7 @@ public class Collection {
     private List<Items> collectionItemList;
 
     @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime launchedDate;
 
     public Collection() {

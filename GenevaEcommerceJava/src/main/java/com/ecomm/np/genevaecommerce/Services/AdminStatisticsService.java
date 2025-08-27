@@ -6,7 +6,6 @@ import com.ecomm.np.genevaecommerce.Repositories.ItemsRepository;
 import com.ecomm.np.genevaecommerce.Repositories.OrderItemAuditRepository;
 import com.ecomm.np.genevaecommerce.Repositories.OrderItemsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jmx.ParentAwareNamingStrategy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,14 +19,12 @@ public class AdminStatisticsService {
     private final OrderItemAuditRepository orderItemAuditRepository;
     private final ItemsRepository itemsRepository;
     private final OrderItemsRepository orderItemsRepository;
-    private final ParentAwareNamingStrategy objectNamingStrategy;
 
     @Autowired
-    public AdminStatisticsService(OrderItemAuditRepository orderItemAuditRepository, ItemsRepository itemsRepository, OrderItemsRepository orderItemsRepository, ParentAwareNamingStrategy objectNamingStrategy) {
+    public AdminStatisticsService(OrderItemAuditRepository orderItemAuditRepository, ItemsRepository itemsRepository, OrderItemsRepository orderItemsRepository) {
         this.orderItemAuditRepository = orderItemAuditRepository;
         this.itemsRepository = itemsRepository;
         this.orderItemsRepository = orderItemsRepository;
-        this.objectNamingStrategy = objectNamingStrategy;
     }
 
     public Map<String,Integer> getWeekData(){
@@ -48,7 +45,8 @@ public class AdminStatisticsService {
 
 
     public int findTotalItems(){
-        return (int)itemsRepository.count();
+        long val = itemsRepository.findTotalItems();
+        return (int)val;
     }
 
     public int totalOrders(){
@@ -106,9 +104,9 @@ public class AdminStatisticsService {
         stats.setNotPackedOrders(this.ordersPacked(false));
         stats.setTotalSales(this.totalSales());
         stats.setTotalSalesToday(this.totalSoldToday());
-        stats.setTotalItems(this.findTotalItemsOrdered());
+        stats.setTotalItemsOrdered(this.findTotalItemsOrdered());
         stats.setPackedItems(this.findPackedItems(true));
-        stats.setPackedItems(this.findPackedItems(false));
+        stats.setItemsToBePacked(this.findPackedItems(false));
         return stats;
     }
 }

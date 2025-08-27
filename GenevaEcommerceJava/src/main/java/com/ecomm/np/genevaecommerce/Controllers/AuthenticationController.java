@@ -30,10 +30,6 @@ public class AuthenticationController {
     public AuthenticationController(AuthService authService) {
         this.authService = authService;
     }
-    @GetMapping("/wow")
-    public String check(){
-        return "Success";
-    }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO>LoginUser(@RequestBody LoginDTO loginDTO,HttpServletResponse response){
