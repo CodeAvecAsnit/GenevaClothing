@@ -150,24 +150,17 @@ public class AuthService {
         if (newPass.getNewPassword().equals(newPass.getOldPassword())) {
             throw new BadCredentialsException("New password cannot be the same as the old password.");
         }
-
         UserModel user = userRepository.findByEmail(email);
         if (user == null) {
             throw new UsernameNotFoundException("User not found ");
         }
-
         if (!checkPassword(newPass.getOldPassword(), user.getPassword())) {
             throw new BadCredentialsException("Incorrect old password.");
         }
-
         String encodedPassword = passwordEncoder.encode(newPass.getNewPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);
-
         logger.info("Password changed successfully for user: {}", email);
         return "Password changed successfully";
     }
-
-
-
 }

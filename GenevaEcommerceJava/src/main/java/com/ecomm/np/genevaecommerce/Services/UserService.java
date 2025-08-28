@@ -1,6 +1,7 @@
 package com.ecomm.np.genevaecommerce.services;
 
 import com.ecomm.np.genevaecommerce.DTO.ItemDisplayDTO;
+import com.ecomm.np.genevaecommerce.DTO.PasswordDTO;
 import com.ecomm.np.genevaecommerce.DTO.UserDTO;
 import com.ecomm.np.genevaecommerce.DTO.WishListDTO;
 import com.ecomm.np.genevaecommerce.Enumerations.Role;
@@ -14,6 +15,7 @@ import com.ecomm.np.genevaecommerce.Repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -64,13 +66,6 @@ public class UserService {
         return userRepository.save(userModel);
     }
 
-    public String itemToCart(int userId, int itemId){
-            UserModel userModel = findById(userId);
-            Items item = findItemById(itemId);
-            userModel.addToCart(item);
-            userRepository.save(userModel);
-            return "Item Added to Cart";
-    }
 
     public Set<ItemDisplayDTO> getCartItems(int userId) throws UsernameNotFoundException {
         UserModel userModel = findById(userId);
@@ -78,13 +73,6 @@ public class UserService {
         return userItems.stream().map(ItemDisplayDTO::MapByItems).collect(Collectors.toSet());
     }
 
-
-    public String itemToWishList(int userId, int itemId) {
-        UserModel userModel = findById(userId);
-        userModel.addToCart(findItemById(itemId));
-        userRepository.save(userModel);
-        return "Item Added to Cart";
-    }
 
     public Set<ItemDisplayDTO> getWishListItems(int user_id)  {
             UserModel user =findById(user_id);
@@ -107,6 +95,8 @@ public class UserService {
                     })
                     .collect(Collectors.toSet());
     }
+
+
 
     public UserModel findUserById(int userId){
         return userRepository.findById(userId).orElseThrow(()->new UsernameNotFoundException("The requested User was not found"));

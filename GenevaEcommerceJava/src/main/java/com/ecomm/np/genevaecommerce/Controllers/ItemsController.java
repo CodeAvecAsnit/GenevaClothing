@@ -31,7 +31,7 @@ public class ItemsController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<ItemDisplayDTO> getItemDisplayById(@PathVariable int id) {
+    public ResponseEntity<?> getItemDisplayById(@PathVariable int id) {
         try {
             return ResponseEntity.ok(itemsService.findById(id));
         } catch (Exception ex) {
@@ -40,19 +40,19 @@ public class ItemsController {
     }
 
     @GetMapping("/new_collection")
-    public ResponseEntity<List<NewCollectionDTO>> getNewCollection() {
+    public ResponseEntity<List<?>> getNewCollection() {
         return ResponseEntity.ok(itemsService.findNewCollection());
     }
 
 
     @GetMapping("/get/gender/{gen}")
-    public ResponseEntity<List<ItemDisplayDTO>> displayByGender(@PathVariable String gen) {
+    public ResponseEntity<List<?>> displayByGender(@PathVariable String gen) {
         return ResponseEntity.ok(itemsService.displayItems(gen));
     }
 
 
     @GetMapping
-    public ResponseEntity<Page<ItemDisplayDTO>> displayItems(@RequestParam(defaultValue = "0") int page, @RequestParam(required = false) String gender) throws Exception {
+    public ResponseEntity<Page<?>> displayItems(@RequestParam(defaultValue = "0") int page, @RequestParam(required = false) String gender) throws Exception {
         int pageSize = 8;
         Pageable pageable = PageRequest.of(page, pageSize);
         if (gender == null) {

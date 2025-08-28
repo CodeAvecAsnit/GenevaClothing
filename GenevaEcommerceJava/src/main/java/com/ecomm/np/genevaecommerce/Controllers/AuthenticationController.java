@@ -100,6 +100,9 @@ public class AuthenticationController {
     @PutMapping("/update/password")
     public ResponseEntity<?> changePassword(@Valid @RequestBody PasswordDTO passwordDTO,
                                             @AuthenticationPrincipal CustomUser userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Please log in.");
+        }
         try {
             String message = authService.changePassword(passwordDTO, userDetails.getEmail());
             return ResponseEntity.ok(new BasicDT0(message));

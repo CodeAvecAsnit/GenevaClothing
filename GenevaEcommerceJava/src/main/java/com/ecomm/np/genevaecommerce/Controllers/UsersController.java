@@ -1,11 +1,10 @@
 package com.ecomm.np.genevaecommerce.Controllers;
 
-import com.ecomm.np.genevaecommerce.DTO.ItemDisplayDTO;
-import com.ecomm.np.genevaecommerce.DTO.UserDTO;
-import com.ecomm.np.genevaecommerce.DTO.WishListDTO;
+import com.ecomm.np.genevaecommerce.DTO.*;
 import com.ecomm.np.genevaecommerce.Models.UserModel;
 import com.ecomm.np.genevaecommerce.Security.CustomUser;
 import com.ecomm.np.genevaecommerce.services.UserService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,19 +35,10 @@ public class UsersController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<UserModel> putUser(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserModel> postUser(@RequestBody UserDTO userDTO){
         return ResponseEntity.ok(userService.saveUser(userDTO));
     }
 
-    @PutMapping("/cart")
-    public ResponseEntity<String> addToCart(@RequestParam int user_id,@RequestParam int item_id){
-        try {
-            return ResponseEntity.ok(userService.itemToCart(user_id, item_id));
-        }catch (Exception ex){
-            log.warn(ex.getMessage());
-            return ResponseEntity.badRequest().build();
-        }
-    }
     @GetMapping("/cart/items")
     public ResponseEntity<Set<ItemDisplayDTO>> displayCart(@AuthenticationPrincipal CustomUser customUser) {
         try {
@@ -63,10 +53,6 @@ public class UsersController {
         }
     }
 
-    @PutMapping("/wishlist")
-    public ResponseEntity<String> addToWishList(@RequestParam int user_id,@RequestParam int item_id){
-        return ResponseEntity.ok(userService.itemToWishList(user_id,item_id));
-    }
 
     @GetMapping("/wishlist/items")
     public ResponseEntity<Set<ItemDisplayDTO>> DisplayWishList(@AuthenticationPrincipal CustomUser customUser){
@@ -81,7 +67,6 @@ public class UsersController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 
     @GetMapping("/wishlist-page/get-all")
     public ResponseEntity<Set<WishListDTO>> getWishList(@AuthenticationPrincipal CustomUser customUser){
