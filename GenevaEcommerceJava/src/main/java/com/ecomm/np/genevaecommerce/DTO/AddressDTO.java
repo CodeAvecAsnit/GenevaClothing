@@ -1,6 +1,6 @@
-package com.ecomm.np.genevaecommerce.DTO;
+package com.ecomm.np.genevaecommerce.dto;
 
-import com.ecomm.np.genevaecommerce.Models.OrderDetails;
+import com.ecomm.np.genevaecommerce.model.OrderDetails;
 
 public class AddressDTO {
     private String streetName;

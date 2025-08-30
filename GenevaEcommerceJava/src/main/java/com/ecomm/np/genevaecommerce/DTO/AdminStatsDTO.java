@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.DTO;
+package com.ecomm.np.genevaecommerce.dto;
 
 import java.util.List;
 

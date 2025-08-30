@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce;
 
-import com.ecomm.np.genevaecommerce.services.OrderHistoryService;
+import com.ecomm.np.genevaecommerce.service.OrderHistoryService;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 import java.time.LocalDateTime;
 
 @SpringBootTest
-@ComponentScan(basePackages = {"com.ecomm.np.genevaecommerce.services"})
+@ComponentScan(basePackages = {"com.ecomm.np.genevaecommerce.service"})
 public class DateTestForOrderHistory {
 
     @Autowired

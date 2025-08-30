@@ -1,7 +1,7 @@
-package com.ecomm.np.genevaecommerce.DTO;
+package com.ecomm.np.genevaecommerce.dto;
 
-import com.ecomm.np.genevaecommerce.Models.Collection;
-import com.ecomm.np.genevaecommerce.Models.Items;
+import com.ecomm.np.genevaecommerce.model.Collection;
+import com.ecomm.np.genevaecommerce.model.Items;
 
 import java.util.ArrayList;
 import java.util.List;

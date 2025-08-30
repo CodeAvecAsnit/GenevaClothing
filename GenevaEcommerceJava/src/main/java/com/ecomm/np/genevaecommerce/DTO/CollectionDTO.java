@@ -1,6 +1,6 @@
-package com.ecomm.np.genevaecommerce.DTO;
+package com.ecomm.np.genevaecommerce.dto;
 
-import com.ecomm.np.genevaecommerce.Models.Collection;
+import com.ecomm.np.genevaecommerce.model.Collection;
 
 public class CollectionDTO {
    private String imageLink;

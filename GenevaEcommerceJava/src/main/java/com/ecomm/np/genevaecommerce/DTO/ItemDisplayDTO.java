@@ -1,6 +1,6 @@
-package com.ecomm.np.genevaecommerce.DTO;
+package com.ecomm.np.genevaecommerce.dto;
 
-import com.ecomm.np.genevaecommerce.Models.Items;
+import com.ecomm.np.genevaecommerce.model.Items;
 
 public class ItemDisplayDTO {
     private int id;

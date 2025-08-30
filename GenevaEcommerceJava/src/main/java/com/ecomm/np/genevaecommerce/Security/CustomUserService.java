@@ -1,7 +1,7 @@
-package com.ecomm.np.genevaecommerce.Security;
+package com.ecomm.np.genevaecommerce.security;
 
-import com.ecomm.np.genevaecommerce.Models.UserModel;
-import com.ecomm.np.genevaecommerce.Repositories.UserRepository;
+import com.ecomm.np.genevaecommerce.model.UserModel;
+import com.ecomm.np.genevaecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

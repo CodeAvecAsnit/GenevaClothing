@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.Security;
+package com.ecomm.np.genevaecommerce.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

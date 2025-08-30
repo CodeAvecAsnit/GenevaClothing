@@ -1,6 +1,6 @@
-package com.ecomm.np.genevaecommerce.DTO;
+package com.ecomm.np.genevaecommerce.dto;
 
-import com.ecomm.np.genevaecommerce.Models.OrderedItems;
+import com.ecomm.np.genevaecommerce.model.OrderedItems;
 
 import java.math.BigDecimal;
 

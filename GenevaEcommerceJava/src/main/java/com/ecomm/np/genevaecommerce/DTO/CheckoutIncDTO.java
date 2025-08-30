@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.DTO;
+package com.ecomm.np.genevaecommerce.dto;
 
 import java.util.List;
 
@@ -8,12 +8,12 @@ public class CheckoutIncDTO {
     private String province;
     private String phoneNumber;
     private String paymentMethod;
-    private List<ItemQuantity> quantities;
+    private List<QuantityItemDTO> quantities;
 
     public CheckoutIncDTO() {
     }
 
-    public CheckoutIncDTO(String deliveryLocation, String city, String province, String phoneNumber, String paymentMethod, List<ItemQuantity> quantities) {
+    public CheckoutIncDTO(String deliveryLocation, String city, String province, String phoneNumber, String paymentMethod, List<QuantityItemDTO> quantities) {
         this.deliveryLocation = deliveryLocation;
         this.city = city;
         this.province = province;
@@ -54,11 +54,11 @@ public class CheckoutIncDTO {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<ItemQuantity> getQuantities() {
+    public List<QuantityItemDTO> getQuantities() {
         return quantities;
     }
 
-    public void setQuantities(List<ItemQuantity> quantities) {
+    public void setQuantities(List<QuantityItemDTO> quantities) {
         this.quantities = quantities;
     }
 

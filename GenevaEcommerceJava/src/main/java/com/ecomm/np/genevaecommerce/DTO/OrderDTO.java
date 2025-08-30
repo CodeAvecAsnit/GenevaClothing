@@ -1,51 +1,156 @@
-package com.ecomm.np.genevaecommerce.DTO;
+package com.ecomm.np.genevaecommerce.dto;
+
+import com.ecomm.np.genevaecommerce.model.OrderDetails;
+import com.ecomm.np.genevaecommerce.model.OrderedItems;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 public class OrderDTO {
-    private String address;
-    private int quantity;
-    private int item_id;
-    private int user_id;
+   private String deliveryAddress;
+   private String city;
+   private String province;
+   private String phoneNumber;
+   private int orderId;
+   private String orderDate;
+   private BigDecimal totalPrice;
+   private BigDecimal paidPrice;
+   private int noOfItems;
+   private boolean isActive; //active denotes that the order is not delivered yet or cancelled.
+   private boolean isProcessed; // this means packed or not
+   private List<DisplayItemsDTO> imageDisplayList;
+;
 
-    public OrderDTO() {
-    }
+   public OrderDTO() {
+   }
 
-    public OrderDTO(String address, int quantity, int item_id,int user_id) {
-        this.address = address;
-        this.quantity = quantity;
-        this.item_id = item_id;
-        this.user_id = user_id;
-    }
+   public OrderDTO(String deliveryAddress, String city, String province, String phoneNumber, int orderId, String orderDate, BigDecimal totalPrice, BigDecimal paidPrice, int noOfItems, List<DisplayItemsDTO> imageDisplayList, boolean isActive, boolean isProcessed) {
+      this.deliveryAddress = deliveryAddress;
+      this.city = city;
+      this.province = province;
+      this.phoneNumber = phoneNumber;
+      this.orderId = orderId;
+      this.orderDate = orderDate;
+      this.totalPrice = totalPrice;
+      this.paidPrice = paidPrice;
+      this.noOfItems = noOfItems;
+      this.imageDisplayList = imageDisplayList;
+      this.isActive = isActive;
+      this.isProcessed = isProcessed;
+   }
 
 
-    public int getUser_id() {
-        return user_id;
-    }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
+   public int getOrderId() {
+      return orderId;
+   }
 
-    public String getAddress() {
-        return address;
-    }
+   public void setOrderId(int orderId) {
+      this.orderId = orderId;
+   }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+   public String getOrderDate() {
+      return orderDate;
+   }
 
-    public int getQuantity() {
-        return quantity;
-    }
+   public void setOrderDate(String orderDate) {
+      this.orderDate = orderDate;
+   }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+   public BigDecimal getTotalPrice() {
+      return totalPrice;
+   }
 
-    public int getItem_id() {
-        return item_id;
-    }
+   public void setTotalPrice(BigDecimal totalPrice) {
+      this.totalPrice = totalPrice;
+   }
 
-    public void setItem_id(int item_id) {
-        this.item_id = item_id;
-    }
+   public BigDecimal getPaidPrice() {
+      return paidPrice;
+   }
+
+   public void setPaidPrice(BigDecimal paidPrice) {
+      this.paidPrice = paidPrice;
+   }
+
+   public int getNoOfItems() {
+      return noOfItems;
+   }
+
+   public void setNoOfItems(int noOfItems) {
+      this.noOfItems = noOfItems;
+   }
+
+   public List<DisplayItemsDTO> getImageDisplayList() {
+      return imageDisplayList;
+   }
+
+   public void setImageDisplayList(List<DisplayItemsDTO> imageDisplayList) {
+      this.imageDisplayList = imageDisplayList;
+   }
+
+   public boolean isActive() {
+      return isActive;
+   }
+
+   public void setActive(boolean active) {
+      isActive = active;
+   }
+
+   public boolean isProcessed() {
+      return isProcessed;
+   }
+
+   public void setProcessed(boolean processed) {
+      isProcessed = processed;
+   }
+
+   public String getDeliveryAddress() {
+      return deliveryAddress;
+   }
+
+   public void setDeliveryAddress(String deliveryAddress) {
+      this.deliveryAddress = deliveryAddress;
+   }
+
+   public String getCity() {
+      return city;
+   }
+
+   public void setCity(String city) {
+      this.city = city;
+   }
+
+   public String getProvince() {
+      return province;
+   }
+
+   public void setProvince(String province) {
+      this.province = province;
+   }
+
+   public String getPhoneNumber() {
+      return phoneNumber;
+   }
+
+   public void setPhoneNumber(String phoneNumber) {
+      this.phoneNumber = phoneNumber;
+   }
+
+   public static OrderDTO buildFromOrderItems(OrderedItems items){
+      OrderDTO orderDataDTO = new OrderDTO();
+      OrderDetails od = items.getOrderDetails();
+      orderDataDTO.setDeliveryAddress(od.getDeliveryLocation());
+      orderDataDTO.setPhoneNumber(od.getPhoneNumber());
+      orderDataDTO.setCity(od.getCity());
+      orderDataDTO.setProvince(od.getProvince());
+      orderDataDTO.setActive(items.isMainActive());
+      orderDataDTO.setOrderId(items.getoId());
+      orderDataDTO.setTotalPrice(items.getTotalPrice());
+      orderDataDTO.setPaidPrice(items.getPaidPrice());
+      orderDataDTO.setProcessed(items.isProcessed());
+      orderDataDTO.setNoOfItems(items.getOrderItemAuditList().size());
+      orderDataDTO.setImageDisplayList(items.getOrderItemAuditList().stream().map(DisplayItemsDTO::buildFromOrderAudit).toList());
+      return orderDataDTO;
+   }
 }

@@ -1,6 +1,6 @@
-package com.ecomm.np.genevaecommerce.DTO;
+package com.ecomm.np.genevaecommerce.dto;
 
-import com.ecomm.np.genevaecommerce.Models.UserModel;
+import com.ecomm.np.genevaecommerce.model.UserModel;
 
 public class SignUpDTO {
     private String email;

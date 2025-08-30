@@ -1,11 +1,11 @@
-package com.ecomm.np.genevaecommerce.Security;
+package com.ecomm.np.genevaecommerce.security;
 
-import com.ecomm.np.genevaecommerce.Enumerations.Role;
-import com.ecomm.np.genevaecommerce.Extras.PasswordGenerator;
-import com.ecomm.np.genevaecommerce.Models.RoleTable;
-import com.ecomm.np.genevaecommerce.Models.UserModel;
-import com.ecomm.np.genevaecommerce.Repositories.RoleTableRepository;
-import com.ecomm.np.genevaecommerce.Repositories.UserRepository;
+import com.ecomm.np.genevaecommerce.enumeration.Role;
+import com.ecomm.np.genevaecommerce.extra.PasswordGenerator;
+import com.ecomm.np.genevaecommerce.model.RoleTable;
+import com.ecomm.np.genevaecommerce.model.UserModel;
+import com.ecomm.np.genevaecommerce.repository.RoleTableRepository;
+import com.ecomm.np.genevaecommerce.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;

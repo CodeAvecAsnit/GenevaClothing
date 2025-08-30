@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.Security;
+package com.ecomm.np.genevaecommerce.security;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;

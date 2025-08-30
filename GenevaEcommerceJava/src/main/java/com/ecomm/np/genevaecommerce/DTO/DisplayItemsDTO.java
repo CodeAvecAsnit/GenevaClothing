@@ -1,7 +1,7 @@
-package com.ecomm.np.genevaecommerce.DTO;
+package com.ecomm.np.genevaecommerce.dto;
 
-import com.ecomm.np.genevaecommerce.Models.Items;
-import com.ecomm.np.genevaecommerce.Models.OrderItemAudit;
+import com.ecomm.np.genevaecommerce.model.Items;
+import com.ecomm.np.genevaecommerce.model.OrderItemAudit;
 
 public class DisplayItemsDTO {
     private int itemCode;
