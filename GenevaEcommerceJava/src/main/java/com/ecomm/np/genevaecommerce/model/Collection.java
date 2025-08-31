@@ -1,6 +1,5 @@
 package com.ecomm.np.genevaecommerce.model;
 
-import com.ecomm.np.genevaecommerce.dto.NewCollectionDTO;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -40,32 +39,12 @@ public class Collection {
         this.collection_description = collectionDescription;
     }
 
-    public static List<NewCollectionDTO> emptyList() {
-        return null;
-    }
-
     public int getCollectionId() {
         return collectionId;
     }
 
     public void setCollectionId(int collectionId) {
         this.collectionId = collectionId;
-    }
-
-    public List<Items> getCollectionItemList() {
-        return collectionItemList;
-    }
-
-    public void setCollectionItemList(List<Items> collectionItemList) {
-        this.collectionItemList = collectionItemList;
-    }
-
-    public LocalDateTime getLaunchedDate() {
-        return launchedDate;
-    }
-
-    public void setLaunchedDate(LocalDateTime launchedDate) {
-        this.launchedDate = launchedDate;
     }
 
     public String getCollectionName() {
@@ -82,5 +61,21 @@ public class Collection {
 
     public void setCollection_description(String collection_description) {
         this.collection_description = collection_description;
+    }
+
+    public List<Items> getCollectionItemList() {
+        return collectionItemList;
+    }
+
+    public void setCollectionItemList(List<Items> collectionItemList) {
+        this.collectionItemList = collectionItemList;
+    }
+
+    public LocalDateTime getLaunchedDate() {
+        return launchedDate;
+    }
+
+    public void setLaunchedDate(LocalDateTime launchedDate) {
+        this.launchedDate = launchedDate;
     }
 }

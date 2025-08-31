@@ -9,14 +9,16 @@ import com.ecomm.np.genevaecommerce.extra.OutOfStockException;
 import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.*;
 import com.ecomm.np.genevaecommerce.repository.*;
-import com.ecomm.np.genevaecommerce.serviceimpl.ItemService;
+import com.ecomm.np.genevaecommerce.service.modelservice.IItemService;
+import com.ecomm.np.genevaecommerce.service.modelservice.ItemService;
+import com.ecomm.np.genevaecommerce.service.modelservice.IUserService;
+import com.ecomm.np.genevaecommerce.service.modelservice.UserService;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
@@ -30,22 +32,18 @@ import java.util.stream.Collectors;
 public class CheckoutService {
 
     private final Logger logger = LoggerFactory.getLogger(CheckoutService.class);
-
-    private final UserRepository userRepository;
-
-    private final ItemService itemService;
-
+    private final IUserService IUserService;
+    private final IItemService itemService;
     private final OrderDetailsRepository orderDetailsRepository;
 
     private Cache<Integer,List<QuantityItemDTO>> itemQuantityMap;
-
     private final SecureRandom secureRandom;
 
     @Autowired
-    public CheckoutService( SecureRandom secureRandom, UserRepository userRepository, ItemServiceImpl itemServiceImpl, OrderDetailsRepository orderDetailsRepository){
+    public CheckoutService(SecureRandom secureRandom, UserService userServiceImpl, ItemService itemServiceImpl, OrderDetailsRepository orderDetailsRepository){
         this.itemService = itemServiceImpl;
         this.secureRandom = secureRandom;
-        this.userRepository = userRepository;
+        this.IUserService = userServiceImpl;
         this.orderDetailsRepository = orderDetailsRepository;
     }
 
@@ -54,7 +52,7 @@ public class CheckoutService {
         this.itemQuantityMap = Caffeine.newBuilder().expireAfterWrite(60, TimeUnit.MINUTES).build();
     }
 
-    public int processAndSaveRequest(List<QuantityItemDTO> itemQuantities)throws OutOfStockException,Exception{
+    public int processAndSaveRequest(List<QuantityItemDTO> itemQuantities)throws OutOfStockException,ResourceNotFoundException{
         Map<Integer, Items> ItemMap = getItemMap(itemQuantities) ;
         if(ItemMap==null||ItemMap.isEmpty())return 0;
         for(QuantityItemDTO itemQuantity : itemQuantities){
@@ -78,7 +76,7 @@ public class CheckoutService {
     private Map<Integer,Items> getItemMap(List<QuantityItemDTO> itemQuantities){
         if(itemQuantities==null||itemQuantities.isEmpty()) return null;
         List<Integer> ids = itemQuantities.stream().map(QuantityItemDTO::getItemCode).toList();
-        return itemService.findAllByListOfIds(ids).stream().collect(Collectors.toMap(Items::getItemCode,x->x));
+        return itemService.findAllByListOfIds(ids).stream().collect(Collectors.toMap(Items::getItemCode, x->x));
     }
 
 
@@ -115,10 +113,6 @@ public class CheckoutService {
         return code;
     }
 
-    private UserModel findUserById(int userId){
-        return userRepository.findById(userId).orElseThrow(()->
-                new UsernameNotFoundException("User was not found."));
-    }
 
     private List<DisplayItemsDTO> findItemDisplayList(List<QuantityItemDTO> itemQuantityList) {
         Map<Integer, Items> itemMap = getItemMap(itemQuantityList);
@@ -145,7 +139,7 @@ public class CheckoutService {
         if(iqList.isEmpty()||iqList==null){
             throw new CodeErrorException("The server took too long to respond");
         }
-        UserModel userModel = findUserById(userId);
+        UserModel userModel = IUserService.findUserById(userId);
         CheckDTO checkDTO = new CheckDTO();
         OrderDetails orderDetails = userModel.getUserOrders();
         if(orderDetails==null){
@@ -168,8 +162,7 @@ public class CheckoutService {
     public boolean checkoutOrder(CheckoutIncDTO checkDTO, int userId) {
         logger.info(checkDTO.toString());
         try {
-            UserModel userModel = userRepository.findById(userId)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            UserModel userModel = IUserService.findUserById(userId);
             OrderDetails od = userModel.getUserOrders();
             if (od == null) {
                 od = new OrderDetails();

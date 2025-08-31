@@ -23,11 +23,6 @@ public class AdminStatisticsController {
         this.adminStatisticsService = adminStatisticsService;
     }
 
-    @GetMapping
-    public ResponseEntity<?> getChartOfWeek(){
-        return ResponseEntity.ok(adminStatisticsService.getWeekData());
-    }
-
     @GetMapping("/highest")
     public ResponseEntity<?> highestSelling(){
         return ResponseEntity.ok(adminStatisticsService.findHighestSellingItems());

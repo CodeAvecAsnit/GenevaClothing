@@ -2,7 +2,7 @@ package com.ecomm.np.genevaecommerce.controller;
 
 import com.ecomm.np.genevaecommerce.dto.*;
 import com.ecomm.np.genevaecommerce.security.CustomUser;
-import com.ecomm.np.genevaecommerce.service.AuthService;
+import com.ecomm.np.genevaecommerce.service.authservice.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -16,14 +16,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-
-
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
 
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
-
     private final AuthService authService;
 
     @Autowired
@@ -36,15 +33,7 @@ public class AuthenticationController {
         try{
             LoginResponseDTO loginAttempt = authService.login(loginDTO);
             if(loginAttempt.getResponseCode()==200) {
-
-                setJwtCookie(response, loginAttempt.getJwtToken()); // asnit
-                Cookie cookie = new Cookie("token", "abd");
-                cookie.setHttpOnly(true);
-                cookie.setSecure(false);
-                cookie.setPath("/");
-                cookie.setMaxAge(86400);
-
-                response.addCookie(cookie);
+                setJwtCookie(response,loginAttempt.getJwtToken());
                 return ResponseEntity.ok(loginAttempt);
             } else if (loginAttempt.getResponseCode()==403) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginAttempt);

@@ -48,4 +48,5 @@ public class PasswordGenerator {
         int x = RANDOM.nextInt(1000, 10000);
         return Integer.toString(x);
     }
+
 }

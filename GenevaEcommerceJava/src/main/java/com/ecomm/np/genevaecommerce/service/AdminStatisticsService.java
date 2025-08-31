@@ -3,8 +3,10 @@ package com.ecomm.np.genevaecommerce.service;
 import com.ecomm.np.genevaecommerce.dto.AdminStatsDTO;
 import com.ecomm.np.genevaecommerce.dto.WeekData;
 import com.ecomm.np.genevaecommerce.repository.OrderItemAuditRepository;
-import com.ecomm.np.genevaecommerce.repository.OrderItemsRepository;
-import com.ecomm.np.genevaecommerce.serviceimpl.ItemService;
+import com.ecomm.np.genevaecommerce.service.modelservice.IItemService;
+import com.ecomm.np.genevaecommerce.service.modelservice.IOrderItemService;
+import com.ecomm.np.genevaecommerce.service.modelservice.ItemService;
+import com.ecomm.np.genevaecommerce.service.modelservice.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,27 +18,16 @@ import java.util.*;
 public class AdminStatisticsService {
 
     private final OrderItemAuditRepository orderItemAuditRepository;
-    private final ItemService itemService;
-    private final OrderItemsRepository orderItemsRepository;
+    private final IItemService itemService;
+    private final IOrderItemService orderItemService;
 
     @Autowired
-    public AdminStatisticsService(OrderItemAuditRepository orderItemAuditRepository, ItemServiceImpl itemServiceImpl, OrderItemsRepository orderItemsRepository) {
+    public AdminStatisticsService(OrderItemAuditRepository orderItemAuditRepository, ItemService itemService, OrderItemService orderItemService) {
         this.orderItemAuditRepository = orderItemAuditRepository;
-        this.itemService = itemServiceImpl;
-        this.orderItemsRepository = orderItemsRepository;
+        this.itemService = itemService;
+        this.orderItemService = orderItemService;
     }
 
-    public Map<String,Integer> getWeekData(){
-        Map<String,Integer> map = new HashMap<>();
-        map.put("Sunday",400);
-        map.put("Monday",300);
-        map.put("Tuesday",350);
-        map.put("Wednesday",300);
-        map.put("Thursday",250);
-        map.put("Friday",450);
-        map.put("Saturday",150);
-        return map;
-    }
 
     public List<Integer> findHighestSellingItems(){
         return orderItemAuditRepository.findTopSellingItemCodes();
@@ -49,32 +40,32 @@ public class AdminStatisticsService {
     }
 
     public int totalOrders(){
-        return (int) orderItemsRepository.count();
+        return orderItemService.countAllItems();
     }
 
     private int ordersDelivered(boolean delivered){
-        return Math.toIntExact(orderItemsRepository.findNotDelivered(delivered));
+        return Math.toIntExact(orderItemService.findNotDeliveredCount(delivered));
     }
 
     private int ordersPacked(boolean packed){
-        return Math.toIntExact(orderItemsRepository.findNotPacked(packed));
+        return Math.toIntExact(orderItemService.findNotPackedCount(packed));
     }
 
     private float totalSales(){
-        return orderItemsRepository.findTotalSales();
+        return orderItemService.findTotalSalesCount();
     }
 
     private float totalSoldToday(){
-        return orderItemsRepository.findTotalSalesToday();
+        return orderItemService.findTotalSalesTodayCount();
     }
 
     private int findTotalOrdersToday(){
-        return Math.toIntExact(orderItemsRepository.findTotalOrdersToday());
+        return Math.toIntExact(orderItemService.findTotalOrdersTodayCount());
     }
 
     public List<WeekData> findWeekOrders(){
         List<WeekData> weekList = new ArrayList<>();
-        for(Object[]  row :orderItemsRepository.findOrderCountLast7Days()){
+        for(Object[]  row :orderItemService.findOrderCountLast7DaysCount()){
             WeekData data = new WeekData();
             LocalDate localDate = ((java.sql.Date) row[0]).toLocalDate();
             data.setDay(localDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ENGLISH));

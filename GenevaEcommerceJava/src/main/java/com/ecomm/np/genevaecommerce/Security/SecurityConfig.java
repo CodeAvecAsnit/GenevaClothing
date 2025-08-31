@@ -112,21 +112,4 @@ public class SecurityConfig {
         return new ObjectMapper();
     }
 
-    @Bean
-    public Map<Integer,String> monthMap(){
-        Map<Integer,String> map = new HashMap<>();
-        map.put(1,"Jan");
-        map.put(2,"Feb");
-        map.put(3,"Mar");
-        map.put(4,"Apr");
-        map.put(5,"May");
-        map.put(6,"June");
-        map.put(7,"July");
-        map.put(8,"Aug");
-        map.put(9,"Sept");
-        map.put(10,"Oct");
-        map.put(11,"Nov");
-        map.put(12,"Dec");
-        return map;
-    }
 }

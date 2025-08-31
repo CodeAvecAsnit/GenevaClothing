@@ -14,11 +14,7 @@ import java.util.List;
 public class MailService {
 
     private final Logger logger = LoggerFactory.getLogger(MailService.class);
-
-
     private final JavaMailSender javaMailSender;
-
-
     public MailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }

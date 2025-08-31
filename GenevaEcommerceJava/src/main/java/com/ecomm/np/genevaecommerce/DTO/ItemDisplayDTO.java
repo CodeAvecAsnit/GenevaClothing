@@ -4,7 +4,7 @@ import com.ecomm.np.genevaecommerce.model.Items;
 
 public class ItemDisplayDTO {
     private int id;
-    private String ItemName;
+    private String itemName;
     private String description;
     private float price;
     private String imageLink;
@@ -14,7 +14,7 @@ public class ItemDisplayDTO {
 
     public ItemDisplayDTO(int id, String itemName, String description, float price, String imageLink) {
         this.id = id;
-        ItemName = itemName;
+        this.itemName = itemName;
         this.description = description;
         this.price = price;
         this.imageLink = imageLink;
@@ -29,11 +29,11 @@ public class ItemDisplayDTO {
     }
 
     public String getItemName() {
-        return ItemName;
+        return itemName;
     }
 
     public void setItemName(String itemName) {
-        ItemName = itemName;
+        this.itemName = itemName;
     }
 
     public String getDescription() {

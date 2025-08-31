@@ -1,6 +1,5 @@
 package com.ecomm.np.genevaecommerce.controller;
 
-
 import com.ecomm.np.genevaecommerce.dto.*;
 import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.security.CustomUser;
@@ -21,7 +20,7 @@ import java.util.List;
 @RequestMapping("/api/v1/items")
 public class ItemsController {
 
-    private static Logger logger = LoggerFactory.getLogger(ItemsController.class);
+    private final static Logger logger = LoggerFactory.getLogger(ItemsController.class);
 
     private final CartService cartService;
 
@@ -31,7 +30,7 @@ public class ItemsController {
         this.cartService = cartService;
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/get/{id}")// in use
     public ResponseEntity<?> getItemDisplayById(@PathVariable int id) {
         try {
             return ResponseEntity.ok(cartService.findById(id));
@@ -40,20 +39,10 @@ public class ItemsController {
         }
     }
 
-    @GetMapping("/new_collection")
-    public ResponseEntity<List<?>> getNewCollection() {
-        return ResponseEntity.ok(cartService.findNewCollection());
-    }
-
-
-    @GetMapping("/get/gender/{gen}")
-    public ResponseEntity<List<?>> displayByGender(@PathVariable String gen) {
-        return ResponseEntity.ok(cartService.displayItems(gen));
-    }
 
 
     @GetMapping
-    public ResponseEntity<Page<?>> displayItems(@RequestParam(defaultValue = "0") int page, @RequestParam(required = false) String gender) throws Exception {
+    public ResponseEntity<Page<?>> displayItems(@RequestParam(defaultValue = "0") int page, @RequestParam(required = false) String gender)  {//in use
         int pageSize = 8;
         Pageable pageable = PageRequest.of(page, pageSize);
         if (gender == null) {
@@ -67,17 +56,13 @@ public class ItemsController {
         }
     }
 
-    @GetMapping("/get/latest")
+    @GetMapping("/get/latest")// in Use
     public ResponseEntity<List<ItemDisplayDTO>> latestItems() {
         return ResponseEntity.ok(cartService.displayNewArrivals());
     }
 
-    @GetMapping("/latest/collection")
-    public ResponseEntity<List<CollectionDTO>> getLatestCollection() {
-        return ResponseEntity.ok(null);
-    }
 
-    @PutMapping("/cart/{code}")
+    @PutMapping("/cart/{code}")//in use
     public ResponseEntity<BasicDT0> addItemToCart(@AuthenticationPrincipal CustomUser customUser, @PathVariable int code) {
         BasicDT0 basicDT0 = new BasicDT0();
         try {
@@ -91,8 +76,7 @@ public class ItemsController {
         }
     }
 
-
-    @DeleteMapping("/cart-remove/{code}")
+    @DeleteMapping("/cart-remove/{code}")//in use
     public ResponseEntity<BasicDT0> removeFromCart(@AuthenticationPrincipal CustomUser customUser, @PathVariable int code) {
     try{
         return ResponseEntity.ok(new BasicDT0(cartService.removeFromCart(customUser.getId(),code)));
@@ -103,7 +87,7 @@ public class ItemsController {
     }
     }
 
-    @DeleteMapping("/wishlist-remove/{code}")
+    @DeleteMapping("/wishlist-remove/{code}")//in use
     public ResponseEntity<BasicDT0> removeFromWishList(@AuthenticationPrincipal CustomUser customUser, @PathVariable int code) {
         try{
             return ResponseEntity.ok(new BasicDT0(cartService.removeFromWishList(customUser.getId(),code)));
@@ -114,13 +98,13 @@ public class ItemsController {
         }
     }
 
-    @GetMapping("/check/{code}")
+    @GetMapping("/check/{code}")//in use
     public ResponseEntity<Checkers> checkList(@PathVariable int code,@AuthenticationPrincipal CustomUser customUser){
         return ResponseEntity.ok(new Checkers(cartService.checkItemInCart(customUser.getId(),code),
                 cartService.checkItemInWishList(customUser.getId(),code)));
     }
 
-    @PutMapping("/wishlist/{code}")
+    @PutMapping("/wishlist/{code}")//in use
     public ResponseEntity<BasicDT0> addItemToWishList(@AuthenticationPrincipal CustomUser customUser,@PathVariable int code){
         BasicDT0 basicDT0 = new BasicDT0();
         try{

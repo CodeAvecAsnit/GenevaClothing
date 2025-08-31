@@ -2,7 +2,7 @@ package com.ecomm.np.genevaecommerce.dto;
 
 import com.ecomm.np.genevaecommerce.model.Items;
 
-public class NewCollectionDTO {
+public class NewCollectionDTO {//This should be deleted and instead of this display items should be passed in its usage probably
     private String itemName;
     private String description;
     private String imageName;

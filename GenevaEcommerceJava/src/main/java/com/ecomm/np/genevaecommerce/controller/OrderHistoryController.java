@@ -29,7 +29,7 @@ public class OrderHistoryController {
         this.orderHistoryService=orderHistoryService;
     }
 
-    @GetMapping("/past/orders")
+    @GetMapping("/past/orders")//in use
     public ResponseEntity<Page<HistoryDTO>> getPageHistory(@AuthenticationPrincipal CustomUser customUser,@RequestParam(defaultValue = "0") int page){
         int pageSize = 8;
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "orderInitiatedDate"));
@@ -41,7 +41,7 @@ public class OrderHistoryController {
         }
     }
 
-    @GetMapping("/past/order/{id}")
+    @GetMapping("/past/order/{id}")//in use
     public ResponseEntity<OrderDTO> getOrderData(@PathVariable int id, @AuthenticationPrincipal CustomUser customUser) {
         try {
             return ResponseEntity.ok(orderHistoryService.findOrderData(id, customUser.getId()));

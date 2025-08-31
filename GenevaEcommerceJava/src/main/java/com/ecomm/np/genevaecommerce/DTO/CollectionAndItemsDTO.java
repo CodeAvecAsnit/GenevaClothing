@@ -9,12 +9,12 @@ import java.util.List;
 public class CollectionAndItemsDTO {
     private String collectionName;
     private String collectionDescription;
-    private List<NewCollectionDTO> collectionItems;
+    private List<ItemDisplayDTO> collectionItems;
 
     public CollectionAndItemsDTO() {
     }
 
-    public CollectionAndItemsDTO(String collectionName, String collectionDescription, List<NewCollectionDTO> collectionItems) {
+    public CollectionAndItemsDTO(String collectionName, String collectionDescription, List<ItemDisplayDTO> collectionItems) {
         this.collectionName = collectionName;
         this.collectionDescription = collectionDescription;
         this.collectionItems = collectionItems;
@@ -36,11 +36,11 @@ public class CollectionAndItemsDTO {
         this.collectionDescription = collectionDescription;
     }
 
-    public List<NewCollectionDTO> getCollectionItems() {
+    public List<ItemDisplayDTO> getCollectionItems() {
         return collectionItems;
     }
 
-    public void setCollectionItems(List<NewCollectionDTO> collectionItems) {
+    public void setCollectionItems(List<ItemDisplayDTO> collectionItems) {
         this.collectionItems = collectionItems;
     }
 
@@ -48,12 +48,8 @@ public class CollectionAndItemsDTO {
         CollectionAndItemsDTO collectionAndItemsDTO = new CollectionAndItemsDTO();
         collectionAndItemsDTO.setCollectionName(collection.getCollectionName());
         collectionAndItemsDTO.setCollectionDescription(collection.getCollection_description());
-        List<NewCollectionDTO> collectionList = new ArrayList<>();
-        for(Items item : collection.getCollectionItemList()){
-            NewCollectionDTO newCollectionDTO = NewCollectionDTO.buildFromItem(item);
-            collectionList.add(newCollectionDTO);
-        }
-        collectionAndItemsDTO.setCollectionItems(collectionList);
+        List<ItemDisplayDTO> itemDisplayDTOS = collection.getCollectionItemList().stream().map(ItemDisplayDTO::MapByItems).toList();
+        collectionAndItemsDTO.setCollectionItems(itemDisplayDTOS);
         return collectionAndItemsDTO;
     }
 

@@ -6,7 +6,7 @@ import com.ecomm.np.genevaecommerce.extra.OutOfStockException;
 import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.security.CustomUser;
 import com.ecomm.np.genevaecommerce.service.CheckoutService;
-import com.ecomm.np.genevaecommerce.service.OrderService;
+import com.ecomm.np.genevaecommerce.service.OrderDetailsService;
 import jakarta.validation.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,23 +18,22 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/v1/order")
 public class OrderController {
 
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
-    private final OrderService orderService;
+    private final OrderDetailsService orderDetailsService;
     private final CheckoutService checkoutService;
 
     @Autowired
-    public OrderController(OrderService orderService,CheckoutService checkoutService) {
-        this.orderService = orderService;
+    public OrderController(OrderDetailsService orderDetailsService, CheckoutService checkoutService) {
+        this.orderDetailsService = orderDetailsService;
         this.checkoutService = checkoutService;
     }
 
 
-    @GetMapping("/fetch/order")
+    @GetMapping("/fetch/order")//in use
     public ResponseEntity<CheckDTO> displayOrderPage(@RequestParam int code,@AuthenticationPrincipal CustomUser user){
         try{
             return ResponseEntity.ok(checkoutService.fetchCheckPage(code,user.getId()));
@@ -51,28 +50,26 @@ public class OrderController {
     }
 
 
-    @PutMapping("update")
+    @PutMapping("update")// in use
     public ResponseEntity<AddressDTO> updateAddress(@RequestBody AddressDTO addressDTO,@AuthenticationPrincipal CustomUser customUser){
-        AddressDTO add = orderService.addOrUpdateAddress(customUser.getId(),addressDTO);
+        AddressDTO add = orderDetailsService.addOrUpdateAddress(customUser.getId(),addressDTO);
         return (add==null)?
                 ResponseEntity.notFound().build():
                 ResponseEntity.ok(add);
     }
 
-    @GetMapping("/get/order_details")
+    @GetMapping("/get/order_details")//in use
     public ResponseEntity<AddressDTO> loadUserAddress(@AuthenticationPrincipal CustomUser customUser){
         try {
-            return ResponseEntity.ok(orderService.getAddress(customUser.getId()));
-        }catch (NullPointerException ex){
+            return ResponseEntity.ok(orderDetailsService.getAddress(customUser.getId()));
+        }catch (UsernameNotFoundException ex) {
             return ResponseEntity.status(404).build();
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
         }
     }
 
 
     @PostMapping
-    private ResponseEntity<BasicDT0> respondToCheckout(@RequestBody List<QuantityItemDTO> itemQuantityList, @AuthenticationPrincipal CustomUser customUser) {
+    private ResponseEntity<BasicDT0> respondToCheckout(@RequestBody List<QuantityItemDTO> itemQuantityList, @AuthenticationPrincipal CustomUser customUser) {//in use
         try {
             int code = checkoutService.processAndSaveRequest(itemQuantityList);
             BasicDT0 basicDT0 = new BasicDT0();
@@ -111,7 +108,7 @@ public class OrderController {
         }
     }
 
-    @PostMapping("/checkout/item")
+    @PostMapping("/checkout/item")//in use
     public ResponseEntity<BasicDT0> orderSingleItem(
             @RequestParam int id, @RequestParam int quantity, @NotBlank@RequestParam String size,
             @AuthenticationPrincipal CustomUser customUser)
@@ -131,7 +128,7 @@ public class OrderController {
         }
     }
 
-    @PostMapping("/checkout/register")
+    @PostMapping("/checkout/register")//in use
     public ResponseEntity<BasicDT0> registerOrder(@RequestBody CheckoutIncDTO dto,@AuthenticationPrincipal CustomUser customUser){
         try{
             if (checkoutService.checkoutOrder(dto,customUser.getId())) {
