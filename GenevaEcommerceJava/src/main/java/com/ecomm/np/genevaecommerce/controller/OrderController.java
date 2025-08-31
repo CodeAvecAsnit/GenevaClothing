@@ -1,12 +1,12 @@
 package com.ecomm.np.genevaecommerce.controller;
 
-import com.ecomm.np.genevaecommerce.dto.*;
 import com.ecomm.np.genevaecommerce.extra.CodeErrorException;
 import com.ecomm.np.genevaecommerce.extra.OutOfStockException;
 import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
+import com.ecomm.np.genevaecommerce.model.dto.*;
 import com.ecomm.np.genevaecommerce.security.CustomUser;
-import com.ecomm.np.genevaecommerce.service.CheckoutService;
-import com.ecomm.np.genevaecommerce.service.OrderDetailsService;
+import com.ecomm.np.genevaecommerce.service.application.CheckoutService;
+import com.ecomm.np.genevaecommerce.service.application.OrderDetailsService;
 import jakarta.validation.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class OrderController {
 
 
     @GetMapping("/fetch/order")//in use
-    public ResponseEntity<CheckDTO> displayOrderPage(@RequestParam int code,@AuthenticationPrincipal CustomUser user){
+    public ResponseEntity<CheckDTO> displayOrderPage(@RequestParam int code, @AuthenticationPrincipal CustomUser user){
         try{
             return ResponseEntity.ok(checkoutService.fetchCheckPage(code,user.getId()));
         }catch (UsernameNotFoundException usEX){
@@ -51,7 +51,7 @@ public class OrderController {
 
 
     @PutMapping("update")// in use
-    public ResponseEntity<AddressDTO> updateAddress(@RequestBody AddressDTO addressDTO,@AuthenticationPrincipal CustomUser customUser){
+    public ResponseEntity<AddressDTO> updateAddress(@RequestBody AddressDTO addressDTO, @AuthenticationPrincipal CustomUser customUser){
         AddressDTO add = orderDetailsService.addOrUpdateAddress(customUser.getId(),addressDTO);
         return (add==null)?
                 ResponseEntity.notFound().build():
@@ -129,7 +129,7 @@ public class OrderController {
     }
 
     @PostMapping("/checkout/register")//in use
-    public ResponseEntity<BasicDT0> registerOrder(@RequestBody CheckoutIncDTO dto,@AuthenticationPrincipal CustomUser customUser){
+    public ResponseEntity<BasicDT0> registerOrder(@RequestBody CheckoutIncDTO dto, @AuthenticationPrincipal CustomUser customUser){
         try{
             if (checkoutService.checkoutOrder(dto,customUser.getId())) {
                 return ResponseEntity.ok(new BasicDT0("Success"));

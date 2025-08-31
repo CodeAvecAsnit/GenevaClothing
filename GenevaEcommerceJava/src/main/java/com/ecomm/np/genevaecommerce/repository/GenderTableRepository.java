@@ -1,7 +1,7 @@
 package com.ecomm.np.genevaecommerce.repository;
 
-import com.ecomm.np.genevaecommerce.enumeration.Gender;
-import com.ecomm.np.genevaecommerce.model.GenderTable;
+import com.ecomm.np.genevaecommerce.model.enumeration.Gender;
+import com.ecomm.np.genevaecommerce.model.entity.GenderTable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

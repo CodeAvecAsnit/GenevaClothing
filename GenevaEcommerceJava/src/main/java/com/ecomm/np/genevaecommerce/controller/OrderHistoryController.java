@@ -1,9 +1,9 @@
 package com.ecomm.np.genevaecommerce.controller;
 
-import com.ecomm.np.genevaecommerce.dto.HistoryDTO;
-import com.ecomm.np.genevaecommerce.dto.OrderDTO;
+import com.ecomm.np.genevaecommerce.model.dto.HistoryDTO;
+import com.ecomm.np.genevaecommerce.model.dto.OrderDTO;
 import com.ecomm.np.genevaecommerce.security.CustomUser;
-import com.ecomm.np.genevaecommerce.service.OrderHistoryService;
+import com.ecomm.np.genevaecommerce.service.application.OrderHistoryService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

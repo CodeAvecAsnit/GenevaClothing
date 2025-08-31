@@ -1,10 +1,10 @@
 package com.ecomm.np.genevaecommerce.controller;
 
-import com.ecomm.np.genevaecommerce.dto.CollectionAndItemsDTO;
-import com.ecomm.np.genevaecommerce.model.BestCollection;
-import com.ecomm.np.genevaecommerce.model.Collection;
+import com.ecomm.np.genevaecommerce.model.dto.CollectionAndItemsDTO;
+import com.ecomm.np.genevaecommerce.model.entity.BestCollection;
+import com.ecomm.np.genevaecommerce.model.entity.Collection;
 import com.ecomm.np.genevaecommerce.security.CustomUser;
-import com.ecomm.np.genevaecommerce.service.BasicService;
+import com.ecomm.np.genevaecommerce.service.application.BasicService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

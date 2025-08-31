@@ -1,9 +1,9 @@
 package com.ecomm.np.genevaecommerce.security;
 
-import com.ecomm.np.genevaecommerce.enumeration.Role;
+import com.ecomm.np.genevaecommerce.model.enumeration.Role;
 import com.ecomm.np.genevaecommerce.extra.PasswordGenerator;
-import com.ecomm.np.genevaecommerce.model.RoleTable;
-import com.ecomm.np.genevaecommerce.model.UserModel;
+import com.ecomm.np.genevaecommerce.model.entity.RoleTable;
+import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 import com.ecomm.np.genevaecommerce.repository.RoleTableRepository;
 import com.ecomm.np.genevaecommerce.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;

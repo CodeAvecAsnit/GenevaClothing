@@ -1,13 +1,13 @@
 package com.ecomm.np.genevaecommerce.service.authservice;
 
-import com.ecomm.np.genevaecommerce.dto.*;
-import com.ecomm.np.genevaecommerce.enumeration.Role;
-import com.ecomm.np.genevaecommerce.model.UserModel;
+import com.ecomm.np.genevaecommerce.model.enumeration.Role;
+import com.ecomm.np.genevaecommerce.model.dto.*;
+import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 import com.ecomm.np.genevaecommerce.repository.RoleTableRepository;
 import com.ecomm.np.genevaecommerce.security.CustomUser;
 import com.ecomm.np.genevaecommerce.security.CustomUserService;
 import com.ecomm.np.genevaecommerce.security.JwtUtils;
-import com.ecomm.np.genevaecommerce.service.MailService;
+import com.ecomm.np.genevaecommerce.service.infrastructure.MailService;
 import com.ecomm.np.genevaecommerce.service.modelservice.UserService;
 import com.ecomm.np.genevaecommerce.service.modelservice.IUserService;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -40,7 +40,7 @@ public class AuthService {
     private final SecureRandom secureRandom;//Generation of otp code
 
     private Cache<String, SignUpAttempt> codes;//for rate limiting
-    private Cache<String,SignUpDTO> accounts;//for storing accounts
+    private Cache<String, SignUpDTO> accounts;//for storing accounts
 
 
     @Autowired

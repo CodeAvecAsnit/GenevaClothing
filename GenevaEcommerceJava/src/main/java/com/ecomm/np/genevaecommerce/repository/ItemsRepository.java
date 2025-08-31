@@ -1,7 +1,7 @@
 package com.ecomm.np.genevaecommerce.repository;
 
-import com.ecomm.np.genevaecommerce.model.GenderTable;
-import com.ecomm.np.genevaecommerce.model.Items;
+import com.ecomm.np.genevaecommerce.model.entity.GenderTable;
+import com.ecomm.np.genevaecommerce.model.entity.Items;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

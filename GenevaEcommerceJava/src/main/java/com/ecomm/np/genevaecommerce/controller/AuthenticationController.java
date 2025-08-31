@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce.controller;
 
-import com.ecomm.np.genevaecommerce.dto.*;
+import com.ecomm.np.genevaecommerce.model.dto.*;
 import com.ecomm.np.genevaecommerce.security.CustomUser;
 import com.ecomm.np.genevaecommerce.service.authservice.AuthService;
 import jakarta.servlet.http.Cookie;
@@ -29,7 +29,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO>LoginUser(@RequestBody LoginDTO loginDTO,HttpServletResponse response){
+    public ResponseEntity<LoginResponseDTO>LoginUser(@RequestBody LoginDTO loginDTO, HttpServletResponse response){
         try{
             LoginResponseDTO loginAttempt = authService.login(loginDTO);
             if(loginAttempt.getResponseCode()==200) {
@@ -67,7 +67,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/sign_up/verify")
-    public ResponseEntity<LoginResponseDTO> verify(@RequestBody VerificationDTO verificationDTO,HttpServletResponse response){
+    public ResponseEntity<LoginResponseDTO> verify(@RequestBody VerificationDTO verificationDTO, HttpServletResponse response){
         try{
             LoginResponseDTO verifyAttempt = authService.verify(verificationDTO);
             if(verifyAttempt.getResponseCode()==200) {

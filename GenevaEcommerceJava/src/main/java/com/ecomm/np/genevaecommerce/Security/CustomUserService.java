@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce.security;
 
-import com.ecomm.np.genevaecommerce.model.UserModel;
+import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 import com.ecomm.np.genevaecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

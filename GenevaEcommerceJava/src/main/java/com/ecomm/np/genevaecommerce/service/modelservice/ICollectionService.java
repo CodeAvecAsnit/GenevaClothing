@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce.service.modelservice;
 
-import com.ecomm.np.genevaecommerce.model.Collection;
+import com.ecomm.np.genevaecommerce.model.entity.Collection;
 
 public interface ICollectionService {
 

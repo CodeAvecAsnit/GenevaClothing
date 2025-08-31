@@ -1,10 +1,10 @@
 package com.ecomm.np.genevaecommerce.controller;
 
-import com.ecomm.np.genevaecommerce.dto.BasicDT0;
-import com.ecomm.np.genevaecommerce.dto.HistoryDTO;
-import com.ecomm.np.genevaecommerce.dto.OrderDTO;
+import com.ecomm.np.genevaecommerce.model.dto.BasicDT0;
+import com.ecomm.np.genevaecommerce.model.dto.HistoryDTO;
+import com.ecomm.np.genevaecommerce.model.dto.OrderDTO;
 import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
-import com.ecomm.np.genevaecommerce.service.OrderHistoryService;
+import com.ecomm.np.genevaecommerce.service.application.OrderHistoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

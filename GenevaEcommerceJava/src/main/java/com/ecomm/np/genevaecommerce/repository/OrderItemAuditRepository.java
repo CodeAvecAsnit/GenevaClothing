@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce.repository;
 
-import com.ecomm.np.genevaecommerce.model.OrderItemAudit;
+import com.ecomm.np.genevaecommerce.model.entity.OrderItemAudit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

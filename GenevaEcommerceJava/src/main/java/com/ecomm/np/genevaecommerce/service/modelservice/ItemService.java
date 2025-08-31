@@ -1,8 +1,8 @@
 package com.ecomm.np.genevaecommerce.service.modelservice;
 
 import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
-import com.ecomm.np.genevaecommerce.model.GenderTable;
-import com.ecomm.np.genevaecommerce.model.Items;
+import com.ecomm.np.genevaecommerce.model.entity.GenderTable;
+import com.ecomm.np.genevaecommerce.model.entity.Items;
 import com.ecomm.np.genevaecommerce.repository.ItemsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

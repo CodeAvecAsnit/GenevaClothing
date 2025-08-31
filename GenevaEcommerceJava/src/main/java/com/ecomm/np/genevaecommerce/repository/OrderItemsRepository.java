@@ -1,7 +1,7 @@
 package com.ecomm.np.genevaecommerce.repository;
 
-import com.ecomm.np.genevaecommerce.model.OrderDetails;
-import com.ecomm.np.genevaecommerce.model.OrderedItems;
+import com.ecomm.np.genevaecommerce.model.entity.OrderDetails;
+import com.ecomm.np.genevaecommerce.model.entity.OrderedItems;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

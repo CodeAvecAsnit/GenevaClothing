@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce.repository;
 
-import com.ecomm.np.genevaecommerce.model.Collection;
+import com.ecomm.np.genevaecommerce.model.entity.Collection;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

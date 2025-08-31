@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce.service.modelservice;
 
-import com.ecomm.np.genevaecommerce.model.UserModel;
+import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 
 public interface IUserService {
 

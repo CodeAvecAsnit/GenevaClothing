@@ -1,8 +1,8 @@
 package com.ecomm.np.genevaecommerce.service.modelservice;
 
 import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
-import com.ecomm.np.genevaecommerce.model.OrderDetails;
-import com.ecomm.np.genevaecommerce.model.OrderedItems;
+import com.ecomm.np.genevaecommerce.model.entity.OrderDetails;
+import com.ecomm.np.genevaecommerce.model.entity.OrderedItems;
 import com.ecomm.np.genevaecommerce.repository.OrderItemsRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

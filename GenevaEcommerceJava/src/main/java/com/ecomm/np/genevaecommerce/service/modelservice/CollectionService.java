@@ -1,7 +1,7 @@
 package com.ecomm.np.genevaecommerce.service.modelservice;
 
 import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
-import com.ecomm.np.genevaecommerce.model.Collection;
+import com.ecomm.np.genevaecommerce.model.entity.Collection;
 import com.ecomm.np.genevaecommerce.repository.CollectionRepository;
 import org.springframework.stereotype.Service;
 
