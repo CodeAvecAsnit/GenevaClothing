@@ -61,8 +61,12 @@ public class AuthenticationController {
 
     @PostMapping("/sign_up")
     public ResponseEntity<String> SignUp(@RequestBody SignUpDTO signUpDTO) {
-        authService.signUp(signUpDTO);
-        return ResponseEntity.ok("Verification Code has been sent to : "+signUpDTO.getEmail());
+        try {
+            authService.signUp(signUpDTO);
+            return ResponseEntity.ok("Verification Code has been sent to : " + signUpDTO.getEmail());
+        }catch (UsernameNotFoundException ex){
+            return ResponseEntity.badRequest().body("Username with this email or username already exists");
+        }
     }
 
 

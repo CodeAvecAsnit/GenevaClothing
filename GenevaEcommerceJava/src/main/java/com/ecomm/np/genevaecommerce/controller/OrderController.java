@@ -27,13 +27,13 @@ public class OrderController {
     private final CheckoutService checkoutService;
 
     @Autowired
-    public OrderController(OrderDetailsService orderDetailsService, CheckoutService checkoutService) {
+    public OrderController(OrderDetailsService orderDetailsService,CheckoutService checkoutService) {
         this.orderDetailsService = orderDetailsService;
         this.checkoutService = checkoutService;
     }
 
 
-    @GetMapping("/fetch/order")//in use
+    @GetMapping("/fetch/order")
     public ResponseEntity<CheckDTO> displayOrderPage(@RequestParam int code, @AuthenticationPrincipal CustomUser user){
         try{
             return ResponseEntity.ok(checkoutService.fetchCheckPage(code,user.getId()));
@@ -50,7 +50,7 @@ public class OrderController {
     }
 
 
-    @PutMapping("update")// in use
+    @PutMapping("update")
     public ResponseEntity<AddressDTO> updateAddress(@RequestBody AddressDTO addressDTO, @AuthenticationPrincipal CustomUser customUser){
         AddressDTO add = orderDetailsService.addOrUpdateAddress(customUser.getId(),addressDTO);
         return (add==null)?
@@ -58,18 +58,20 @@ public class OrderController {
                 ResponseEntity.ok(add);
     }
 
-    @GetMapping("/get/order_details")//in use
+    @GetMapping("/get/order_details")
     public ResponseEntity<AddressDTO> loadUserAddress(@AuthenticationPrincipal CustomUser customUser){
         try {
             return ResponseEntity.ok(orderDetailsService.getAddress(customUser.getId()));
-        }catch (UsernameNotFoundException ex) {
+        }catch (NullPointerException ex){
             return ResponseEntity.status(404).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
         }
     }
 
 
     @PostMapping
-    private ResponseEntity<BasicDT0> respondToCheckout(@RequestBody List<QuantityItemDTO> itemQuantityList, @AuthenticationPrincipal CustomUser customUser) {//in use
+    private ResponseEntity<BasicDT0> respondToCheckout(@RequestBody List<QuantityItemDTO> itemQuantityList, @AuthenticationPrincipal CustomUser customUser) {
         try {
             int code = checkoutService.processAndSaveRequest(itemQuantityList);
             BasicDT0 basicDT0 = new BasicDT0();
@@ -81,7 +83,7 @@ public class OrderController {
             return ResponseEntity.ok(basicDT0);
         }catch (OutOfStockException outOfStock){
             return ResponseEntity.status(409).body(new BasicDT0(outOfStock.getMessage()));
-    }   catch (ResourceNotFoundException rEx){
+        }   catch (ResourceNotFoundException rEx){
             log.warn(rEx.getMessage());
             return ResponseEntity.badRequest().body(new BasicDT0("Please try refreshing the page and try again"));
         }catch (Exception ex){
@@ -108,7 +110,7 @@ public class OrderController {
         }
     }
 
-    @PostMapping("/checkout/item")//in use
+    @PostMapping("/checkout/item")
     public ResponseEntity<BasicDT0> orderSingleItem(
             @RequestParam int id, @RequestParam int quantity, @NotBlank@RequestParam String size,
             @AuthenticationPrincipal CustomUser customUser)
@@ -128,7 +130,8 @@ public class OrderController {
         }
     }
 
-    @PostMapping("/checkout/register")//in use
+
+    @PostMapping("/checkout/register")
     public ResponseEntity<BasicDT0> registerOrder(@RequestBody CheckoutIncDTO dto, @AuthenticationPrincipal CustomUser customUser){
         try{
             if (checkoutService.checkoutOrder(dto,customUser.getId())) {

@@ -1,5 +1,6 @@
 package com.ecomm.np.genevaecommerce.security;
 
+import com.ecomm.np.genevaecommerce.extra.NetworkUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +99,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5500","http://127.0.0.1:5500"));
+        String currentAddress;
+        try {
+            currentAddress = NetworkUtils.getLocalIp();
+        }catch (Exception ex){
+            currentAddress="localhost";
+        }
+        config.setAllowedOriginPatterns(List.of("http://*.local", "http://localhost:5500", "http://127.0.0.1:5500", "http://" + currentAddress + ":5500"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

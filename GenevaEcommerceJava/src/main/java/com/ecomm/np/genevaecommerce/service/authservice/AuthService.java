@@ -87,12 +87,12 @@ public class AuthService {
     }
 
     @Async
-    public void signUp(SignUpDTO signUpDTO){
+    public void signUp(SignUpDTO signUpDTO) throws UsernameNotFoundException{
         String mailAddress = signUpDTO.getEmail();
-        UserModel ux = IUserService.findUserByEmail(mailAddress);
-        if(ux!=null) return;
-        UserModel ui = IUserService.findUserByName(signUpDTO.getUsername());
-        if(ui!=null) return ;
+//        UserModel ux = IUserService.findUserByEmail(mailAddress);
+//        if(ux!=null) throw new UsernameNotFoundException("User already exists with this email");
+//        UserModel ui = IUserService.findUserByName(signUpDTO.getUsername());
+//        if(ui!=null) throw new UsernameNotFoundException("User already exists with this Username"); ;
         if(codes.getIfPresent(mailAddress)!=null){
             return;
         }
