@@ -70,7 +70,7 @@ public class AdminItemController {
         } catch (ResourceNotFoundException rEx){
             return ResponseEntity.notFound().build();
         }catch (IOException ex){
-            return ResponseEntity.badRequest().body("Unable to upload the file");
+            return ResponseEntity.badRequest().body("Unable to uploadImage the file");
         }
         catch (Exception e) {
             logger.error(e.getMessage());

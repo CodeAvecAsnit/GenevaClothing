@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.service.authservice;
+package com.ecomm.np.genevaecommerce.service.authservice.impl;
 
 import com.ecomm.np.genevaecommerce.model.enumeration.Role;
 import com.ecomm.np.genevaecommerce.model.dto.*;
@@ -8,8 +8,8 @@ import com.ecomm.np.genevaecommerce.security.CustomUser;
 import com.ecomm.np.genevaecommerce.security.CustomUserService;
 import com.ecomm.np.genevaecommerce.security.JwtUtils;
 import com.ecomm.np.genevaecommerce.service.infrastructure.MailService;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.UserServiceImpl;
 import com.ecomm.np.genevaecommerce.service.modelservice.UserService;
-import com.ecomm.np.genevaecommerce.service.modelservice.IUserService;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import jakarta.annotation.PostConstruct;
@@ -32,7 +32,7 @@ public class AuthService {
 
     private final Logger logger = LoggerFactory.getLogger(AuthService.class);
     private final CustomUserService customUserService;
-    private final IUserService IUserService;
+    private final UserService UserService;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
     private final RoleTableRepository roleTableRepository;
@@ -44,11 +44,11 @@ public class AuthService {
 
 
     @Autowired
-    public AuthService(CustomUserService customUserService,  UserService userServiceImpl,
-                       PasswordEncoder passwordEncoder, MailService mailService,
-                       RoleTableRepository roleTableRepository, JwtUtils jwtUtils, SecureRandom secureRandom) {
+    public AuthService(CustomUserService customUserService, UserServiceImpl userServiceImpl,
+                       PasswordEncoder passwordEncoder,
+                       RoleTableRepository roleTableRepository, JwtUtils jwtUtils, SecureRandom secureRandom, MailService mailService) {
         this.customUserService = customUserService;
-        this.IUserService = userServiceImpl;
+        this.UserService = userServiceImpl;
         this.passwordEncoder = passwordEncoder;
         this.mailService = mailService;
         this.roleTableRepository = roleTableRepository;
@@ -89,10 +89,10 @@ public class AuthService {
     @Async
     public void signUp(SignUpDTO signUpDTO) throws UsernameNotFoundException{
         String mailAddress = signUpDTO.getEmail();
-//        UserModel ux = IUserService.findUserByEmail(mailAddress);
-//        if(ux!=null) throw new UsernameNotFoundException("User already exists with this email");
-//        UserModel ui = IUserService.findUserByName(signUpDTO.getUsername());
-//        if(ui!=null) throw new UsernameNotFoundException("User already exists with this Username"); ;
+        UserModel ux = UserService.findUserByEmail(mailAddress);
+        if(ux!=null) throw new UsernameNotFoundException("User already exists with this email");
+        UserModel ui = UserService.findUserByName(signUpDTO.getUsername());
+        if(ui!=null) throw new UsernameNotFoundException("User already exists with this Username"); ;
         if(codes.getIfPresent(mailAddress)!=null){
             return;
         }
@@ -101,6 +101,7 @@ public class AuthService {
         codes.put(mailAddress,new SignUpAttempt(code));
         accounts.put(mailAddress,signUpDTO);
     }
+
 
 
     public void resendEmail(String email)throws Exception{
@@ -132,7 +133,7 @@ public class AuthService {
             UserModel user = SignUpDTO.build(userDTO);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setRoleTable(roleTableRepository.findByRole(Role.USER));
-            UserModel savedUser = IUserService.saveUser(user);
+            UserModel savedUser = UserService.saveUser(user);
             codes.invalidate(email);
             accounts.invalidate(email);
             String jwt = jwtUtils.generateJwtTokens(CustomUser.build(savedUser));
@@ -146,7 +147,7 @@ public class AuthService {
         if (newPass.getNewPassword().equals(newPass.getOldPassword())) {
             throw new BadCredentialsException("New password cannot be the same as the old password.");
         }
-        UserModel user = IUserService.findUserByEmail(email);
+        UserModel user = UserService.findUserByEmail(email);
         if (user == null) {
             throw new UsernameNotFoundException("User not found ");
         }
@@ -155,7 +156,7 @@ public class AuthService {
         }
         String encodedPassword = passwordEncoder.encode(newPass.getNewPassword());
         user.setPassword(encodedPassword);
-        IUserService.saveUser(user);
+        UserService.saveUser(user);
         logger.info("Password changed successfully for user: {}", email);
         return "Password changed successfully";
     }

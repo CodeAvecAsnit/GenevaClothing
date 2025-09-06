@@ -6,9 +6,16 @@ import com.ecomm.np.genevaecommerce.extra.DateFormat;
 import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.entity.Collection;
 import com.ecomm.np.genevaecommerce.model.entity.Items;
-import com.ecomm.np.genevaecommerce.repository.OrderItemAuditRepository;
+import com.ecomm.np.genevaecommerce.service.infrastructure.impl.CloudinaryServiceImpl;
 import com.ecomm.np.genevaecommerce.service.infrastructure.CloudinaryService;
-import com.ecomm.np.genevaecommerce.service.modelservice.*;
+import com.ecomm.np.genevaecommerce.service.modelservice.CollectionService;
+import com.ecomm.np.genevaecommerce.service.modelservice.GenderService;
+import com.ecomm.np.genevaecommerce.service.modelservice.ItemService;
+import com.ecomm.np.genevaecommerce.service.modelservice.OrderItemAuditService;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.CollectionServiceImpl;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.GenderServiceImpl;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.ItemServiceImpl;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.OrderItemAuditServiceImpl;
 import io.jsonwebtoken.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,22 +29,22 @@ public class AdminItemService {// fix this very tightly coupled
 
     private static final Logger log = LogManager.getLogger(AdminItemService.class);
     private final CloudinaryService cloudinaryService;
-    private final IItemService iitemService;
-    private final ICollectionService collectionService;
-    private final IGenderService genderService;
-    private final IOrderItemAuditService orderItemAuditService;
+    private final ItemService iitemService;
+    private final CollectionService collectionService;
+    private final GenderService genderService;
+    private final OrderItemAuditService orderItemAuditService;
 
     @Autowired
-    public AdminItemService(CloudinaryService cloudinaryService,
-                            ItemService itemServiceImpl,
-                            CollectionService collectionService,
-                            GenderService genderService,
-                            OrderItemAuditService orderItemAuditService) {
-        this.cloudinaryService = cloudinaryService;
+    public AdminItemService(CloudinaryServiceImpl cloudinaryServiceImpl,
+                            ItemServiceImpl itemServiceImpl,
+                            CollectionServiceImpl collectionServiceImpl,
+                            GenderServiceImpl genderServiceImpl,
+                            OrderItemAuditServiceImpl orderItemAuditServiceImpl) {
+        this.cloudinaryService = cloudinaryServiceImpl;
         this.iitemService = itemServiceImpl;
-        this.collectionService = collectionService;
-        this.genderService = genderService;
-        this.orderItemAuditService = orderItemAuditService;
+        this.collectionService = collectionServiceImpl;
+        this.genderService = genderServiceImpl;
+        this.orderItemAuditService = orderItemAuditServiceImpl;
     }
 
 
@@ -100,9 +107,9 @@ public class AdminItemService {// fix this very tightly coupled
 
     private Map<?,?>uploadImage(MultipartFile file) throws RuntimeException {
         try {
-           return cloudinaryService.upload(file);
+           return cloudinaryService.uploadImage(file);
         } catch (RuntimeException ex) {
-            log.error("Image upload failed: {}", ex.getMessage());
+            log.error("Image uploadImage failed: {}", ex.getMessage());
             throw ex;
         } catch (Exception e) {
             throw new RuntimeException(e);

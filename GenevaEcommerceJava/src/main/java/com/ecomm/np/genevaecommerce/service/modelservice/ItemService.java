@@ -1,68 +1,25 @@
 package com.ecomm.np.genevaecommerce.service.modelservice;
 
-import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.entity.GenderTable;
 import com.ecomm.np.genevaecommerce.model.entity.Items;
-import com.ecomm.np.genevaecommerce.repository.ItemsRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class ItemService implements IItemService {
-    private final ItemsRepository itemsRepository;
+public interface ItemService {
 
-    @Autowired
-    public ItemService(ItemsRepository itemsRepository) {
-        this.itemsRepository = itemsRepository;
-    }
+    Items findItemById(int id);
 
-    @Override
-    @Transactional
-    public Items findItemById(int id){
-        return itemsRepository.findById(id)
-                .orElseThrow(()->
-                        new ResourceNotFoundException("The requested item was not found."));
-    }
+    void saveItem(Items item);
 
-    @Override
-    @Transactional
-    public void saveItem(Items item){
-        itemsRepository.save(item);
-    }
+    Page<Items> findGenderItems(GenderTable genderTable, Pageable pageable);
 
-    @Override
-    @Transactional
-    public Page<Items> findGenderItems(GenderTable genderTable, Pageable pageable) {
-        return itemsRepository.findByGenderTable(genderTable, pageable);
-    }
+    Page<Items> findAllTheItems(Pageable page);
 
-    @Override
-    @Transactional
-    public Page<Items> findAllTheItems(Pageable page){
-        return itemsRepository.findAll(page);
-    }
+    List<Items> findTop10();
 
-    @Override
-    @Transactional
-    public List<Items> findTop10(){
-        return itemsRepository.findTop10ByOrderByCreatedDateDesc();
-    }
+    Long findTotalItemCount();
 
-    @Override
-    @Transactional
-    public Long findTotalItemCount() {
-        return itemsRepository.findTotalItems();
-    }
-
-    @Override
-    @Transactional
-    public List<Items> findAllByListOfIds(List<Integer> ids) {
-        return itemsRepository.findAllById(ids);
-    }
+    List<Items> findAllByListOfIds(List<Integer> ids);
 }
-

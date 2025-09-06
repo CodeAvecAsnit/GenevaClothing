@@ -2,7 +2,7 @@ package com.ecomm.np.genevaecommerce.controller;
 
 import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.dto.ItemDisplayDTO;
-import com.ecomm.np.genevaecommerce.service.authservice.GeneralItemService;
+import com.ecomm.np.genevaecommerce.service.application.GeneralItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;

@@ -9,10 +9,10 @@ import com.ecomm.np.genevaecommerce.extra.OutOfStockException;
 import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.entity.*;
 import com.ecomm.np.genevaecommerce.repository.*;
-import com.ecomm.np.genevaecommerce.service.modelservice.IItemService;
 import com.ecomm.np.genevaecommerce.service.modelservice.ItemService;
-import com.ecomm.np.genevaecommerce.service.modelservice.IUserService;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.ItemServiceImpl;
 import com.ecomm.np.genevaecommerce.service.modelservice.UserService;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.UserServiceImpl;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import jakarta.annotation.PostConstruct;
@@ -32,18 +32,18 @@ import java.util.stream.Collectors;
 public class CheckoutService {
 
     private final Logger logger = LoggerFactory.getLogger(CheckoutService.class);
-    private final IUserService IUserService;
-    private final IItemService itemService;
+    private final UserService UserService;
+    private final ItemService itemService;
     private final OrderDetailsRepository orderDetailsRepository;
 
     private Cache<Integer,List<QuantityItemDTO>> itemQuantityMap;
     private final SecureRandom secureRandom;
 
     @Autowired
-    public CheckoutService(SecureRandom secureRandom, UserService userServiceImpl, ItemService itemServiceImpl, OrderDetailsRepository orderDetailsRepository){
+    public CheckoutService(SecureRandom secureRandom, UserServiceImpl userServiceImpl, ItemServiceImpl itemServiceImpl, OrderDetailsRepository orderDetailsRepository){
         this.itemService = itemServiceImpl;
         this.secureRandom = secureRandom;
-        this.IUserService = userServiceImpl;
+        this.UserService = userServiceImpl;
         this.orderDetailsRepository = orderDetailsRepository;
     }
 
@@ -139,7 +139,7 @@ public class CheckoutService {
         if(iqList.isEmpty()||iqList==null){
             throw new CodeErrorException("The server took too long to respond");
         }
-        UserModel userModel = IUserService.findUserById(userId);
+        UserModel userModel = UserService.findUserById(userId);
         CheckDTO checkDTO = new CheckDTO();
         OrderDetails orderDetails = userModel.getUserOrders();
         if(orderDetails==null){
@@ -162,7 +162,7 @@ public class CheckoutService {
     public boolean checkoutOrder(CheckoutIncDTO checkDTO, int userId) {
         logger.info(checkDTO.toString());
         try {
-            UserModel userModel = IUserService.findUserById(userId);
+            UserModel userModel = UserService.findUserById(userId);
             OrderDetails od = userModel.getUserOrders();
             if (od == null) {
                 od = new OrderDetails();

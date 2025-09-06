@@ -4,8 +4,8 @@ import com.ecomm.np.genevaecommerce.model.dto.AddressDTO;
 import com.ecomm.np.genevaecommerce.model.entity.OrderDetails;
 import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 import com.ecomm.np.genevaecommerce.repository.OrderDetailsRepository;
-import com.ecomm.np.genevaecommerce.service.modelservice.IUserService;
 import com.ecomm.np.genevaecommerce.service.modelservice.UserService;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,22 +14,22 @@ import org.springframework.stereotype.Service;
 public class OrderDetailsService {
 
     private final OrderDetailsRepository orderDetailsRepository;
-    private final IUserService IUserService;
+    private final UserService UserService;
 
     @Autowired
-    public OrderDetailsService(OrderDetailsRepository orderDetailsRepository, UserService userServiceImpl) {
-        this.IUserService = userServiceImpl;
+    public OrderDetailsService(OrderDetailsRepository orderDetailsRepository, UserServiceImpl userServiceImpl) {
+        this.UserService = userServiceImpl;
         this.orderDetailsRepository = orderDetailsRepository;
     }
 
     public AddressDTO getAddress(int id){
-        UserModel user = IUserService.findUserById(id);
+        UserModel user = UserService.findUserById(id);
         OrderDetails od = user.getUserOrders();
         return AddressDTO.buildFromModel(od);
     }
 
     public AddressDTO addOrUpdateAddress(int id,AddressDTO addressDTO){
-        UserModel userModel = IUserService.findUserById(id);
+        UserModel userModel = UserService.findUserById(id);
         OrderDetails od = userModel.getUserOrders();
         if(od==null){
             od = new OrderDetails();

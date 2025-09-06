@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce;
 
-import com.ecomm.np.genevaecommerce.service.authservice.AuthService;
+import com.ecomm.np.genevaecommerce.service.authservice.impl.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 

@@ -6,7 +6,12 @@ import com.ecomm.np.genevaecommerce.extra.DateFormat;
 import com.ecomm.np.genevaecommerce.model.entity.OrderDetails;
 import com.ecomm.np.genevaecommerce.model.entity.OrderItemAudit;
 import com.ecomm.np.genevaecommerce.model.entity.OrderedItems;
-import com.ecomm.np.genevaecommerce.service.modelservice.*;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.OrderItemAuditServiceImpl;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.OrderItemServiceImpl;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.UserServiceImpl;
+import com.ecomm.np.genevaecommerce.service.modelservice.OrderItemAuditService;
+import com.ecomm.np.genevaecommerce.service.modelservice.OrderItemService;
+import com.ecomm.np.genevaecommerce.service.modelservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,13 +23,13 @@ import java.util.List;
 @Service
 public class OrderHistoryService {//try and reduce
 
-    private final IUserService userService;
-    private final IOrderItemService orderItemService;
-    private final IOrderItemAuditService orderItemAudiService;
+    private final UserService userService;
+    private final OrderItemService orderItemService;
+    private final OrderItemAuditService orderItemAudiService;
 
     @Autowired
-    public OrderHistoryService(UserService userService, OrderItemService orderItemService, OrderItemAuditService orderItemAudiService) {
-        this.userService = userService;
+    public OrderHistoryService(UserServiceImpl userServiceImpl, OrderItemServiceImpl orderItemService, OrderItemAuditServiceImpl orderItemAudiService) {
+        this.userService = userServiceImpl;
         this.orderItemService = orderItemService;
         this.orderItemAudiService = orderItemAudiService;
     }

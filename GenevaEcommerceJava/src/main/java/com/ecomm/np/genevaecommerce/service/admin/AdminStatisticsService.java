@@ -2,7 +2,12 @@ package com.ecomm.np.genevaecommerce.service.admin;
 
 import com.ecomm.np.genevaecommerce.model.dto.AdminStatsDTO;
 import com.ecomm.np.genevaecommerce.model.dto.WeekData;
-import com.ecomm.np.genevaecommerce.service.modelservice.*;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.OrderItemAuditServiceImpl;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.OrderItemServiceImpl;
+import com.ecomm.np.genevaecommerce.service.modelservice.ItemService;
+import com.ecomm.np.genevaecommerce.service.modelservice.OrderItemAuditService;
+import com.ecomm.np.genevaecommerce.service.modelservice.OrderItemService;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.ItemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,14 +18,14 @@ import java.util.*;
 @Service
 public class AdminStatisticsService {
 
-    private final IOrderItemAuditService orderItemAuditService;
-    private final IItemService itemService;
-    private final IOrderItemService orderItemService;
+    private final OrderItemAuditService orderItemAuditService;
+    private final ItemService itemService;
+    private final OrderItemService orderItemService;
 
     @Autowired
-    public AdminStatisticsService(OrderItemAuditService orderItemAuditService, ItemService itemService, OrderItemService orderItemService) {
-        this.orderItemAuditService = orderItemAuditService;
-        this.itemService = itemService;
+    public AdminStatisticsService(OrderItemAuditServiceImpl orderItemAuditServiceImpl, ItemServiceImpl itemServiceImpl, OrderItemServiceImpl orderItemService) {
+        this.orderItemAuditService = orderItemAuditServiceImpl;
+        this.itemService = itemServiceImpl;
         this.orderItemService = orderItemService;
     }
 

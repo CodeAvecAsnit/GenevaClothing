@@ -1,13 +1,13 @@
-package com.ecomm.np.genevaecommerce.service.authservice;
+package com.ecomm.np.genevaecommerce.service.application;
 
 import com.ecomm.np.genevaecommerce.model.dto.ItemDisplayDTO;
 import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.entity.GenderTable;
 import com.ecomm.np.genevaecommerce.model.entity.Items;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.GenderServiceImpl;
 import com.ecomm.np.genevaecommerce.service.modelservice.GenderService;
-import com.ecomm.np.genevaecommerce.service.modelservice.IGenderService;
-import com.ecomm.np.genevaecommerce.service.modelservice.IItemService;
 import com.ecomm.np.genevaecommerce.service.modelservice.ItemService;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.ItemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 @Service
 public class GeneralItemService {
 
-    private final IItemService itemService;
-    private final IGenderService genderService;
+    private final ItemService itemService;
+    private final GenderService genderService;
 
     @Autowired
-    public GeneralItemService(ItemService itemService, GenderService genderService) {
-        this.itemService = itemService;
-        this.genderService = genderService;
+    public GeneralItemService(ItemServiceImpl itemServiceImpl, GenderServiceImpl genderServiceImpl) {
+        this.itemService = itemServiceImpl;
+        this.genderService = genderServiceImpl;
     }
 
     public ItemDisplayDTO findById(int id) throws ResourceNotFoundException {

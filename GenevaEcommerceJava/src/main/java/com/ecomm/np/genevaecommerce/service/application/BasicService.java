@@ -6,10 +6,10 @@ import com.ecomm.np.genevaecommerce.model.entity.BestCollection;
 import com.ecomm.np.genevaecommerce.model.entity.Collection;
 import com.ecomm.np.genevaecommerce.model.entity.Items;
 import com.ecomm.np.genevaecommerce.model.entity.UserModel;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.CollectionServiceImpl;
 import com.ecomm.np.genevaecommerce.service.modelservice.CollectionService;
-import com.ecomm.np.genevaecommerce.service.modelservice.ICollectionService;
-import com.ecomm.np.genevaecommerce.service.modelservice.IUserService;
 import com.ecomm.np.genevaecommerce.service.modelservice.UserService;
+import com.ecomm.np.genevaecommerce.service.modelservice.impl.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,17 +23,17 @@ import java.util.stream.Collectors;
 
 @Service
 public class BasicService {
-    private final IUserService IUserService;
-    private final ICollectionService collectionService;
+    private final UserService UserService;
+    private final CollectionService collectionService;
     private final ObjectMapper objectMapper;
     private final String path ="collection.json";
     private final File file = new File(path);
 
     @Autowired
-    public BasicService(UserService userServiceImpl
-            , CollectionService collectionService, ObjectMapper objectMapper) {
-        this.IUserService = userServiceImpl;
-        this.collectionService = collectionService;
+    public BasicService(UserServiceImpl userServiceImpl
+            , CollectionServiceImpl collectionServiceImpl, ObjectMapper objectMapper) {
+        this.UserService = userServiceImpl;
+        this.collectionService = collectionServiceImpl;
         this.objectMapper = objectMapper;
     }
 
@@ -54,14 +54,14 @@ public class BasicService {
     }
 
     public Set<ItemDisplayDTO> getCartItems(int userId) throws UsernameNotFoundException {
-        UserModel userModel = IUserService.findUserById(userId);
+        UserModel userModel = UserService.findUserById(userId);
         Set<Items> userItems = userModel.getCartList();
         return userItems.stream().map(ItemDisplayDTO::MapByItems).collect(Collectors.toSet());
     }
 
 
     public Set<WishListDTO> getWishListFromUser(int userId)throws UsernameNotFoundException {
-        UserModel user = IUserService.findUserById(userId);
+        UserModel user = UserService.findUserById(userId);
         return user.getWishList().stream()
                     .map(item -> {
                         WishListDTO dto = WishListDTO.BuildFromItems(item);
