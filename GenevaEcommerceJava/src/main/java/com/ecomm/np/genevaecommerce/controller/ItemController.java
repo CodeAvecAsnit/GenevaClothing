@@ -35,7 +35,7 @@ public class ItemController {
 
     @GetMapping
     public ResponseEntity<Page<?>> displayItems(@RequestParam(defaultValue = "0") int page, @RequestParam(required = false) String gender)  {//in use
-        int pageSize = 8;
+        int pageSize = 12;
         Pageable pageable = PageRequest.of(page, pageSize);
         try {
             if (gender == null) {

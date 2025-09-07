@@ -45,4 +45,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    @Transactional
+    public boolean userIsNotRegistered(String email){
+        var user = userRepository.findByEmail(email);
+        return user.isEmpty();
+    }
 }

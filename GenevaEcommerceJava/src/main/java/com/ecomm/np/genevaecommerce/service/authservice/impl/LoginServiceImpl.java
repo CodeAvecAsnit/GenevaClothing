@@ -2,7 +2,6 @@ package com.ecomm.np.genevaecommerce.service.authservice.impl;
 
 import com.ecomm.np.genevaecommerce.model.dto.LoginDTO;
 import com.ecomm.np.genevaecommerce.model.dto.LoginResponseDTO;
-import com.ecomm.np.genevaecommerce.model.dto.PasswordDTO;
 import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 import com.ecomm.np.genevaecommerce.security.CustomUser;
 import com.ecomm.np.genevaecommerce.security.CustomUserService;
@@ -10,7 +9,6 @@ import com.ecomm.np.genevaecommerce.security.JwtUtils;
 import com.ecomm.np.genevaecommerce.service.authservice.LoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,10 +31,9 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public LoginResponseDTO login(LoginDTO loginDTO) {
         try {
-            CustomUser user = (CustomUser) customUserService.loadUserByUsername(loginDTO.getEmail());//Custom User being used here for jwt token
+            CustomUser user = (CustomUser) customUserService.loadUserByUsername(loginDTO.getEmail());
             if (passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
-                String jwt = jwtUtils.generateJwtTokens(user);
-                return new LoginResponseDTO(200, "Logged in successfully", jwt);
+                return new LoginResponseDTO(200, "Logged in successfully", generateJwt(user));
             } else {
                 logger.warn("Invalid login attempt for user: {}", loginDTO.getEmail());
                 return new LoginResponseDTO(403, "Invalid Username or Password", "");
@@ -51,30 +48,11 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public String changePassword(PasswordDTO passwordDTO, String email) {
-        if (passwordDTO.getNewPassword().equals(passwordDTO.getOldPassword())) {
-            throw new BadCredentialsException("New password cannot be the same as the old password.");
-        }
-       CustomUser user = findUserOrThrow(email);
-        if (!passwordEncoder.matches(passwordDTO.getOldPassword(), user.getPassword())) {
-            throw new BadCredentialsException("Incorrect old password.");
-        }
-        String encodedPassword = passwordEncoder.encode(passwordDTO.getNewPassword());
-        user.setPassword(encodedPassword);
-        logger.info("Password changed successfully for user: {}", email);
-        return "Password changed successfully";
-    }
-
-    private CustomUser findUserOrThrow(String email) {
-        CustomUser user = (CustomUser) customUserService.loadUserByUsername(email);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        return user;
-    }
-
-    @Override
     public String generateJwt(UserModel user){
         return jwtUtils.generateJwtTokens(CustomUser.build(user));
+    }
+
+    private String generateJwt(CustomUser user){
+        return jwtUtils.generateJwtTokens(user);
     }
 }

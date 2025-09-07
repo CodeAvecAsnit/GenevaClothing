@@ -8,6 +8,7 @@ public class PasswordDTO {
         this.oldPassword = oldPassword;
         this.newPassword = newPassword;
     }
+    public PasswordDTO(){}
 
     public String getOldPassword() {
         return oldPassword;

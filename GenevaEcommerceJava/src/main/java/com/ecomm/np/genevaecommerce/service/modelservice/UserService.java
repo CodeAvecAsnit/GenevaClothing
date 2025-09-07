@@ -1,6 +1,7 @@
 package com.ecomm.np.genevaecommerce.service.modelservice;
 
 import com.ecomm.np.genevaecommerce.model.entity.UserModel;
+import jakarta.transaction.Transactional;
 
 public interface UserService {
 
@@ -12,4 +13,6 @@ public interface UserService {
 
     UserModel saveUser(UserModel user);
 
+    @Transactional
+    boolean userIsNotRegistered(String email);
 }

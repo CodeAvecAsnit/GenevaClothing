@@ -29,7 +29,7 @@ public class AdminItemService {// fix this very tightly coupled
 
     private static final Logger log = LogManager.getLogger(AdminItemService.class);
     private final CloudinaryService cloudinaryService;
-    private final ItemService iitemService;
+    private final ItemService itemService;
     private final CollectionService collectionService;
     private final GenderService genderService;
     private final OrderItemAuditService orderItemAuditService;
@@ -41,7 +41,7 @@ public class AdminItemService {// fix this very tightly coupled
                             GenderServiceImpl genderServiceImpl,
                             OrderItemAuditServiceImpl orderItemAuditServiceImpl) {
         this.cloudinaryService = cloudinaryServiceImpl;
-        this.iitemService = itemServiceImpl;
+        this.itemService = itemServiceImpl;
         this.collectionService = collectionServiceImpl;
         this.genderService = genderServiceImpl;
         this.orderItemAuditService = orderItemAuditServiceImpl;
@@ -49,7 +49,7 @@ public class AdminItemService {// fix this very tightly coupled
 
 
     public void deleteItem(int id){
-        Items item = iitemService.findItemById(id);
+        Items item = itemService.findItemById(id);
     }
 
     public void saveItem(ListItemDTO item, MultipartFile file) throws Exception {
@@ -59,17 +59,17 @@ public class AdminItemService {// fix this very tightly coupled
         Items newItem = ListItemDTO.ItemsMapper(item, imageUrl,imageId);
         setCollectionIfExists(newItem, item.getCollection());
         setGenderIfValid(newItem, item.getGender());
-        iitemService.saveItem(newItem);
+        itemService.saveItem(newItem);
     }
 
     public void updateItemByAdmin(ListItemDTO dto,MultipartFile file,int integerCode) throws IOException,Exception{
-        Items items = iitemService.findItemById(integerCode);
+        Items items = itemService.findItemById(integerCode);
         Map<?,?> uploadedMap = uploadImage(file);
         String uploadedUrl = (String) uploadedMap.get("secure_url");
         String uploadedId = (String) uploadedMap.get("public_id");
         String oldId = items.getImageId();
         Items updatedItem = updateItem(items,dto,uploadedUrl,uploadedId);
-        iitemService.saveItem(updatedItem);
+        itemService.saveItem(updatedItem);
         try {
             cloudinaryService.deleteImageFromCloudinary(oldId);
         }catch (Exception ex){
@@ -79,7 +79,7 @@ public class AdminItemService {// fix this very tightly coupled
 
 
     public AdminReadItemsDTO readDataForAdmin(int id){
-        Items item = iitemService.findItemById(id);
+        Items item = itemService.findItemById(id);
         AdminReadItemsDTO dto = AdminReadItemsDTO.buildFromItem(item);
         dto.setGender(item.getGenderTable().getGender());
         dto.setCollection(item.getCollection().getCollectionName());

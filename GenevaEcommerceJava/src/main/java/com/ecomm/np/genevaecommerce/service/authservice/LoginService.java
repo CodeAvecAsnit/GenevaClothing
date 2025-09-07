@@ -8,7 +8,5 @@ import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 
 public interface LoginService {
     LoginResponseDTO login(LoginDTO loginDTO);
-    String changePassword(PasswordDTO passwordDTO,String email);
-
     String generateJwt(UserModel user);
 }

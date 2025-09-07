@@ -1,5 +1,7 @@
 package com.ecomm.np.genevaecommerce.service.authservice.impl;
 
+import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
+import com.ecomm.np.genevaecommerce.model.dto.PasswordDTO;
 import com.ecomm.np.genevaecommerce.model.dto.SignUpDTO;
 import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 import com.ecomm.np.genevaecommerce.model.enumeration.Role;
@@ -9,6 +11,7 @@ import com.ecomm.np.genevaecommerce.service.modelservice.UserService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,14 +33,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public void validateUserUniqueness(SignUpDTO signUpDTO) {
-        UserModel existingUserByEmail = userService.findUserByEmail(signUpDTO.getEmail());
-        if (existingUserByEmail != null) {
-            throw new UsernameNotFoundException("User already exists with this email");
-        }
-
-        UserModel existingUserByName = userService.findUserByName(signUpDTO.getUsername());
-        if (existingUserByName != null) {
-            throw new UsernameNotFoundException("User already exists with this username");
+        if(!userService.userIsNotRegistered(signUpDTO.getEmail())){
+            throw new RuntimeException("User is already registered");
         }
     }
 
@@ -50,5 +47,22 @@ public class RegistrationServiceImpl implements RegistrationService {
         UserModel savedUser = userService.saveUser(user);
         logger.info("New user created successfully: {}", signUpDTO.getEmail());
         return savedUser;
+    }
+
+    @Override
+    @Transactional
+    public String registerNewPassword(PasswordDTO passwordDTO, String email) {
+        if (passwordDTO.getNewPassword().equals(passwordDTO.getOldPassword())) {
+            throw new BadCredentialsException("New password cannot be the same as the old password.");
+        }
+        UserModel user = userService.findUserByEmail(email);
+        if (!passwordEncoder.matches(passwordDTO.getOldPassword(), user.getPassword())) {
+            throw new BadCredentialsException("Incorrect old password.");
+        }
+        String encodedPassword = passwordEncoder.encode(passwordDTO.getNewPassword());
+        user.setPassword(encodedPassword);
+        userService.saveUser(user);
+        logger.info("Password changed successfully for user: {}", email);
+        return "Password changed successfully";
     }
 }
