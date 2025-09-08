@@ -3,6 +3,7 @@ package com.ecomm.np.genevaecommerce.controller;
 import com.ecomm.np.genevaecommerce.model.dto.ListItemDTO;
 import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.service.admin.AdminItemService;
+import com.ecomm.np.genevaecommerce.service.admin.impl.AdminItemServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +20,12 @@ import java.io.IOException;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class AdminItemController {
 
-    private final Logger logger = LoggerFactory.getLogger(AdminItemService.class);
+    private final Logger logger = LoggerFactory.getLogger(AdminItemServiceImpl.class);
     private final AdminItemService adminItemService;
 
     @Autowired
-    public AdminItemController(AdminItemService adminItemService) {
-        this.adminItemService = adminItemService;
+    public AdminItemController(AdminItemServiceImpl adminItemServiceImpl) {
+        this.adminItemService = adminItemServiceImpl;
     }
 
     @PostMapping("/upload")

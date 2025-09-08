@@ -80,26 +80,6 @@ public class CheckoutService {
     }
 
 
-    public float liveCalculator(List<QuantityItemDTO> itemQuantities){
-        Map<Integer, Items> ItemMap = getItemMap(itemQuantities);
-        if(ItemMap==null) return 0f;
-        float sum = 0;
-        for(QuantityItemDTO quantityItem :itemQuantities ){
-            Items item = ItemMap.get(quantityItem.getItemCode());
-            if(item==null){
-                logger.warn("Item with id : "+quantityItem.getItemCode()+" not found.");
-                continue;
-            }
-            if(item.getStock()>quantityItem.getQuantity()){
-                sum+=item.getPrice()*quantityItem.getQuantity();
-            }else{
-                logger.warn("Insufficient Stock for item "+item.getItemName());
-            }
-        }
-        return sum;
-    }
-
-
     public int processSingleItem(int itemId,int quantity,String size){
         Items item = itemService.findItemById(itemId);
         if(item.getStock()<quantity){

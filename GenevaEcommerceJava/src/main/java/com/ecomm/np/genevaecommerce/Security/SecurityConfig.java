@@ -50,8 +50,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/oauth2/**",
-                                "/login/oauth2/code/github",
-                                "/login/oauth2/code/google",
+                                "/oauth2/authorization/google",
+                               "/oauth2/authorization/github",
                                 "/api/v1/auth/**",
                                 "/api/v1/auth/sign_up",
                                 "api/v1/auth/sign_up/resend",
