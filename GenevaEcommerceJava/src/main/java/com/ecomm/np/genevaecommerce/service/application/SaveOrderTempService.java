@@ -1,6 +1,7 @@
 package com.ecomm.np.genevaecommerce.service.application;
 
 import com.ecomm.np.genevaecommerce.extra.CodeErrorException;
+import com.ecomm.np.genevaecommerce.extra.ItemMapComp;
 import com.ecomm.np.genevaecommerce.extra.OutOfStockException;
 import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.dto.CheckDTO;
@@ -9,9 +10,7 @@ import com.ecomm.np.genevaecommerce.model.dto.QuantityItemDTO;
 import com.ecomm.np.genevaecommerce.model.entity.Items;
 import com.ecomm.np.genevaecommerce.model.entity.OrderDetails;
 import com.ecomm.np.genevaecommerce.model.entity.UserModel;
-import com.ecomm.np.genevaecommerce.service.modelservice.ItemService;
 import com.ecomm.np.genevaecommerce.service.modelservice.UserService;
-import com.ecomm.np.genevaecommerce.service.modelservice.impl.ItemServiceImpl;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import jakarta.annotation.PostConstruct;
@@ -22,18 +21,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 public class SaveOrderTempService {
 
-    private final ItemService itemService;
+    private final ItemMapComp itemMapComp;
     private final SecureRandom secureRandom;
-    private Cache<Integer,List<QuantityItemDTO>> itemQuantityMap;
     private final UserService userService;
 
-    public SaveOrderTempService(ItemServiceImpl itemServiceImpl, SecureRandom secureRandom, UserService userService) {
-        this.itemService = itemServiceImpl;
+    private Cache<Integer,List<QuantityItemDTO>> itemQuantityMap;
+
+    public SaveOrderTempService(ItemMapComp itemMapComp, SecureRandom secureRandom, UserService userService) {
+        this.itemMapComp = itemMapComp;
         this.secureRandom = secureRandom;
         this.userService = userService;
     }
@@ -44,7 +43,7 @@ public class SaveOrderTempService {
     }
 
     public int processAndSaveRequest(List<QuantityItemDTO> itemQuantities)throws OutOfStockException, ResourceNotFoundException {
-        Map<Integer, Items> ItemMap = getItemMap(itemQuantities) ;
+        Map<Integer, Items> ItemMap =itemMapComp.getItemMap(itemQuantities) ;
         if(ItemMap==null||ItemMap.isEmpty())return 0;
         for(QuantityItemDTO itemQuantity : itemQuantities){
             Items item = ItemMap.get(itemQuantity.getItemCode());
@@ -64,7 +63,7 @@ public class SaveOrderTempService {
     }
 
     public int processSingleItem(int itemId,int quantity,String size){
-        Items item = itemService.findItemById(itemId);
+        Items item = itemMapComp.findItemById(itemId);
         if(item.getStock()<quantity){
             throw new OutOfStockException(item.getItemName()+" is out of stock.");
         }
@@ -103,7 +102,7 @@ public class SaveOrderTempService {
     }
 
     private List<DisplayItemsDTO> findItemDisplayList(List<QuantityItemDTO> itemQuantityList) {
-        Map<Integer, Items> itemMap = getItemMap(itemQuantityList);
+        Map<Integer, Items> itemMap = itemMapComp.getItemMap(itemQuantityList);
         List<DisplayItemsDTO> displayItems = new ArrayList<>();
         if (itemMap == null || itemMap.isEmpty()) {
             return displayItems;
@@ -120,11 +119,4 @@ public class SaveOrderTempService {
         }
         return displayItems;
     }
-
-    private Map<Integer,Items> getItemMap(List<QuantityItemDTO> itemQuantities){
-        if(itemQuantities==null||itemQuantities.isEmpty()) return null;
-        List<Integer> ids = itemQuantities.stream().map(QuantityItemDTO::getItemCode).toList();
-        return itemService.findAllByListOfIds(ids).stream().collect(Collectors.toMap(Items::getItemCode, x->x));
-    }
-
 }

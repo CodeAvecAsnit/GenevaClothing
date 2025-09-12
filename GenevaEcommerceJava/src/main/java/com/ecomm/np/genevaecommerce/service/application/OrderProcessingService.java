@@ -56,6 +56,7 @@ public class OrderProcessingService {
         setOrderPacked(oI);
         return true;
     }
+
     private boolean checkAllPacked(OrderedItems orderedItems){
         return orderedItems.getOrderItemAuditList().stream()
                 .allMatch(OrderItemAudit::isPacked);

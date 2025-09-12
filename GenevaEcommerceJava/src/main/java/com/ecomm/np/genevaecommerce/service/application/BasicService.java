@@ -39,7 +39,7 @@ public class BasicService {
 
     public Collection saveCollection(){
         return collectionService.findLatestCollection();
-    }//can be removed
+    }
 
     public BestCollection bestCollection() throws IOException {
         if (!file.exists()) {
