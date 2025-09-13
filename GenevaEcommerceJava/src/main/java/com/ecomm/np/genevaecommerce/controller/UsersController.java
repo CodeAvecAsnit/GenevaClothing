@@ -60,7 +60,7 @@ public class UsersController {
         }
     }
 
-    @GetMapping("/check")//to be removed
+    @GetMapping("/check")
     public ResponseEntity<Boolean> responseEntity(@AuthenticationPrincipal CustomUser customUser){
         Boolean isAdmin = customUser.getAuthorities().stream().anyMatch(auth->auth.getAuthority().equals("ADMIN"));
         return ResponseEntity.ok(isAdmin);
