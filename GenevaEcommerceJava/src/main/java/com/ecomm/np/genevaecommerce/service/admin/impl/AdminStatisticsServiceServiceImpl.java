@@ -10,6 +10,7 @@ import com.ecomm.np.genevaecommerce.service.modelservice.OrderItemAuditService;
 import com.ecomm.np.genevaecommerce.service.modelservice.OrderItemService;
 import com.ecomm.np.genevaecommerce.service.modelservice.impl.ItemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,9 +25,11 @@ public class AdminStatisticsServiceServiceImpl implements AdminStatisticsService
     private final OrderItemService orderItemService;
 
     @Autowired
-    public AdminStatisticsServiceServiceImpl(OrderItemAuditServiceImpl orderItemAuditServiceImpl, ItemServiceImpl itemServiceImpl, OrderItemServiceImpl orderItemService) {
-        this.orderItemAuditService = orderItemAuditServiceImpl;
-        this.itemService = itemServiceImpl;
+    public AdminStatisticsServiceServiceImpl(@Qualifier("orderItemAuditServiceImpl") OrderItemAuditService orderItemAuditService,
+                                             @Qualifier("itemServiceImpl") ItemService itemService,
+                                             @Qualifier("orderItemServiceImpl") OrderItemService orderItemService) {
+        this.orderItemAuditService = orderItemAuditService;
+        this.itemService = itemService;
         this.orderItemService = orderItemService;
     }
 

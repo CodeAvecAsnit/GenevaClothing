@@ -5,6 +5,7 @@ import com.ecomm.np.genevaecommerce.model.dto.ItemDisplayDTO;
 import com.ecomm.np.genevaecommerce.service.application.GeneralItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,10 +18,10 @@ import java.util.List;
 @RequestMapping("/api/v1/items")
 public class ItemController {
 
-    private static Logger logger = LoggerFactory.getLogger(ItemController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ItemController.class);
     private final GeneralItemService generalItemService;
 
-    public ItemController(GeneralItemService generalItemService) {
+    public ItemController(@Qualifier("generalItemServiceImpl") GeneralItemService generalItemService) {
         this.generalItemService = generalItemService;
     }
 

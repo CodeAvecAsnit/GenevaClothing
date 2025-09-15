@@ -7,7 +7,6 @@ import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.entity.Collection;
 import com.ecomm.np.genevaecommerce.model.entity.Items;
 import com.ecomm.np.genevaecommerce.service.admin.AdminItemService;
-import com.ecomm.np.genevaecommerce.service.infrastructure.impl.CloudinaryServiceImpl;
 import com.ecomm.np.genevaecommerce.service.infrastructure.CloudinaryService;
 import com.ecomm.np.genevaecommerce.service.modelservice.CollectionService;
 import com.ecomm.np.genevaecommerce.service.modelservice.GenderService;
@@ -22,6 +21,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Map;
@@ -37,16 +37,16 @@ public class AdminItemServiceImpl implements AdminItemService {
     private final OrderItemAuditService orderItemAuditService;
 
     @Autowired
-    public AdminItemServiceImpl(CloudinaryServiceImpl cloudinaryServiceImpl,
-                                ItemServiceImpl itemServiceImpl,
-                                CollectionServiceImpl collectionServiceImpl,
-                                GenderServiceImpl genderServiceImpl,
-                                OrderItemAuditServiceImpl orderItemAuditServiceImpl) {
-        this.cloudinaryService = cloudinaryServiceImpl;
-        this.itemService = itemServiceImpl;
-        this.collectionService = collectionServiceImpl;
-        this.genderService = genderServiceImpl;
-        this.orderItemAuditService = orderItemAuditServiceImpl;
+    public AdminItemServiceImpl(@Qualifier("cloudinaryServiceImpl") CloudinaryService cloudinaryService,
+                                @Qualifier("itemServiceImpl") ItemServiceImpl itemService,
+                                @Qualifier("collectionServiceImpl") CollectionServiceImpl collectionService,
+                                @Qualifier("genderServiceImpl") GenderServiceImpl genderService,
+                                @Qualifier("orderItemAuditServiceImpl") OrderItemAuditServiceImpl orderItemAuditService) {
+        this.cloudinaryService = cloudinaryService;
+        this.itemService = itemService;
+        this.collectionService = collectionService;
+        this.genderService = genderService;
+        this.orderItemAuditService = orderItemAuditService;
     }
 
 

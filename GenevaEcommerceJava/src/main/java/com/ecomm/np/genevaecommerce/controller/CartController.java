@@ -7,6 +7,7 @@ import com.ecomm.np.genevaecommerce.service.application.CartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +21,9 @@ public class CartController {
     private final CartService cartService;
 
     @Autowired
-    public CartController(CartService cartService) {
+    public CartController(@Qualifier("cartServiceImpl") CartService cartService) {
         this.cartService = cartService;
     }
-
 
     @PutMapping("/cart/{code}")//in use
     public ResponseEntity<BasicDT0> addItemToCart(@AuthenticationPrincipal CustomUser customUser, @PathVariable int code) {

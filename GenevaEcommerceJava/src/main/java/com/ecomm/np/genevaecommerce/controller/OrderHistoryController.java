@@ -3,7 +3,7 @@ package com.ecomm.np.genevaecommerce.controller;
 import com.ecomm.np.genevaecommerce.model.dto.HistoryDTO;
 import com.ecomm.np.genevaecommerce.model.dto.OrderDTO;
 import com.ecomm.np.genevaecommerce.security.CustomUser;
-import com.ecomm.np.genevaecommerce.service.application.OrderHistoryService;
+import com.ecomm.np.genevaecommerce.service.application.impl.OrderHistoryServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.*;
 public class OrderHistoryController {
 
     private static final Logger log = LogManager.getLogger(OrderHistoryController.class);
-    private final OrderHistoryService orderHistoryService;
+    private final OrderHistoryServiceImpl orderHistoryService;
 
     @Autowired
-    public OrderHistoryController(OrderHistoryService orderHistoryService){
+    public OrderHistoryController(OrderHistoryServiceImpl orderHistoryService){
         this.orderHistoryService=orderHistoryService;
     }
 

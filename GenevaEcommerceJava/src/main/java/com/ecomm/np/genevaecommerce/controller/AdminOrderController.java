@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +28,7 @@ public class AdminOrderController {
     private final OrderHistoryService orderHistoryService;
 
     @Autowired
-    public AdminOrderController(OrderHistoryService orderHistoryService){
+    public AdminOrderController(@Qualifier("orderHistoryServiceImpl") OrderHistoryService orderHistoryService){
         this.orderHistoryService = orderHistoryService;
     }
 

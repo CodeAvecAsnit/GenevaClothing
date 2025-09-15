@@ -8,6 +8,7 @@ import com.ecomm.np.genevaecommerce.service.application.BasicService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +26,13 @@ public class CollectionsController {
     private final BasicService basicService;
 
     @Autowired
-    public CollectionsController(BasicService basicService) {
+    public CollectionsController(@Qualifier("basicServiceImpl") BasicService basicService) {
         this.basicService = basicService;
     }
 
     @GetMapping
-    public ResponseEntity<CollectionAndItemsDTO> provideCollection() {//in Use
-        Collection collection = basicService.saveCollection();//migrate somewhere else
+    public ResponseEntity<CollectionAndItemsDTO> provideCollection() {
+        Collection collection = basicService.saveCollection();
         return ResponseEntity.ok(CollectionAndItemsDTO.buildFromCollection(collection));
     }
 

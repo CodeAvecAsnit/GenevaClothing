@@ -3,7 +3,7 @@ package com.ecomm.np.genevaecommerce.controller;
 import com.ecomm.np.genevaecommerce.model.dto.ItemDisplayDTO;
 import com.ecomm.np.genevaecommerce.model.dto.WishListDTO;
 import com.ecomm.np.genevaecommerce.security.CustomUser;
-import com.ecomm.np.genevaecommerce.service.application.BasicService;
+import com.ecomm.np.genevaecommerce.service.application.impl.BasicServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +20,11 @@ import java.util.Set;
 public class UsersController {
 
     private static final Logger log = LoggerFactory.getLogger(UsersController.class);
-    private final BasicService basicService;
+    private final BasicServiceImpl basicServiceImpl;
 
     @Autowired
-    public UsersController(BasicService basicService) {
-        this.basicService = basicService;
+    public UsersController(BasicServiceImpl basicServiceImpl) {
+        this.basicServiceImpl = basicServiceImpl;
     }
 
 
@@ -34,7 +34,7 @@ public class UsersController {
             return ResponseEntity.status(401).build();
         }
         try {
-            Set<ItemDisplayDTO> cartItems = basicService.getCartItems(customUser.getId());
+            Set<ItemDisplayDTO> cartItems = basicServiceImpl.getCartItems(customUser.getId());
             return ResponseEntity.ok(cartItems);
         } catch (UsernameNotFoundException ex) {
             log.warn("User not found. User ID: {}", customUser.getId(), ex);
@@ -51,7 +51,7 @@ public class UsersController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         try{
-            return ResponseEntity.ok(basicService.getWishListFromUser(customUser.getId()));
+            return ResponseEntity.ok(basicServiceImpl.getWishListFromUser(customUser.getId()));
         }
         catch (UsernameNotFoundException ex){
             return ResponseEntity.notFound().build();

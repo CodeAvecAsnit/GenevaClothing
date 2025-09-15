@@ -8,9 +8,11 @@ import com.ecomm.np.genevaecommerce.model.dto.CheckDTO;
 import com.ecomm.np.genevaecommerce.model.dto.QuantityItemDTO;
 import com.ecomm.np.genevaecommerce.security.CustomUser;
 import com.ecomm.np.genevaecommerce.service.application.SaveOrderTempService;
+import com.ecomm.np.genevaecommerce.service.application.impl.SaveOrderTempServiceImpl;
 import jakarta.validation.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,7 +27,8 @@ public class OrderSaveController {
     private final Logger log = LoggerFactory.getLogger(OrderSaveController.class);
     private final SaveOrderTempService saveOrderTempService;
 
-    public OrderSaveController(SaveOrderTempService saveOrderTempService) {
+    public OrderSaveController(@Qualifier("saveOrderTempServiceImpl") SaveOrderTempService
+                                       saveOrderTempService) {
         this.saveOrderTempService = saveOrderTempService;
     }
     @GetMapping("/fetch/order")

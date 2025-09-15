@@ -13,6 +13,7 @@ import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,7 +33,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
     private final Logger logger = LoggerFactory.getLogger(EmailVerificationServiceImpl.class);
 
     @Autowired
-    public EmailVerificationServiceImpl(MailService mailService, SecureRandom secureRandom) {
+    public EmailVerificationServiceImpl(@Qualifier("mailServiceImpl") MailService mailService, SecureRandom secureRandom) {
         this.mailService = mailService;
         this.secureRandom = secureRandom;
     }

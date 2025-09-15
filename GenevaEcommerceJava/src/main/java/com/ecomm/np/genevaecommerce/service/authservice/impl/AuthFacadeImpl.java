@@ -8,6 +8,7 @@ import com.ecomm.np.genevaecommerce.service.authservice.LoginService;
 import com.ecomm.np.genevaecommerce.service.authservice.RegistrationService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +19,12 @@ public class AuthFacadeImpl implements AuthFacade {
     private final RegistrationService registrationService;
 
     @Autowired
-    public AuthFacadeImpl(LoginServiceImpl loginServiceImpl, EmailVerificationService emailVerificationService, RegistrationServiceImpl registrationServiceImpl) {
-        this.loginService = loginServiceImpl;
+    public AuthFacadeImpl(@Qualifier("loginServiceImpl") LoginService loginService,
+                          @Qualifier("emailVerificationServiceImpl") EmailVerificationService emailVerificationService,
+                          @Qualifier("registrationServiceImpl") RegistrationService registrationService) {
+        this.loginService = loginService;
         this.emailVerificationService = emailVerificationService;
-        this.registrationService = registrationServiceImpl;
+        this.registrationService = registrationService;
     }
 
     @Override

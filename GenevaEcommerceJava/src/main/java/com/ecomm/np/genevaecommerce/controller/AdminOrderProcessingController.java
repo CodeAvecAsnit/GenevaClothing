@@ -4,6 +4,7 @@ import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.dto.BasicDT0;
 import com.ecomm.np.genevaecommerce.service.application.OrderProcessingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +19,8 @@ public class AdminOrderProcessingController {
     private final OrderProcessingService orderProcessingService;
 
     @Autowired
-    public AdminOrderProcessingController(OrderProcessingService orderProcessingService) {
+    public AdminOrderProcessingController(@Qualifier("orderProcessingServiceImpl") OrderProcessingService
+                                                      orderProcessingService) {
         this.orderProcessingService = orderProcessingService;
     }
 

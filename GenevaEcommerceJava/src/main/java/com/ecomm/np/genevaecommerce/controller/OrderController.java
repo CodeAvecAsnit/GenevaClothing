@@ -4,6 +4,7 @@ import com.ecomm.np.genevaecommerce.model.dto.*;
 import com.ecomm.np.genevaecommerce.security.CustomUser;
 import com.ecomm.np.genevaecommerce.service.application.CheckoutService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class OrderController {
 
 
     @Autowired
-    public OrderController(CheckoutService checkoutService) {
+    public OrderController(@Qualifier("checkoutServiceImpl") CheckoutService checkoutService) {
         this.checkoutService = checkoutService;
     }
 

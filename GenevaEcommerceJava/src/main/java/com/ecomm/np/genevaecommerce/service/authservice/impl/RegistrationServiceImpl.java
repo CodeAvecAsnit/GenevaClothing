@@ -1,6 +1,5 @@
 package com.ecomm.np.genevaecommerce.service.authservice.impl;
 
-import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.dto.PasswordDTO;
 import com.ecomm.np.genevaecommerce.model.dto.SignUpDTO;
 import com.ecomm.np.genevaecommerce.model.entity.UserModel;
@@ -11,8 +10,8 @@ import com.ecomm.np.genevaecommerce.service.modelservice.UserService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final RoleTableRepository roleTableRepository;
     private final Logger logger = LoggerFactory.getLogger(RegistrationServiceImpl.class);
 
-    public RegistrationServiceImpl(UserService userService,
+    public RegistrationServiceImpl(@Qualifier("userServiceImpl") UserService userService,
                                    PasswordEncoder passwordEncoder,
                                    RoleTableRepository roleTableRepository) {
         this.userService = userService;
