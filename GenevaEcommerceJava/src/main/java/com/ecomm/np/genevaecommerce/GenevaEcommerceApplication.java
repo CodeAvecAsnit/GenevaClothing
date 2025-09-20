@@ -14,5 +14,4 @@ public class GenevaEcommerceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GenevaEcommerceApplication.class, args);
 	}
-
 }

@@ -27,14 +27,20 @@ public class UserServiceImplTests {
 
     @Test
     public void testFindUserByEmail() {
-        UserModel mockUser = new UserModel
-                ();
+        UserModel mockUser = new UserModel();
         mockUser.setEmail("asnitbakhati@gmail.com");
-
-        when(userRepository.findByEmail("asnitbakhati@gmail.com"))
+        when(userRepository.findByEmail(mockUser.getEmail()))
                 .thenReturn(Optional.of(mockUser));
         UserModel foundUser = userService.findUserByEmail("asnitbakhati@gmail.com");
+        assertNotNull(foundUser);
+    }
 
+    @Test
+    public void testFindUserById(){
+        UserModel mockUser = new UserModel();
+        mockUser.setUserId(1);
+        when(userRepository.findById(mockUser.getUserId())).thenReturn(Optional.of(mockUser));
+        UserModel foundUser = userService.findUserById(1);
         assertNotNull(foundUser);
     }
 }
