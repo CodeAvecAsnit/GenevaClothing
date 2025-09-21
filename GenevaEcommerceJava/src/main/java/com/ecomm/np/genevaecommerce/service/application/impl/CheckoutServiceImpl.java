@@ -6,12 +6,13 @@ import com.ecomm.np.genevaecommerce.model.dto.QuantityItemDTO;
 import com.ecomm.np.genevaecommerce.model.entity.*;
 import com.ecomm.np.genevaecommerce.repository.*;
 import com.ecomm.np.genevaecommerce.service.application.CheckoutService;
+import com.ecomm.np.genevaecommerce.service.infrastructure.MailService;
 import com.ecomm.np.genevaecommerce.service.modelservice.UserService;
-import com.ecomm.np.genevaecommerce.service.modelservice.impl.UserServiceImpl;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Map;
@@ -23,13 +24,18 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final UserService UserService;
     private final OrderDetailsRepository orderDetailsRepository;
     private final ItemMapComp itemMapComp;
+    private final MailService mailService;
 
     @Autowired
-    public CheckoutServiceImpl(UserServiceImpl userServiceImpl, OrderDetailsRepository orderDetailsRepository, ItemMapComp itemMapComp){
+    public CheckoutServiceImpl(@Qualifier("userServiceImpl") UserService userService,
+                               OrderDetailsRepository orderDetailsRepository,
+                               ItemMapComp itemMapComp,
+                               @Qualifier("mailServiceImpl") MailService mailService){
 
-        this.UserService = userServiceImpl;
+        this.UserService = userService;
         this.orderDetailsRepository = orderDetailsRepository;
         this.itemMapComp = itemMapComp;
+        this.mailService = mailService;
     }
 
     @Override
@@ -70,7 +76,10 @@ public class CheckoutServiceImpl implements CheckoutService {
                 orderedItems.getOrderItemAuditList().add(audit);
             }
             orderedItems.findTotalOrderPrice();
-            orderDetailsRepository.save(od);
+            OrderDetails savedDetails = orderDetailsRepository.save(od);
+
+            mailService.sendOrderConfirmationNotice(userModel.getEmail(),);
+
             return true;
         } catch (Exception ex) {
             logger.error("Checkout failed: {}", ex.getMessage(), ex);
