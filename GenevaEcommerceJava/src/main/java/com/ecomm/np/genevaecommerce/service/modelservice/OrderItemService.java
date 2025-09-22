@@ -12,7 +12,7 @@ public interface OrderItemService {
     OrderedItems findOrderedItemsById(int oId);
     Page<OrderedItems> findAllOrdered(Pageable pageable);
     Page<OrderedItems> findActiveOrderedItems(Pageable pageable,boolean isActive);
-    void saveOrderedItems(OrderedItems orderedItems);
+    OrderedItems saveOrderedItems(OrderedItems orderedItems);
     Integer countAllItems();
     Long findNotDeliveredCount(boolean delivered);
     Long findTotalOrdersTodayCount();

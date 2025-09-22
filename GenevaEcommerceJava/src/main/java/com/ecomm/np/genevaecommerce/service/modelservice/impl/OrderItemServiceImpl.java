@@ -48,8 +48,8 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     @Transactional
-    public void saveOrderedItems(OrderedItems orderedItems) {
-        orderItemsRepository.save(orderedItems);
+    public OrderedItems saveOrderedItems(OrderedItems orderedItems) {
+        return orderItemsRepository.save(orderedItems);
     }
 
     @Override

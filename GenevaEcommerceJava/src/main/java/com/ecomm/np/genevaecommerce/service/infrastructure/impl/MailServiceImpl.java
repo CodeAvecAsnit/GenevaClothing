@@ -232,7 +232,7 @@ public class MailServiceImpl implements MailService {
 
         html.append("<div class='footer'>")
                 .append("<p>Thank you for shopping with us!</p>")
-                .append("<p>If you have any questions about your order, please contact us at support@yourstore.com</p>")
+                .append("<p>If you have any questions about your order, please contact us at furnituremandu@gmail.com</p>")
                 .append("<p style='font-size: 12px; margin-top: 15px;'>This is an automated email. Please do not reply to this email.</p>")
                 .append("</div>");
 
