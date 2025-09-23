@@ -27,7 +27,7 @@ public class DummyController {
         try {
             UrlQrCode qrCode = new UrlQrCode();
             qrCode.generateQR();
-            Path pathToImage = Paths.get("").toAbsolutePath().resolve("qrcode.png");
+            Path pathToImage = Paths.get("").toAbsolutePath().resolve("src/main/resources/static/qrcode.png");
             Resource resource= new UrlResource(pathToImage.toUri());
             if (!resource.exists()) {
                 return ResponseEntity.notFound().build();

@@ -1,7 +1,7 @@
 package com.ecomm.np.genevaecommerce.service.checkout.impl;
 
 import com.ecomm.np.genevaecommerce.model.dto.CheckoutIncDTO;
-import com.ecomm.np.genevaecommerce.model.dto.OrderCreatedEvent;
+import com.ecomm.np.genevaecommerce.model.events.OrderCreatedEvent;
 import com.ecomm.np.genevaecommerce.model.entity.*;
 import com.ecomm.np.genevaecommerce.service.checkout.CheckoutService;
 import com.ecomm.np.genevaecommerce.service.checkout.OrderCreationService;

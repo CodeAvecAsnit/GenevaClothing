@@ -15,6 +15,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.List;
 
 
@@ -63,7 +64,6 @@ public class MailServiceImpl implements MailService {
         }
     }
 
-
     @Async
     @Override
     public void sendOrderConfirmationNotice(String email, OrderedItems orderedItems) {
@@ -76,6 +76,30 @@ public class MailServiceImpl implements MailService {
             OrderDTO orderDTO= OrderDTO.buildFromOrderItems(orderedItems);
             String htmlContent = buildOrderConfirmationHtml(orderDTO);
             helper.setText(htmlContent,true);
+            javaMailSender.send(mimeMessage);
+
+        }catch (MessagingException e){
+            throw new RuntimeException("Failed to send Email");
+        }
+    }
+
+    @Override
+    public void sendPackedNotice(String email, OrderedItems orderedItems) {
+        logger.info("Item has been packed");
+        File qrFile = new File("qrcode.png");
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true,"UTF-8");
+            helper.setTo(email);
+            helper.setSubject("Order Packed Notice - Order #" + orderedItems.getoId());
+            helper.setFrom("furnituremandu@gmail.com");
+            helper.setText("This email has been sent to notify you that your email has been packed.");
+            File txtFile = new File("src/main/resources/static/hello.txt");
+            if (!qrFile.exists()||!txtFile.exists()) {
+                throw new RuntimeException("QR code file not found: " + qrFile.getAbsolutePath());
+            }
+            helper.addAttachment("qrcode.png",qrFile);
+            helper.addAttachment("hello.txt",txtFile);
             javaMailSender.send(mimeMessage);
 
         }catch (MessagingException e){

@@ -61,8 +61,6 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-
-
     private String parseJWT(HttpServletRequest request) {
         String jwt = jwtUtils.getJwtFromHeader(request);
         if (jwt != null) {

@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.model.dto;
+package com.ecomm.np.genevaecommerce.model.events;
 
 import com.ecomm.np.genevaecommerce.model.entity.OrderedItems;
 

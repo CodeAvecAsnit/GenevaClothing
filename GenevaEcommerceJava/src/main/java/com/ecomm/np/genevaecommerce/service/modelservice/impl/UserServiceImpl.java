@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserModel saveUser(UserModel user) {
+        //can encode password here and remove from others
         return userRepository.save(user);
     }
 

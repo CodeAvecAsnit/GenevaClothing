@@ -1,6 +1,7 @@
-package com.ecomm.np.genevaecommerce.extra;
+package com.ecomm.np.genevaecommerce.service.infrastructure.impl;
 
-import com.ecomm.np.genevaecommerce.model.dto.OrderCreatedEvent;
+import com.ecomm.np.genevaecommerce.model.events.OrderCreatedEvent;
+import com.ecomm.np.genevaecommerce.model.events.OrderPackedEvent;
 import com.ecomm.np.genevaecommerce.service.infrastructure.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,18 @@ public class CheckoutEventHandler {
         try {
             mailService.sendOrderConfirmationNotice(event.userEmail(),event.orderedItems());
             logger.info("Order confirmation email sent for order: {}", event.orderedItems().getoId());
+        } catch (Exception ex) {
+            logger.error("Failed to send order confirmation email: {}", ex.getMessage(), ex);
+        }
+    }
+
+
+    @EventListener
+    @Async
+    public void handleOrderPacked(OrderPackedEvent event){
+        try {
+            mailService.sendPackedNotice(event.orderEmail(),event.items());
+            logger.info("Order packed email sent for order: {}", event.items().getoId());
         } catch (Exception ex) {
             logger.error("Failed to send order confirmation email: {}", ex.getMessage(), ex);
         }

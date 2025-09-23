@@ -7,4 +7,5 @@ public interface MailService {
     void sendVerificationCode(String email,int code);
     void sendPromotion(List<String> emails, String title, String body);
     void sendOrderConfirmationNotice(String email, OrderedItems orderedItems);
+    void sendPackedNotice(String email,OrderedItems orderedItems);
 }

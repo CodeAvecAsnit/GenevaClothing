@@ -18,7 +18,7 @@ public class UrlQrCode {
         String url = "http://" + localIp + ":5500";
         System.out.println("Generating QR for: " + url);
 
-        String filePath = "qrcode.png";
+        String filePath = "src/main/resources/static/qrcode.png";
         File file = new File(filePath);
         if (file.exists()) {
             System.out.println("Old QR code found. Deleting...");
