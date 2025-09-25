@@ -135,6 +135,25 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
 		</dependency>
+
+	<!-- ZXing for QR Code generation -->
+	<dependency>
+		<groupId>com.google.zxing</groupId>
+		<artifactId>core</artifactId>
+		<version>3.5.1</version>
+	</dependency>
+	<dependency>
+		<groupId>com.google.zxing</groupId>
+		<artifactId>javase</artifactId>
+		<version>3.5.1</version>
+	</dependency>
+
+	<!-- JavaMail API (usually included with spring-boot-starter-mail) -->
+	<dependency>
+		<groupId>javax.activation</groupId>
+		<artifactId>activation</artifactId>
+		<version>1.1.1</version>
+	</dependency>
 	</dependencies>
 	<build>
 		<plugins>

@@ -1,9 +1,12 @@
 package com.ecomm.np.genevaecommerce.TestPackage.Encryption;
 
+import com.ecomm.np.genevaecommerce.model.entity.OrderDetails;
+import com.ecomm.np.genevaecommerce.model.entity.OrderedItems;
+
 public class OrderData {
     private int orderId;
-    private int totalAmount;
-    private int paidAmount;
+    private float totalAmount;
+    private float paidAmount;
     private int noOfItems;
     private String address;
     private String payload;
@@ -11,7 +14,7 @@ public class OrderData {
     public OrderData() {
     }
 
-    public OrderData(int orderId, int totalAmount, int paidAmount, int noOfItems, String address, String payload) {
+    public OrderData(int orderId, float totalAmount, float paidAmount, int noOfItems, String address, String payload) {
         this.orderId = orderId;
         this.totalAmount = totalAmount;
         this.paidAmount = paidAmount;
@@ -20,7 +23,7 @@ public class OrderData {
         this.payload = payload;
     }
 
-    public OrderData(int orderId, int totalAmount, int paidAmount, int noOfItems, String address) {
+    public OrderData(int orderId, float totalAmount, float paidAmount, int noOfItems, String address) {
         this.orderId = orderId;
         this.totalAmount = totalAmount;
         this.paidAmount = paidAmount;
@@ -36,19 +39,19 @@ public class OrderData {
         this.orderId = orderId;
     }
 
-    public int getTotalAmount() {
+    public float getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(int totalAmount) {
+    public void setTotalAmount(float totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public int getPaidAmount() {
+    public float getPaidAmount() {
         return paidAmount;
     }
 
-    public void setPaidAmount(int paidAmount) {
+    public void setPaidAmount(float paidAmount) {
         this.paidAmount = paidAmount;
     }
 
@@ -101,5 +104,21 @@ public class OrderData {
     private String escapeJson(String value) {
         if (value == null) return "";
         return value.replace("\\", "\\\\").replace("\"", "\\\"");
+    }
+
+    public static OrderData buildFromOrderedItems(OrderedItems or){
+        OrderData orderData = new OrderData();
+        orderData.setOrderId(or.getoId());
+        orderData.setPaidAmount(or.getPaidPrice().floatValue());
+        orderData.setTotalAmount(or.getTotalPrice().floatValue());
+        orderData.setNoOfItems(or.getOrderItemAuditList().size());
+        OrderDetails od = or.getOrderDetails();
+        StringBuilder address = new StringBuilder(od.getDeliveryLocation());
+        address.append(" , ");
+        address.append(od.getCity());
+        address.append(" , ");
+        address.append(od.getProvince());
+        orderData.setAddress(address.toString());
+        return orderData;
     }
 }

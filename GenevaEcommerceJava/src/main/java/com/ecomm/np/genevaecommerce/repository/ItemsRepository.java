@@ -38,9 +38,13 @@ public interface ItemsRepository extends JpaRepository<Items,Integer> {
 
     select total_price;
     end$$*/
+
     @Query(value="Call findTotalPrice(:quantity,:id)",nativeQuery = true)
     Float findTotalPrice(@Param("quantity")int quantity,@Param("id")int id);
 
     @Query(value = "select count(item_code) from items",nativeQuery = true)
     Long findTotalItems();
+
+    @Query(value = "SELECT * FROM items ORDER BY RAND() LIMIT 5", nativeQuery = true)
+    List<Items> findRandomItems();
 }

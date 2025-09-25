@@ -37,12 +37,12 @@ public class OrderedItems {
     private BigDecimal paidPrice;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "orderedItems", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "orderedItems", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<OrderItemAudit> orderItemAuditList = new ArrayList<>();
 
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
     private OrderDetails orderDetails;
 

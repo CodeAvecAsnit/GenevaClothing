@@ -39,8 +39,6 @@ public class AESEncrypt {
     }
 
     public String decrypt(String cipherText) throws Exception {
-        System.out.println("KEY bytes length: " + SECRET_KEY.getBytes(StandardCharsets.UTF_8).length);
-        System.out.println("IV  bytes length: " + INIT_VECTOR.getBytes(StandardCharsets.UTF_8).length);
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
         cipher.init(Cipher.DECRYPT_MODE, spec, iv);
         byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(cipherText));

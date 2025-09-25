@@ -2,6 +2,7 @@ package com.ecomm.np.genevaecommerce.service.modelservice;
 
 import com.ecomm.np.genevaecommerce.model.entity.GenderTable;
 import com.ecomm.np.genevaecommerce.model.entity.Items;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,4 +23,6 @@ public interface ItemService {
     Long findTotalItemCount();
 
     List<Items> findAllByListOfIds(List<Integer> ids);
+
+    List<Items> getRandomItems();
 }

@@ -49,6 +49,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/index.html",
+                                "api/v1/top-selling/high",
+                                "api/v1/top-selling/random",
+                                "share/qr",
+                                "get/order",
                                 "/oauth2/**",
                                 "/oauth2/authorization/google",
                                "/oauth2/authorization/github",
@@ -105,7 +110,7 @@ public class SecurityConfig {
         }catch (Exception ex){
             currentAddress="localhost";
         }
-        config.setAllowedOriginPatterns(List.of("http://*.local", "http://localhost:5500", "http://127.0.0.1:5500", "http://" + currentAddress + ":5500"));
+        config.setAllowedOriginPatterns(List.of("http://*.local", "http://localhost:5500", "http://127.0.0.1:5500", "http://" + currentAddress + ":5500","https://genevaclothingnepal.vercel.app"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

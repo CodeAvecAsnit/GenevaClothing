@@ -65,5 +65,11 @@ public class ItemServiceImpl implements ItemService {
     public List<Items> findAllByListOfIds(List<Integer> ids) {
         return itemsRepository.findAllById(ids);
     }
+
+    @Override
+    @Transactional
+    public List<Items> getRandomItems(){
+        return itemsRepository.findRandomItems();
+    }
 }
 
