@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce.service.modelservice.impl;
 
-import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
+import com.ecomm.np.genevaecommerce.extra.exception.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.entity.OrderDetails;
 import com.ecomm.np.genevaecommerce.model.entity.OrderedItems;
 import com.ecomm.np.genevaecommerce.repository.OrderItemsRepository;
@@ -48,8 +48,8 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     @Transactional
-    public void saveOrderedItems(OrderedItems orderedItems) {
-        orderItemsRepository.save(orderedItems);
+    public OrderedItems saveOrderedItems(OrderedItems orderedItems) {
+        return orderItemsRepository.save(orderedItems);
     }
 
     @Override

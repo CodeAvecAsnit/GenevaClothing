@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce.service.modelservice.impl;
 
-import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
+import com.ecomm.np.genevaecommerce.extra.exception.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 import com.ecomm.np.genevaecommerce.repository.UserRepository;
 import com.ecomm.np.genevaecommerce.service.modelservice.UserService;
@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserModel saveUser(UserModel user) {
+        //can encode password here and remove from others
         return userRepository.save(user);
     }
 

@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.extra;
+package com.ecomm.np.genevaecommerce.extra.components;
 
 import com.ecomm.np.genevaecommerce.model.dto.QuantityItemDTO;
 import com.ecomm.np.genevaecommerce.model.entity.Items;

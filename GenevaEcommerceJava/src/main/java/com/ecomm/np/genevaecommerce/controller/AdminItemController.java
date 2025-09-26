@@ -1,7 +1,7 @@
 package com.ecomm.np.genevaecommerce.controller;
 
 import com.ecomm.np.genevaecommerce.model.dto.ListItemDTO;
-import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
+import com.ecomm.np.genevaecommerce.extra.exception.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.service.admin.AdminItemService;
 import com.ecomm.np.genevaecommerce.service.admin.impl.AdminItemServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;

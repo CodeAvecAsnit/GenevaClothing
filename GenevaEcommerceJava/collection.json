@@ -1,2 +1,6 @@
-{"image":"images/single-image-2.jpg","name":"Winter collection","description":"Dignissim lacus, turpis ut suspendisse vel tellus. Turpis puru Ola, gravida orci, fringilla a. Ac sed eu fringilla odio mi. Consequat pharetra at magna imperdiet cursus ac faucibus sit libero. Ultricies quam nunc, lorem sit lorem urna, pretium aliquam ut. In vel, quis donec dolor id in. Pulvinar commodo mollis diam sed facilisis at cusring and the ac that is the shit","id":1}
-
+{
+  "image": "images/single-image-2.jpg",
+  "name": "Annual Collection",
+  "description": "A refined blend of elegance and modern design. Featuring graceful lines and rich textures, this collection brings sophistication to every setting. With its thoughtful details and timeless appeal, it’s crafted to elevate your style throughout the seasons.",
+  "id": 1
+}

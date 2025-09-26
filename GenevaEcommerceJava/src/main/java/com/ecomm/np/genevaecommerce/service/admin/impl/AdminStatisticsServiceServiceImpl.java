@@ -3,14 +3,12 @@ package com.ecomm.np.genevaecommerce.service.admin.impl;
 import com.ecomm.np.genevaecommerce.model.dto.AdminStatsDTO;
 import com.ecomm.np.genevaecommerce.model.dto.WeekData;
 import com.ecomm.np.genevaecommerce.service.admin.AdminStatisticsService;
-import com.ecomm.np.genevaecommerce.service.modelservice.impl.OrderItemAuditServiceImpl;
-import com.ecomm.np.genevaecommerce.service.modelservice.impl.OrderItemServiceImpl;
 import com.ecomm.np.genevaecommerce.service.modelservice.ItemService;
 import com.ecomm.np.genevaecommerce.service.modelservice.OrderItemAuditService;
 import com.ecomm.np.genevaecommerce.service.modelservice.OrderItemService;
-import com.ecomm.np.genevaecommerce.service.modelservice.impl.ItemServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,6 +16,7 @@ import java.time.format.TextStyle;
 import java.util.*;
 
 @Service
+@PreAuthorize("hasAuthority('ADMIN')")
 public class AdminStatisticsServiceServiceImpl implements AdminStatisticsService {
 
     private final OrderItemAuditService orderItemAuditService;

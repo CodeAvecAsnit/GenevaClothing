@@ -10,8 +10,6 @@ public interface CollectionService {
 
     Collection findLatestCollection();
 
-    void saveCollection(Collection collection);
-
     void saveCollection(String collectionName,String description);
 
 }

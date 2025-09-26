@@ -1,7 +1,7 @@
 package com.ecomm.np.genevaecommerce.security;
 
 import com.ecomm.np.genevaecommerce.model.enumeration.Role;
-import com.ecomm.np.genevaecommerce.extra.PasswordGenerator;
+import com.ecomm.np.genevaecommerce.extra.util.PasswordGenerator;
 import com.ecomm.np.genevaecommerce.model.entity.RoleTable;
 import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 import com.ecomm.np.genevaecommerce.repository.RoleTableRepository;

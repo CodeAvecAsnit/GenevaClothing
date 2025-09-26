@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce.service.modelservice.impl;
 
-import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
+import com.ecomm.np.genevaecommerce.extra.exception.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.entity.Collection;
 import com.ecomm.np.genevaecommerce.repository.CollectionRepository;
 import com.ecomm.np.genevaecommerce.service.modelservice.CollectionService;
@@ -45,9 +45,4 @@ public class CollectionServiceImpl implements CollectionService {
         collectionRepository.save(collection);
     }
 
-    @Override
-    @Transactional
-    public void saveCollection(Collection collection){
-        collectionRepository.save(collection);
-    }
 }

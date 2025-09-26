@@ -3,10 +3,11 @@ package com.ecomm.np.genevaecommerce.controller;
 import com.ecomm.np.genevaecommerce.model.dto.ItemDisplayDTO;
 import com.ecomm.np.genevaecommerce.model.dto.WishListDTO;
 import com.ecomm.np.genevaecommerce.security.CustomUser;
-import com.ecomm.np.genevaecommerce.service.application.impl.BasicServiceImpl;
+import com.ecomm.np.genevaecommerce.service.application.UserCartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,11 +21,11 @@ import java.util.Set;
 public class UsersController {
 
     private static final Logger log = LoggerFactory.getLogger(UsersController.class);
-    private final BasicServiceImpl basicServiceImpl;
+    private final UserCartService userCartService;
 
     @Autowired
-    public UsersController(BasicServiceImpl basicServiceImpl) {
-        this.basicServiceImpl = basicServiceImpl;
+    public UsersController(@Qualifier("userCartServiceImpl") UserCartService userCartService) {
+        this.userCartService = userCartService;
     }
 
 
@@ -34,7 +35,7 @@ public class UsersController {
             return ResponseEntity.status(401).build();
         }
         try {
-            Set<ItemDisplayDTO> cartItems = basicServiceImpl.getCartItems(customUser.getId());
+            Set<ItemDisplayDTO> cartItems = userCartService.getCartItems(customUser.getId());
             return ResponseEntity.ok(cartItems);
         } catch (UsernameNotFoundException ex) {
             log.warn("User not found. User ID: {}", customUser.getId(), ex);
@@ -51,7 +52,7 @@ public class UsersController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         try{
-            return ResponseEntity.ok(basicServiceImpl.getWishListFromUser(customUser.getId()));
+            return ResponseEntity.ok(userCartService.getWishListFromUser(customUser.getId()));
         }
         catch (UsernameNotFoundException ex){
             return ResponseEntity.notFound().build();

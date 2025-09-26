@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.service.application;
+package com.ecomm.np.genevaecommerce.service.checkout;
 
 import com.ecomm.np.genevaecommerce.model.dto.CheckoutIncDTO;
 import jakarta.transaction.Transactional;

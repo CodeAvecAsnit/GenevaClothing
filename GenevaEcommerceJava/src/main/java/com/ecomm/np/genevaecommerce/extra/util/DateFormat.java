@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.extra;
+package com.ecomm.np.genevaecommerce.extra.util;
 
 import java.time.LocalDateTime;
 

@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce.security;
 
-import com.ecomm.np.genevaecommerce.extra.NetworkUtils;
+import com.ecomm.np.genevaecommerce.extra.util.NetworkUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,15 +23,12 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.security.SecureRandom;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-
 
     private final JwtFilter jwtFilter;
 
@@ -45,10 +43,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "share/qr",
+                                "api/v1/get/order",
                                 "/oauth2/**",
                                 "/oauth2/authorization/google",
                                "/oauth2/authorization/github",
@@ -57,9 +57,8 @@ public class SecurityConfig {
                                 "api/v1/auth/sign_up/resend",
                                 "/api/v1/auth/verify",
                                 "/api/v1/auth/login",
-                                "/api/v1/home/best",
+                                "/api/v1/home/*",
                                 "/api/v1/home",
-                                "/api/v1/home/**",
                                 "/api/v1/items/get/*",
                                 "/swagger-ui.html",
                                 "/api/v1/items",
@@ -105,7 +104,12 @@ public class SecurityConfig {
         }catch (Exception ex){
             currentAddress="localhost";
         }
-        config.setAllowedOriginPatterns(List.of("http://*.local", "http://localhost:5500", "http://127.0.0.1:5500", "http://" + currentAddress + ":5500"));
+        config.setAllowedOriginPatterns(List.of("http://*.local",
+                "http://localhost:5500",
+                "http://127.0.0.1:5500",
+                "http://" + currentAddress + ":5500",
+                "https://genevaclothingnepal.vercel.app"));
+
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
@@ -118,5 +122,4 @@ public class SecurityConfig {
     public ObjectMapper objectMapper(){
         return new ObjectMapper();
     }
-
 }
