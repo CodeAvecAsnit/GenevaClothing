@@ -1,7 +1,7 @@
 package com.ecomm.np.genevaecommerce.service.authservice.impl;
 
-import com.ecomm.np.genevaecommerce.extra.ExpiryError;
-import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
+import com.ecomm.np.genevaecommerce.extra.exception.ExpiryError;
+import com.ecomm.np.genevaecommerce.extra.exception.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.dto.SignUpAttempt;
 import com.ecomm.np.genevaecommerce.model.dto.SignUpDTO;
 import com.ecomm.np.genevaecommerce.model.dto.VerificationDTO;

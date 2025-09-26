@@ -1,8 +1,8 @@
 package com.ecomm.np.genevaecommerce.service;
 
-import com.ecomm.np.genevaecommerce.TestPackage.Encryption.AESEncrypt;
-import com.ecomm.np.genevaecommerce.TestPackage.Encryption.OrderData;
-import com.ecomm.np.genevaecommerce.TestPackage.Encryption.OrderDataUtils;
+import com.ecomm.np.genevaecommerce.extra.components.AESEncrypt;
+import com.ecomm.np.genevaecommerce.model.dto.OrderData;
+import com.ecomm.np.genevaecommerce.extra.util.OrderDataUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

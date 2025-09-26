@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce.service.modelservice.impl;
 
-import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
+import com.ecomm.np.genevaecommerce.extra.exception.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.entity.GenderTable;
 import com.ecomm.np.genevaecommerce.model.entity.Items;
 import com.ecomm.np.genevaecommerce.repository.ItemsRepository;
@@ -70,6 +70,11 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public List<Items> getRandomItems(){
         return itemsRepository.findRandomItems();
+    }
+
+    @Override
+    public List<Items> findAllById(List<Integer> ids) {
+        return itemsRepository.findAllById(ids);
     }
 }
 

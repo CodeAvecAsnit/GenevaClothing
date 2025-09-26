@@ -1,29 +1,21 @@
-package com.ecomm.np.genevaecommerce.TestPackage;
+package com.ecomm.np.genevaecommerce.controller;
 
-import com.ecomm.np.genevaecommerce.TestPackage.Encryption.EncryptionService;
-import com.ecomm.np.genevaecommerce.TestPackage.Encryption.OrderData;
+import com.ecomm.np.genevaecommerce.service.infrastructure.EncryptionService;
+import com.ecomm.np.genevaecommerce.service.infrastructure.impl.EncryptionServiceImpl;
+import com.ecomm.np.genevaecommerce.model.dto.OrderData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/get/order")
+@RequestMapping("api/v1/get/order")
 public class QrController {
     private final EncryptionService encryptionService;
 
     @Autowired
-    public QrController(EncryptionService encryptionService) {
+    public QrController(@Qualifier("encryptionServiceImpl") EncryptionServiceImpl encryptionService) {
         this.encryptionService = encryptionService;
-    }
-
-    @PostMapping
-    public ResponseEntity<String> getEncryptedText() {
-        OrderData orderData = new OrderData(1, 200, 100, 2, "Kathmandu Sahara");
-        try {
-            return ResponseEntity.ok(encryptionService.generateOrderData(orderData));
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().build();
-        }
     }
 
     @GetMapping

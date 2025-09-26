@@ -1,7 +1,7 @@
-package com.ecomm.np.genevaecommerce.TestPackage.Encryption;
+package com.ecomm.np.genevaecommerce.extra.components;
 
-import com.ecomm.np.genevaecommerce.extra.NetworkUtils;
-import com.ecomm.np.genevaecommerce.extra.UrlQrCode;
+import com.ecomm.np.genevaecommerce.extra.util.UrlQrCode;
+import com.ecomm.np.genevaecommerce.extra.util.NetworkUtils;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 

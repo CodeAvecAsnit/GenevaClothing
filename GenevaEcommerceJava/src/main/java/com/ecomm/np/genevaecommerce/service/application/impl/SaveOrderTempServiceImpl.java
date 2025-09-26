@@ -1,9 +1,9 @@
 package com.ecomm.np.genevaecommerce.service.application.impl;
 
-import com.ecomm.np.genevaecommerce.extra.CodeErrorException;
-import com.ecomm.np.genevaecommerce.extra.ItemMapComp;
-import com.ecomm.np.genevaecommerce.extra.OutOfStockException;
-import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
+import com.ecomm.np.genevaecommerce.extra.exception.CodeErrorException;
+import com.ecomm.np.genevaecommerce.extra.components.ItemMapComp;
+import com.ecomm.np.genevaecommerce.extra.exception.OutOfStockException;
+import com.ecomm.np.genevaecommerce.extra.exception.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.dto.CheckDTO;
 import com.ecomm.np.genevaecommerce.model.dto.DisplayItemsDTO;
 import com.ecomm.np.genevaecommerce.model.dto.QuantityItemDTO;

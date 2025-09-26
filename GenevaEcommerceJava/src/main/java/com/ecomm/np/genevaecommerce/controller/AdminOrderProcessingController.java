@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce.controller;
 
-import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
+import com.ecomm.np.genevaecommerce.extra.exception.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.dto.BasicDT0;
 import com.ecomm.np.genevaecommerce.service.application.OrderProcessingService;
 import org.springframework.beans.factory.annotation.Autowired;

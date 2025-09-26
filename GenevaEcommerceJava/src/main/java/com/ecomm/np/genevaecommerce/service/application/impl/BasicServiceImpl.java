@@ -1,41 +1,43 @@
 package com.ecomm.np.genevaecommerce.service.application.impl;
 
 import com.ecomm.np.genevaecommerce.model.dto.ItemDisplayDTO;
-import com.ecomm.np.genevaecommerce.model.dto.WishListDTO;
 import com.ecomm.np.genevaecommerce.model.entity.BestCollection;
 import com.ecomm.np.genevaecommerce.model.entity.Collection;
 import com.ecomm.np.genevaecommerce.model.entity.Items;
-import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 import com.ecomm.np.genevaecommerce.service.application.BasicService;
-import com.ecomm.np.genevaecommerce.service.modelservice.impl.CollectionServiceImpl;
+import com.ecomm.np.genevaecommerce.service.modelservice.ItemService;
 import com.ecomm.np.genevaecommerce.service.modelservice.CollectionService;
-import com.ecomm.np.genevaecommerce.service.modelservice.UserService;
-import com.ecomm.np.genevaecommerce.service.modelservice.impl.UserServiceImpl;
+import com.ecomm.np.genevaecommerce.service.modelservice.OrderItemAuditService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class BasicServiceImpl implements BasicService {
-    private final UserService UserService;
     private final CollectionService collectionService;
     private final ObjectMapper objectMapper;
     private final String path ="collection.json";
     private final File file = new File(path);
+    private final ItemService itemService;
+    private final OrderItemAuditService orderItemAuditService;
 
     @Autowired
-    public BasicServiceImpl(UserServiceImpl userServiceImpl
-            , CollectionServiceImpl collectionServiceImpl, ObjectMapper objectMapper) {
-        this.UserService = userServiceImpl;
-        this.collectionService = collectionServiceImpl;
+    public BasicServiceImpl(
+            @Qualifier("collectionServiceImpl") CollectionService collectionService,
+            ObjectMapper objectMapper,
+            @Qualifier("itemServiceImpl") ItemService itemService,
+            @Qualifier("orderItemAuditServiceImpl") OrderItemAuditService orderItemAuditService) {
+        this.collectionService = collectionService;
         this.objectMapper = objectMapper;
+        this.itemService = itemService;
+        this.orderItemAuditService = orderItemAuditService;
     }
 
     @Override
@@ -51,30 +53,26 @@ public class BasicServiceImpl implements BasicService {
         return objectMapper.readValue(file, BestCollection.class);
     }
 
+
     @Override
-    public String updateBestCollection(BestCollection collection) throws IOException {
-        objectMapper.writeValue(file, collection);
-        return "Success";
+    public List<ItemDisplayDTO> findHighestSellingItems(){
+        List<Integer> ids = orderItemAuditService.findTopSellingItemIds();
+        List<Items> items = itemService.findAllById(ids);
+        return items.stream().map(ItemDisplayDTO::MapByItems).toList();
     }
 
     @Override
-    public Set<ItemDisplayDTO> getCartItems(int userId) throws UsernameNotFoundException {
-        UserModel userModel = UserService.findUserById(userId);
-        Set<Items> userItems = userModel.getCartList();
-        return userItems.stream().map(ItemDisplayDTO::MapByItems).collect(Collectors.toSet());
+    public List<ItemDisplayDTO> findRandomItems(){
+        List<Items> itemList = itemService.getRandomItems();
+        return itemList.stream().map(ItemDisplayDTO::MapByItems).toList();
     }
 
-
     @Override
-    public Set<WishListDTO> getWishListFromUser(int userId)throws UsernameNotFoundException {
-        UserModel user = UserService.findUserById(userId);
-        return user.getWishList().stream()
-                    .map(item -> {
-                        WishListDTO dto = WishListDTO.BuildFromItems(item);
-                        dto.setInCart(user.getCartList().contains(item));
-                        return dto;
-                    })
-                    .collect(Collectors.toSet());
+    public List<ItemDisplayDTO> displayNewArrivals(){// can be moved into another controller maybe
+        List<Items> newArrrivalList= itemService.findTop10();
+        return newArrrivalList.stream().
+                map(ItemDisplayDTO::MapByItems).
+                collect(Collectors.toList());
     }
 
 }

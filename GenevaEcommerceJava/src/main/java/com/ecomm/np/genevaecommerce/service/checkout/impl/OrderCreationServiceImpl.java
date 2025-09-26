@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce.service.checkout.impl;
 
-import com.ecomm.np.genevaecommerce.extra.ItemMapComp;
+import com.ecomm.np.genevaecommerce.extra.components.ItemMapComp;
 import com.ecomm.np.genevaecommerce.model.dto.CheckoutIncDTO;
 import com.ecomm.np.genevaecommerce.model.dto.QuantityItemDTO;
 import com.ecomm.np.genevaecommerce.model.entity.*;

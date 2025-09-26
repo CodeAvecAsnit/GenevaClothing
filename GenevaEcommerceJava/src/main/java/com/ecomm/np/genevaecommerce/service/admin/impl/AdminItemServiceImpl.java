@@ -2,8 +2,8 @@ package com.ecomm.np.genevaecommerce.service.admin.impl;
 
 import com.ecomm.np.genevaecommerce.model.dto.AdminReadItemsDTO;
 import com.ecomm.np.genevaecommerce.model.dto.ListItemDTO;
-import com.ecomm.np.genevaecommerce.extra.DateFormat;
-import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
+import com.ecomm.np.genevaecommerce.extra.util.DateFormat;
+import com.ecomm.np.genevaecommerce.extra.exception.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.entity.Collection;
 import com.ecomm.np.genevaecommerce.model.entity.Items;
 import com.ecomm.np.genevaecommerce.service.admin.AdminItemService;
@@ -22,11 +22,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Map;
 
 @Service
+@PreAuthorize("hasAuthority('ADMIN')")
 public class AdminItemServiceImpl implements AdminItemService {
 
     private static final Logger log = LoggerFactory.getLogger(AdminItemServiceImpl.class);

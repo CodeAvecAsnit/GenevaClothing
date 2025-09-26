@@ -2,7 +2,7 @@ package com.ecomm.np.genevaecommerce.service.application.impl;
 
 import com.ecomm.np.genevaecommerce.model.dto.HistoryDTO;
 import com.ecomm.np.genevaecommerce.model.dto.OrderDTO;
-import com.ecomm.np.genevaecommerce.extra.DateFormat;
+import com.ecomm.np.genevaecommerce.extra.util.DateFormat;
 import com.ecomm.np.genevaecommerce.model.entity.OrderDetails;
 import com.ecomm.np.genevaecommerce.model.entity.OrderedItems;
 import com.ecomm.np.genevaecommerce.service.application.OrderHistoryService;

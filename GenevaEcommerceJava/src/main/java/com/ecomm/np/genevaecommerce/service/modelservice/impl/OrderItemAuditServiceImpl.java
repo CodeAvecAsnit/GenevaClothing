@@ -1,6 +1,6 @@
 package com.ecomm.np.genevaecommerce.service.modelservice.impl;
 
-import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
+import com.ecomm.np.genevaecommerce.extra.exception.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.entity.OrderItemAudit;
 import com.ecomm.np.genevaecommerce.repository.OrderItemAuditRepository;
 import com.ecomm.np.genevaecommerce.service.modelservice.OrderItemAuditService;

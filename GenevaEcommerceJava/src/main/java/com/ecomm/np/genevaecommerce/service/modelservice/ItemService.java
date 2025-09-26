@@ -25,4 +25,6 @@ public interface ItemService {
     List<Items> findAllByListOfIds(List<Integer> ids);
 
     List<Items> getRandomItems();
+
+    List<Items> findAllById(List<Integer> ids);
 }

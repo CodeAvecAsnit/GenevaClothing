@@ -1,7 +1,7 @@
 package com.ecomm.np.genevaecommerce.service.application.impl;
 
 import com.ecomm.np.genevaecommerce.model.dto.ItemDisplayDTO;
-import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
+import com.ecomm.np.genevaecommerce.extra.exception.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.entity.GenderTable;
 import com.ecomm.np.genevaecommerce.model.entity.Items;
 import com.ecomm.np.genevaecommerce.service.application.GeneralItemService;
@@ -13,9 +13,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class GeneralItemServiceImpl implements GeneralItemService {
@@ -49,11 +46,4 @@ public class GeneralItemServiceImpl implements GeneralItemService {
         return page.map(ItemDisplayDTO::MapByItems);
     }
 
-    @Override
-    public List<ItemDisplayDTO> displayNewArrivals(){// can be moved into another controller maybe
-        List<Items> newArrrivalList= itemService.findTop10();
-        return newArrrivalList.stream().
-                map(ItemDisplayDTO::MapByItems).
-                collect(Collectors.toList());
-    }
 }

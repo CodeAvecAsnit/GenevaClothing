@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.TestPackage.Encryption;
+package com.ecomm.np.genevaecommerce.model.dto;
 
 import com.ecomm.np.genevaecommerce.model.entity.OrderDetails;
 import com.ecomm.np.genevaecommerce.model.entity.OrderedItems;

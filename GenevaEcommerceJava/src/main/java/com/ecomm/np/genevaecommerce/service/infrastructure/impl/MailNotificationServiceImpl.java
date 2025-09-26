@@ -1,15 +1,16 @@
 package com.ecomm.np.genevaecommerce.service.infrastructure.impl;
 
-import com.ecomm.np.genevaecommerce.TestPackage.Encryption.EncryptionService;
-import com.ecomm.np.genevaecommerce.TestPackage.Encryption.OrderData;
-import com.ecomm.np.genevaecommerce.extra.NetworkUtils;
-import com.ecomm.np.genevaecommerce.extra.UrlQrCode;
+import com.ecomm.np.genevaecommerce.model.dto.OrderData;
+import com.ecomm.np.genevaecommerce.extra.util.NetworkUtils;
+import com.ecomm.np.genevaecommerce.extra.util.UrlQrCode;
 import com.ecomm.np.genevaecommerce.model.entity.OrderedItems;
+import com.ecomm.np.genevaecommerce.service.infrastructure.EncryptionService;
 import com.ecomm.np.genevaecommerce.service.infrastructure.PackedNotificationService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.util.ByteArrayDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -28,7 +29,8 @@ public class MailNotificationServiceImpl implements PackedNotificationService {
 
 
     @Autowired
-    public MailNotificationServiceImpl(JavaMailSender javaMailSender, EncryptionService encryptionService) {
+    public MailNotificationServiceImpl(JavaMailSender javaMailSender,
+                                       @Qualifier("encryptionServiceImpl") EncryptionService encryptionService) {
         this.javaMailSender = javaMailSender;
         this.encryptionService = encryptionService;
     }
@@ -65,7 +67,7 @@ public class MailNotificationServiceImpl implements PackedNotificationService {
 
     private String BuildURL(String param)throws Exception{
         return "http://" + NetworkUtils.getLocalIp() +
-                ":8080/get/order?textVal=" +
+                ":8080/api/v1/get/order?textVal=" +
                 URLEncoder.encode(param, StandardCharsets.UTF_8);
     }
 

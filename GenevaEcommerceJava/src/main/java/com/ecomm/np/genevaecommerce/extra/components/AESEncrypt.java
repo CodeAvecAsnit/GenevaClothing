@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.TestPackage.Encryption;
+package com.ecomm.np.genevaecommerce.extra.components;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;

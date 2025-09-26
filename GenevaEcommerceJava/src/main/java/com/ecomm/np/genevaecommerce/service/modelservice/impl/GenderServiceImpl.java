@@ -1,7 +1,7 @@
 package com.ecomm.np.genevaecommerce.service.modelservice.impl;
 
 import com.ecomm.np.genevaecommerce.model.enumeration.Gender;
-import com.ecomm.np.genevaecommerce.extra.ResourceNotFoundException;
+import com.ecomm.np.genevaecommerce.extra.exception.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.entity.GenderTable;
 import com.ecomm.np.genevaecommerce.repository.GenderTableRepository;
 import com.ecomm.np.genevaecommerce.service.modelservice.GenderService;

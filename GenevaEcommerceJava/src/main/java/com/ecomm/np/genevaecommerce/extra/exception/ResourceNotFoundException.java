@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.extra;
+package com.ecomm.np.genevaecommerce.extra.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {
