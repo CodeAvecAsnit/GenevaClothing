@@ -6,7 +6,7 @@ import com.ecomm.np.genevaecommerce.extra.exception.ResourceNotFoundException;
 import com.ecomm.np.genevaecommerce.model.dto.BasicDT0;
 import com.ecomm.np.genevaecommerce.model.dto.CheckDTO;
 import com.ecomm.np.genevaecommerce.model.dto.QuantityItemDTO;
-import com.ecomm.np.genevaecommerce.Security.CustomUser;
+import com.ecomm.np.genevaecommerce.security.CustomUser;
 import com.ecomm.np.genevaecommerce.service.application.SaveOrderTempService;
 import jakarta.validation.constraints.NotBlank;
 import org.slf4j.Logger;

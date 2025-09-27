@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.Security;
+package com.ecomm.np.genevaecommerce.security;
 
 import com.ecomm.np.genevaecommerce.extra.util.NetworkUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
