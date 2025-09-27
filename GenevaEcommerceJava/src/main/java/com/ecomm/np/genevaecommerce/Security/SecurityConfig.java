@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/interchange",
                                 "share/qr",
                                 "api/v1/get/order",
                                 "/oauth2/**",

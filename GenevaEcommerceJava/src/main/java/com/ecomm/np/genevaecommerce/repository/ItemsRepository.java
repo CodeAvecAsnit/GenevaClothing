@@ -12,39 +12,21 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ItemsRepository extends JpaRepository<Items,Integer> {
+public interface ItemsRepository extends JpaRepository<Items, Integer> {
+
     List<Items> findTop10ByOrderByCreatedDateDesc();
+
 
     Page<Items> findByGenderTable(GenderTable genderTable, Pageable pageable);
 
-/*    A procedure that calculates the price according for each quantity
-    delimiter $$
+    @Query(value="SELECT findTotalPrice(:quantity, :id)", nativeQuery = true)
+    Float findTotalPrice(@Param("quantity") int quantity, @Param("id") int id);
 
-    Create procedure findTotalPrice(in quantity int,in id int)
-    begin
-    declare item_price decimal(10,2);
-    declare item_stock int;
-    declare total_price decimal(10,2);
 
-    select price,stock into item_price,item_stock
-    from items
-    where item_code = id;
-
-    if(item_stock<quantity) then
-    set total_price = 0;
-    else
-    set total_price = item_price*quantity;
-    end if;
-
-    select total_price;
-    end$$*/
-
-    @Query(value="Call findTotalPrice(:quantity,:id)",nativeQuery = true)
-    Float findTotalPrice(@Param("quantity")int quantity,@Param("id")int id);
-
-    @Query(value = "select count(item_code) from items",nativeQuery = true)
+    @Query(value = "SELECT COUNT(item_code) FROM items", nativeQuery = true)
     Long findTotalItems();
 
-    @Query(value = "SELECT * FROM items ORDER BY RAND() LIMIT 5", nativeQuery = true)
+    @Query(value = "SELECT * FROM items ORDER BY RANDOM() LIMIT 5", nativeQuery = true)
     List<Items> findRandomItems();
 }
+

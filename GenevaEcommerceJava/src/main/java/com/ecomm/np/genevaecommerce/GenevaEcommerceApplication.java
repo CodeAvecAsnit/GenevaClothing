@@ -10,7 +10,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 @EnableJpaAuditing
 public class GenevaEcommerceApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(GenevaEcommerceApplication.class, args);
 	}
