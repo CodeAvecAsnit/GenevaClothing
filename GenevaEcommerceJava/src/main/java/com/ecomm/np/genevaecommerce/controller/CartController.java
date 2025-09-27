@@ -2,7 +2,7 @@ package com.ecomm.np.genevaecommerce.controller;
 
 import com.ecomm.np.genevaecommerce.model.dto.BasicDT0;
 import com.ecomm.np.genevaecommerce.model.dto.Checkers;
-import com.ecomm.np.genevaecommerce.security.CustomUser;
+import com.ecomm.np.genevaecommerce.Security.CustomUser;
 import com.ecomm.np.genevaecommerce.service.application.CartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

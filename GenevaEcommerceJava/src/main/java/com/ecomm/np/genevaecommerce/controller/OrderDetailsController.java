@@ -1,7 +1,7 @@
 package com.ecomm.np.genevaecommerce.controller;
 
 import com.ecomm.np.genevaecommerce.model.dto.AddressDTO;
-import com.ecomm.np.genevaecommerce.security.CustomUser;
+import com.ecomm.np.genevaecommerce.Security.CustomUser;
 import com.ecomm.np.genevaecommerce.service.application.OrderDetailsService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;

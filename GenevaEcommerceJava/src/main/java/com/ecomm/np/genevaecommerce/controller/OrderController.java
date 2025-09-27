@@ -1,7 +1,7 @@
 package com.ecomm.np.genevaecommerce.controller;
 
 import com.ecomm.np.genevaecommerce.model.dto.*;
-import com.ecomm.np.genevaecommerce.security.CustomUser;
+import com.ecomm.np.genevaecommerce.Security.CustomUser;
 import com.ecomm.np.genevaecommerce.service.checkout.CheckoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

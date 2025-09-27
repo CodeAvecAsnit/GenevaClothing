@@ -7,17 +7,13 @@ import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 import com.ecomm.np.genevaecommerce.service.application.UserCartService;
 import com.ecomm.np.genevaecommerce.service.modelservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@Scope(value = WebApplicationContext.SCOPE_SESSION,proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UserCartServiceImpl implements UserCartService {
     private final UserService userService;
 

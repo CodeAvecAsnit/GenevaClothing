@@ -2,7 +2,7 @@ package com.ecomm.np.genevaecommerce.controller;
 
 import com.ecomm.np.genevaecommerce.model.dto.ItemDisplayDTO;
 import com.ecomm.np.genevaecommerce.model.dto.WishListDTO;
-import com.ecomm.np.genevaecommerce.security.CustomUser;
+import com.ecomm.np.genevaecommerce.Security.CustomUser;
 import com.ecomm.np.genevaecommerce.service.application.UserCartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

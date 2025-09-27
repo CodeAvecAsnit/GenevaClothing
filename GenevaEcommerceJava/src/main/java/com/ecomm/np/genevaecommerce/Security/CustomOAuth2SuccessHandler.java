@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.security;
+package com.ecomm.np.genevaecommerce.Security;
 
 import com.ecomm.np.genevaecommerce.model.enumeration.Role;
 import com.ecomm.np.genevaecommerce.extra.util.PasswordGenerator;

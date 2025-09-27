@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.security;
+package com.ecomm.np.genevaecommerce.Security;
 
 import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 import org.springframework.security.core.GrantedAuthority;
