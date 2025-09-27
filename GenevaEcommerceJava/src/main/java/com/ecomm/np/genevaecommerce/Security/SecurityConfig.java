@@ -108,6 +108,7 @@ public class SecurityConfig {
                 "http://localhost:5500",
                 "http://127.0.0.1:5500",
                 "http://" + currentAddress + ":5500",
+                "http://localhost:9000",
                 "https://genevaclothingnepal.vercel.app"));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

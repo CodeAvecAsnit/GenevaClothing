@@ -12,7 +12,7 @@ public class OrderDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long orderId;
 
-    @Lob
+    @Column(columnDefinition = "text")
     private String deliveryLocation;
 
     private String city;
