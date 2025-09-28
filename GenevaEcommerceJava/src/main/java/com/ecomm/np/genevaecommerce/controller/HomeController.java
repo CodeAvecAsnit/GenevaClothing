@@ -17,7 +17,13 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/home")
@@ -84,6 +90,50 @@ public class HomeController {
     @GetMapping("/health")
     public String health() {
         return "App is running!";
+    }
+
+
+    @GetMapping("/test-db")
+    public Map
+            <String, Object> testDatabase() {
+        Map<String, Object> result = new HashMap<>();
+
+        String url = "jdbc:postgresql://db.yzhmojktlemvrmbfrmta.supabase.co:5432/postgres?sslmode=require";
+        String username = "postgres";
+        String password = "ZS8fFnVHMVp1Duge";
+
+        try {
+            // Test connection
+            Connection connection = DriverManager.getConnection(url, username, password);
+            result.put("connection", "SUCCESS");
+
+            // Test simple query
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT version()");
+            if (rs.next()) {
+                result.put("database_version", rs.getString(1));
+            }
+
+            // Test table access
+            try {
+                ResultSet tables = stmt.executeQuery("SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public'");
+                if (tables.next()) {
+                    result.put("public_tables_count", tables.getInt(1));
+                }
+            } catch (Exception e) {
+                result.put("tables_error", e.getMessage());
+            }
+
+            connection.close();
+            result.put("status", "Database connection successful!");
+
+        } catch (Exception e) {
+            result.put("connection", "FAILED");
+            result.put("error", e.getMessage());
+            result.put("error_class", e.getClass().getSimpleName());
+        }
+
+        return result;
     }
 
 }
