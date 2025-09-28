@@ -38,6 +38,6 @@ public class CollectionDTO {
     }
 
     public static CollectionDTO buildFromCollection(Collection c,String ImageLink){
-        return new CollectionDTO(ImageLink, c.getCollectionName(), c.getCollection_description());
+        return new CollectionDTO(ImageLink, c.getCollectionName(), c.getCollectionDescription());
     }
 }

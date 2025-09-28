@@ -45,7 +45,7 @@ public class CollectionAndItemsDTO {
     public static CollectionAndItemsDTO buildFromCollection(Collection collection){
         CollectionAndItemsDTO collectionAndItemsDTO = new CollectionAndItemsDTO();
         collectionAndItemsDTO.setCollectionName(collection.getCollectionName());
-        collectionAndItemsDTO.setCollectionDescription(collection.getCollection_description());
+        collectionAndItemsDTO.setCollectionDescription(collection.getCollectionDescription());
         List<ItemDisplayDTO> itemDisplayDTOS = collection.getCollectionItemList().stream().map(ItemDisplayDTO::MapByItems).toList();
         collectionAndItemsDTO.setCollectionItems(itemDisplayDTOS);
         return collectionAndItemsDTO;

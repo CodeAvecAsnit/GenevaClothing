@@ -17,8 +17,8 @@ public class Collection {
 
     private String collectionName;
 
-    @Lob
-    private String collection_description;
+    @Column(columnDefinition = "text")
+    private String collectionDescription;
 
     @OneToMany (mappedBy = "collection",fetch = FetchType.LAZY)
     private List<Items> collectionItemList;
@@ -36,7 +36,7 @@ public class Collection {
         this.collectionItemList = collectionItemList;
         this.launchedDate = launchedDate;
         this.collectionName = collectionName;
-        this.collection_description = collectionDescription;
+        this.collectionDescription = collectionDescription;
     }
 
     public int getCollectionId() {
@@ -55,12 +55,12 @@ public class Collection {
         this.collectionName = collectionName;
     }
 
-    public String getCollection_description() {
-        return collection_description;
+    public String getCollectionDescription() {
+        return collectionDescription;
     }
 
-    public void setCollection_description(String collection_description) {
-        this.collection_description = collection_description;
+    public void setCollection_description(String collectionDescription) {
+        this.collectionDescription = collectionDescription;
     }
 
     public List<Items> getCollectionItemList() {
