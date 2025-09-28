@@ -81,5 +81,9 @@ public class HomeController {
         return ResponseEntity.ok(basicService.displayNewArrivals());
     }
 
+    @GetMapping("/health")
+    public String health() {
+        return "App is running!";
+    }
 
 }
