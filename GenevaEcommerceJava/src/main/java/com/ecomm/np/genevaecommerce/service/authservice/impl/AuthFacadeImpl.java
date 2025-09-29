@@ -35,8 +35,9 @@ public class AuthFacadeImpl implements AuthFacade {
     @Async
     @Override
     public void signUp(SignUpDTO signUpDTO){
-        registrationService.validateUserUniqueness(signUpDTO);
-        emailVerificationService.initiateVerification(signUpDTO);
+        if(registrationService.validateUserUniqueness(signUpDTO)) {
+            emailVerificationService.initiateVerification(signUpDTO);
+        }
     }
 
     @Async
@@ -50,7 +51,7 @@ public class AuthFacadeImpl implements AuthFacade {
     public LoginResponseDTO verify(VerificationDTO verificationDTO) throws Exception{
         SignUpDTO newUser = emailVerificationService.verifyCode(verificationDTO);
         UserModel user = registrationService.createUser(newUser);
-        return new LoginResponseDTO(200,"Sucessfull verified",loginService.generateJwt(user));
+        return new LoginResponseDTO(200,"Successfully verified",loginService.generateJwt(user));
     }
 
     @Transactional

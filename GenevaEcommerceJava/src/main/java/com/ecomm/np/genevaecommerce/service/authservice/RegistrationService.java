@@ -6,7 +6,7 @@ import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 import jakarta.transaction.Transactional;
 
 public interface RegistrationService{
-    void validateUserUniqueness(SignUpDTO signUpDTO);
+    boolean validateUserUniqueness(SignUpDTO signUpDTO);
     UserModel createUser(SignUpDTO signUpDTO);
     String registerNewPassword(PasswordDTO passwordDTO, String email);
 }
