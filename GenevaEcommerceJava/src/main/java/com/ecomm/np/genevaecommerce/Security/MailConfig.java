@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.security;
+package com.ecomm.np.genevaecommerce.Security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
