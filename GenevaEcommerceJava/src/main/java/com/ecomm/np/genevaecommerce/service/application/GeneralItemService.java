@@ -5,6 +5,10 @@ import com.ecomm.np.genevaecommerce.model.dto.ItemDisplayDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 public interface GeneralItemService {
     ItemDisplayDTO findById(int id) throws ResourceNotFoundException;
 

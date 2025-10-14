@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.List;
 
+/**
+ * @author : Asnit Bakhati
+ */
 
 @Service
 public class MailServiceImpl implements MailService {

@@ -25,6 +25,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.security.SecureRandom;
 import java.util.List;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)

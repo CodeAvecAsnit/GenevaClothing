@@ -23,6 +23,10 @@ import java.security.SecureRandom;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 @Service
 public class EmailVerificationServiceImpl implements EmailVerificationService {
     private final MailService mailService;

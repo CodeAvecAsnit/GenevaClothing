@@ -3,6 +3,10 @@ package com.ecomm.np.genevaecommerce.service.modelservice;
 import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 import jakarta.transaction.Transactional;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 public interface UserService {
 
     UserModel findUserById(int userid);

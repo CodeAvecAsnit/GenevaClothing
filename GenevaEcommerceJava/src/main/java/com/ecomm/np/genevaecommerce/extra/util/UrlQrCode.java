@@ -9,6 +9,10 @@ import jakarta.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
 
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 public class UrlQrCode {
 
     public static ByteArrayDataSource generateQR(String text) throws Exception{

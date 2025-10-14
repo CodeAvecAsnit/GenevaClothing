@@ -5,6 +5,10 @@ import com.ecomm.np.genevaecommerce.model.dto.AdminStatsDTO;
 
 import java.util.List;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 public interface AdminStatisticsService {
     List<Integer> findHighestSellingItems();
     AdminStatsDTO findStatsForAdmin();

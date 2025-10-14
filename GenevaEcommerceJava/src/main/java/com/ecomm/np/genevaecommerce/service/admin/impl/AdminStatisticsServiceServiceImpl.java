@@ -15,8 +15,11 @@ import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.*;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 @Service
-@PreAuthorize("hasAuthority('ADMIN')")
 public class AdminStatisticsServiceServiceImpl implements AdminStatisticsService {
 
     private final OrderItemAuditService orderItemAuditService;
@@ -33,6 +36,7 @@ public class AdminStatisticsServiceServiceImpl implements AdminStatisticsService
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public AdminStatsDTO findStatsForAdmin(){
         AdminStatsDTO stats = new AdminStatsDTO();
         stats.setWeekData(this.findWeekOrders());
@@ -52,6 +56,7 @@ public class AdminStatisticsServiceServiceImpl implements AdminStatisticsService
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<Integer> findHighestSellingItems(){
         return orderItemAuditService.findTopSellingItemIds();
     }

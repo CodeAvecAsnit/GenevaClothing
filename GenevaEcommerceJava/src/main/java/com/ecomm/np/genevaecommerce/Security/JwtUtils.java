@@ -13,6 +13,10 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 @Component
 public class JwtUtils {
 

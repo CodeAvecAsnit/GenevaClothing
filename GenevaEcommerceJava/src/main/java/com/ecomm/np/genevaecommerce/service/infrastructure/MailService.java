@@ -3,6 +3,10 @@ import com.ecomm.np.genevaecommerce.model.entity.OrderedItems;
 import org.springframework.scheduling.annotation.Async;
 import java.util.List;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 public interface MailService {
     void sendVerificationCode(String email,int code);
     void sendPromotion(List<String> emails, String title, String body);

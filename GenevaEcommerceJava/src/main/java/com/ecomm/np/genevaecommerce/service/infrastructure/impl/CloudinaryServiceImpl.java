@@ -9,6 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 @Service
 public class CloudinaryServiceImpl implements CloudinaryService {
     private final Cloudinary cloudinary;

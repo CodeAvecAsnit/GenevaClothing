@@ -4,6 +4,10 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 public class NetworkUtils {
     public static String getLocalIp()throws Exception {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();

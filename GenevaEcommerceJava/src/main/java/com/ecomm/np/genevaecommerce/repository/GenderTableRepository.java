@@ -7,6 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 @Repository
 public interface GenderTableRepository extends JpaRepository<GenderTable,Integer> {
     Optional<GenderTable> findByGender(Gender gender);

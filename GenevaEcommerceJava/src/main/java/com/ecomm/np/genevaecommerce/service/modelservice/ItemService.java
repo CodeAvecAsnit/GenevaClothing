@@ -2,11 +2,14 @@ package com.ecomm.np.genevaecommerce.service.modelservice;
 
 import com.ecomm.np.genevaecommerce.model.entity.GenderTable;
 import com.ecomm.np.genevaecommerce.model.entity.Items;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+
+/**
+ * @author : Asnit Bakhati
+ */
 
 public interface ItemService {
 

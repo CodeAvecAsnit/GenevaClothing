@@ -5,6 +5,10 @@ import com.ecomm.np.genevaecommerce.model.dto.SignUpDTO;
 import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 import jakarta.transaction.Transactional;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 public interface RegistrationService{
     void validateUserUniqueness(SignUpDTO signUpDTO);
     UserModel createUser(SignUpDTO signUpDTO);

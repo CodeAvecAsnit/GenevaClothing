@@ -7,6 +7,10 @@ import com.ecomm.np.genevaecommerce.model.entity.Collection;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 public interface BasicService {
 
     Collection saveCollection();
