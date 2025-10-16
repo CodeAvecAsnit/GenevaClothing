@@ -17,39 +17,44 @@ public interface OrderItemsRepository extends JpaRepository<OrderedItems, Intege
     Page<OrderedItems> findByOrderDetails(OrderDetails orderDetails, Pageable page);
     Page<OrderedItems> findByMainActive(boolean mainActive, Pageable page);
 
-
+    // Total orders today
     @Query(value = """
         SELECT COUNT(o_id) FROM ordered_items
         WHERE order_initiated_date >= CURRENT_DATE
-        AND order_initiated_date < CURRENT_DATE + INTERVAL '1 day'
+        AND order_initiated_date < CURRENT_DATE + INTERVAL 1 DAY
         """, nativeQuery = true)
     Long findTotalOrdersToday();
 
+    // Total sales
     @Query(value = "SELECT COALESCE(SUM(total_price), 0) FROM ordered_items", nativeQuery = true)
     Float findTotalSales();
 
+    // Total sales today
     @Query(value = """
         SELECT COALESCE(SUM(total_price), 0) FROM ordered_items
         WHERE order_initiated_date >= CURRENT_DATE
-        AND order_initiated_date < CURRENT_DATE + INTERVAL '1 day'
+        AND order_initiated_date < CURRENT_DATE + INTERVAL 1 DAY
         """, nativeQuery = true)
     Float findTotalSalesToday();
 
-
+    // Not delivered count
     @Query(value = "SELECT COUNT(o_id) FROM ordered_items WHERE main_active = :val", nativeQuery = true)
     Long findNotDelivered(@Param("val") boolean isActive);
 
+    // Not packed count
     @Query(value = "SELECT COUNT(o_id) FROM ordered_items WHERE processed = :val", nativeQuery = true)
     Long findNotPacked(@Param("val") boolean isActive);
 
+    // Orders in the last 7 days grouped by date
     @Query(value = """
-        SELECT CAST(order_initiated_date AS DATE) AS order_date,
+        SELECT DATE(order_initiated_date) AS order_date,
                COUNT(*) AS total_orders
         FROM ordered_items
-        WHERE order_initiated_date >= CURRENT_DATE - INTERVAL '6 days'
-          AND order_initiated_date < CURRENT_DATE + INTERVAL '1 day'
-        GROUP BY CAST(order_initiated_date AS DATE)
+        WHERE order_initiated_date >= CURRENT_DATE - INTERVAL 6 DAY
+          AND order_initiated_date < CURRENT_DATE + INTERVAL 1 DAY
+        GROUP BY DATE(order_initiated_date)
         ORDER BY order_date ASC
         """, nativeQuery = true)
     List<Object[]> findOrderCountLast7Days();
 }
+

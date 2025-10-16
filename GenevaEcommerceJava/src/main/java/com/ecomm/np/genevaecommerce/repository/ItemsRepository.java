@@ -26,7 +26,7 @@ public interface ItemsRepository extends JpaRepository<Items, Integer> {
     @Query(value = "SELECT COUNT(item_code) FROM items", nativeQuery = true)
     Long findTotalItems();
 
-    @Query(value = "SELECT * FROM items ORDER BY RANDOM() LIMIT 5", nativeQuery = true)
+    @Query(value = "SELECT * FROM items ORDER BY RAND() LIMIT 5", nativeQuery = true)
     List<Items> findRandomItems();
 }
 

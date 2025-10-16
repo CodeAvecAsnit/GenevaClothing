@@ -1,7 +1,6 @@
 package com.ecomm.np.genevaecommerce.model.entity;
 
 
-
 public class BestCollection {
     private String image;
     private String name;

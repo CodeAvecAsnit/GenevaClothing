@@ -9,17 +9,17 @@ import java.util.List;
 
 public interface OrderItemAuditRepository extends JpaRepository<OrderItemAudit, Integer> {
 
-    //Total orders for a given item code
+    // Total orders for a given item code
     @Query(value = """
-        SELECT COALESCE(SUM(quantity), 0)::int
+        SELECT COALESCE(SUM(quantity), 0)
         FROM order_item_audit
         WHERE item_code = :itemCode
         """, nativeQuery = true)
     Integer totalOrders(@Param("itemCode") int id);
 
-    //Total items ordered (all codes)
+    // Total items ordered (all codes)
     @Query(value = """
-        SELECT COALESCE(SUM(quantity), 0)::int
+        SELECT COALESCE(SUM(quantity), 0)
         FROM order_item_audit
         """, nativeQuery = true)
     Integer totalItemOrdered();
@@ -34,9 +34,9 @@ public interface OrderItemAuditRepository extends JpaRepository<OrderItemAudit, 
         """, nativeQuery = true)
     List<Integer> findTopSellingItemCodes();
 
-    // Total items packed (boolean works natively in Postgres)
+    // Total items packed (assuming `is_packed` is TINYINT(1) or BOOLEAN in MySQL)
     @Query(value = """
-        SELECT COALESCE(SUM(quantity), 0)::int
+        SELECT COALESCE(SUM(quantity), 0)
         FROM order_item_audit
         WHERE is_packed = :val
         """, nativeQuery = true)
