@@ -24,6 +24,11 @@ public class GenderTable {
     public GenderTable() {
     }
 
+    public GenderTable(int id,Gender gender){
+        this.genderId = id;
+        this.gender = gender;
+    }
+
     public GenderTable(int genderId, Gender gender, List<Items> itemList) {
         this.genderId = genderId;
         this.gender = gender;
