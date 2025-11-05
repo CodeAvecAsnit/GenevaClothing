@@ -1,12 +1,11 @@
 package com.ecomm.np.genevaecommerce.service.authservice.impl;
 
-import com.ecomm.np.genevaecommerce.extra.exception.ExpiryError;
-import com.ecomm.np.genevaecommerce.extra.exception.ResourceNotFoundException;
-import com.ecomm.np.genevaecommerce.model.dto.SignUpAttempt;
+import com.ecomm.np.genevaecommerce.extra.exception.RateLimitException;
 import com.ecomm.np.genevaecommerce.model.dto.SignUpDTO;
 import com.ecomm.np.genevaecommerce.model.dto.VerificationDTO;
 import com.ecomm.np.genevaecommerce.service.authservice.EmailVerificationService;
 import com.ecomm.np.genevaecommerce.service.infrastructure.MailService;
+import com.ecomm.np.genevaecommerce.service.infrastructure.RateLimiter;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import jakarta.annotation.PostConstruct;
@@ -20,34 +19,28 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-
-/**
- * @author : Asnit Bakhati
- */
 
 @Service
 public class EmailVerificationServiceImpl implements EmailVerificationService {
     private final MailService mailService;
     private final SecureRandom secureRandom;
 
-    private Cache<String, SignUpAttempt> verificationCodes;
+    private final RateLimiter rateLimiter;
     private Cache<String, SignUpDTO> pendingAccounts;
     private final Logger logger = LoggerFactory.getLogger(EmailVerificationServiceImpl.class);
 
     @Autowired
-    public EmailVerificationServiceImpl(@Qualifier("mailServiceImpl") MailService mailService, SecureRandom secureRandom) {
+    public EmailVerificationServiceImpl(@Qualifier("mailServiceImpl") MailService mailService, SecureRandom secureRandom, RateLimiter rateLimiter) {
         this.mailService = mailService;
         this.secureRandom = secureRandom;
+        this.rateLimiter = rateLimiter;
     }
 
     @PostConstruct
     public void initializeCaches() {
-        this.verificationCodes = Caffeine.newBuilder()
-                .expireAfterAccess(5, TimeUnit.MINUTES)
-                .maximumSize(1000)
-                .build();
         this.pendingAccounts = Caffeine.newBuilder()
                 .expireAfterAccess(5, TimeUnit.MINUTES)
                 .maximumSize(1000)
@@ -57,20 +50,20 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
     @Async
     public void initiateVerification(SignUpDTO signUpDTO) {
         String email = signUpDTO.getEmail();
-        if (verificationCodes.getIfPresent(email) != null) {
+        if (pendingAccounts.getIfPresent(email) != null) {
             logger.warn("Verification already in progress for email: {}", email);
             return;
         }
         int code = generateVerificationCode();
+        signUpDTO.setCode(code);
         mailService.sendVerificationCode(email, code);
-        verificationCodes.put(email, new SignUpAttempt(code));
         pendingAccounts.put(email, signUpDTO);
         logger.info("Verification code sent to: {}", email);
     }
 
     @Async
     public void resendVerificationCode(String email) throws Exception {
-        SignUpAttempt attempt = verificationCodes.getIfPresent(email);
+        SignUpDTO attempt = pendingAccounts.getIfPresent(email);
         if (attempt == null) {
             throw new UsernameNotFoundException("Email verification session expired. Please sign up again.");
         }
@@ -85,7 +78,7 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
     }
 
     private void clearVerificationData(String email) {
-        verificationCodes.invalidate(email);
+        rateLimiter.remove(email);
         pendingAccounts.invalidate(email);
     }
 
@@ -96,26 +89,30 @@ public class EmailVerificationServiceImpl implements EmailVerificationService {
     @Override
     public SignUpDTO verifyCode(VerificationDTO verificationDTO) {
         String email = verificationDTO.getEmail();
-        SignUpAttempt attempt = verificationCodes.getIfPresent(email);
+        SignUpDTO attempt = pendingAccounts.getIfPresent(email);
         if (attempt == null) {
             throw new RuntimeException("Verification code has expired or does not exist");
         }
-        int responseCode = attempt.verificationAttempt(verificationDTO.getCode());
-        switch (responseCode) {
-            case -1:
-                clearVerificationData(email);
-                throw new ExpiryError("Verification code has already expired");
-            case 0:
-                throw new BadCredentialsException("Verification code does not match");
-            case 1:
-                SignUpDTO signUpDTO = pendingAccounts.getIfPresent(email);
-                if (signUpDTO == null) {
-                    throw new ResourceNotFoundException("User not found for provided email");
-                }
-                clearVerificationData(email);
-                return signUpDTO;
-            default:
-                throw new IllegalStateException("Unexpected verification response code: " + responseCode);
+        int tryNumber = checkLimitation(email);
+        if(attempt.getCode()==verificationDTO.getCode()){
+            clearVerificationData(email);
+            rateLimiter.onSuccessRemove(email,tryNumber);
+            return attempt;
+        }else{
+            rateLimiter.setTries(email,++tryNumber);
+            throw new BadCredentialsException("Verification code does not match");
         }
+    }
+
+    private Integer checkLimitation(String email){
+        int num = 1;
+        Optional<Integer> opt = rateLimiter.getTries(email);
+        if(opt.isPresent()){
+            num = opt.get();
+            if(num>5){
+                throw new RateLimitException("Max Limit reached.Try again later");
+            }
+        }
+        return num;
     }
 }

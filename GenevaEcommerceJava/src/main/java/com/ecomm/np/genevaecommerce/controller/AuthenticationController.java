@@ -33,23 +33,6 @@ public class AuthenticationController {
         this.authFacade = authFacade;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO>LoginUser(@RequestBody LoginDTO loginDTO, HttpServletResponse response){
-        try{
-            LoginResponseDTO loginAttempt = authFacade.login(loginDTO);
-            if(loginAttempt.getResponseCode()==200) {
-                setJwtCookie(response,loginAttempt.getJwtToken());
-                return ResponseEntity.ok(loginAttempt);
-            } else if (loginAttempt.getResponseCode()==403) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginAttempt);
-            }else{
-                return ResponseEntity.notFound().build();
-            }
-        }catch (Exception ex){
-            logger.error(ex.getMessage());
-            return ResponseEntity.ok(new LoginResponseDTO(403,"Invalid UserName or Password","No token"));
-        }
-    }
 
 
     @PostMapping("/sign_up/resend")
@@ -78,9 +61,8 @@ public class AuthenticationController {
     @PostMapping("/sign_up/verify")
     public ResponseEntity<?> verify(@RequestBody VerificationDTO verificationDTO, HttpServletResponse response){
         try{
-            LoginResponseDTO verifyAttempt = authFacade.verify(verificationDTO);
+            LoginResponseDTO verifyAttempt = authFacade.verify(verificationDTO,response);
             if(verifyAttempt.getResponseCode()==200) {
-                setJwtCookie(response,verifyAttempt.getJwtToken());
                 return ResponseEntity.ok(verifyAttempt);
             }
             else return ResponseEntity.status(403).body(verifyAttempt);
@@ -118,13 +100,5 @@ public class AuthenticationController {
         }
     }
 
-    private void setJwtCookie(HttpServletResponse response, String jwt) {
-        Cookie cookie = new Cookie("access_token", jwt);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false);
-        cookie.setPath("/");
-        cookie.setMaxAge(86400);
-        response.addCookie(cookie);
-    }
 }
 
