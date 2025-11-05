@@ -1,4 +1,4 @@
-package com.ecomm.np.genevaecommerce.Security;
+package com.ecomm.np.genevaecommerce.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -40,7 +40,7 @@ public class JwtUtils {
         else return null;
     }
 
-    public String generateJwtTokens(CustomUser userDetails){
+    public String generateJwtTokens(com.ecomm.np.genevaecommerce.security.CustomUser userDetails){
         String username = userDetails.getUsername();
         String detailsRole = userDetails.getAuthorities().stream().findFirst().map(GrantedAuthority::getAuthority).orElse("USER_ROLE");
         return Jwts.builder().subject(username).claim("role",detailsRole).claim("id",userDetails.getId()).
