@@ -164,6 +164,10 @@ public class OrderedItems {
         return paidPrice;
     }
 
+    public int getTotalItems(){
+        return this.orderItemAuditList.stream().mapToInt(OrderItemAudit::getQuantity).sum();
+    }
+
     public void setPaidPrice(BigDecimal paidPrice) {
         this.paidPrice = paidPrice;
     }

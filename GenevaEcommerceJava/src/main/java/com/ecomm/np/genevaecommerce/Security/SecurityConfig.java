@@ -64,7 +64,8 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/api/v1/items",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**"
+                                "/v3/api-docs/**",
+                                "/payment/cancel"
                         ).permitAll()
                         .anyRequest().authenticated()
                 ).cors(Customizer.withDefaults())

@@ -117,4 +117,8 @@ public class OrderDetails {
     public void setOrderedItems(List<OrderedItems> orderedItems) {
         this.orderedItems = orderedItems;
     }
+
+    public String getFinalLocation(){
+        return deliveryLocation+", "+city;
+    }
 }
