@@ -61,6 +61,18 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
+        <!-- Core bucket4j  -->
+        <dependency>
+            <groupId>com.bucket4j</groupId>
+            <artifactId>bucket4j-core</artifactId>
+            <version>8.10.1</version>
+        </dependency>
+
+        <!-- Caffeine cache -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
 <!--		Postgres-->
 		<dependency>
 			<groupId>org.postgresql</groupId>
