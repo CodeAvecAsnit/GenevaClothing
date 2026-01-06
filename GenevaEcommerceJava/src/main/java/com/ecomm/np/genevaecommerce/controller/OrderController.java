@@ -26,8 +26,8 @@ public class OrderController {
     @PostMapping("/checkout/register")
     public ResponseEntity<?> registerOrder(@RequestBody CheckoutIncDTO dto, @AuthenticationPrincipal CustomUser customUser){
         try{
-                Map<String,Object> map = checkoutService.checkoutOrder(dto,customUser.getId());
-                return ResponseEntity.ok(map);
+            Map<String,Object> map = checkoutService.checkoutOrder(dto,customUser.getId());
+            return ResponseEntity.ok(map);
         }catch (Exception ex){
             return ResponseEntity.internalServerError().body(new BasicDT0("Something went wrong"));
         }

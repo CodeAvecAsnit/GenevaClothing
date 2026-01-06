@@ -47,6 +47,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         try {
             UserModel userModel = userService.findUserById(userId);
             OrderedItems savedOrder = orderCreationService.createOrder(checkDTO, userModel);
+            eventPublisher.publishEvent(new OrderCreatedEvent(userModel.getEmail(), savedOrder));
 
             if(checkDTO.getPaymentMethod().equals("OPENPAY")){
                 String checkoutUrl = redirectToStripe(savedOrder);
@@ -56,7 +57,6 @@ public class CheckoutServiceImpl implements CheckoutService {
                 logger.info("Stripe checkout URL created for order: {}", savedOrder.getoId());
             } else {
                 // COD payment
-                eventPublisher.publishEvent(new OrderCreatedEvent(userModel.getEmail(), savedOrder));
                 response.put("success", true);
                 response.put("message", "Order placed successfully with COD");
                 response.put("orderId", savedOrder.getoId());
