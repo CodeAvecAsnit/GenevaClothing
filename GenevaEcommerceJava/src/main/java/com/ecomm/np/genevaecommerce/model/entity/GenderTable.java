@@ -11,6 +11,7 @@ import java.util.List;
 public class GenderTable {
     @Id
     @Column(name = "gender_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int genderId;
 
     @Enumerated(EnumType.STRING)

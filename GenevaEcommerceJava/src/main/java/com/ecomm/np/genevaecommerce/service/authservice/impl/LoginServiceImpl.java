@@ -31,6 +31,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public LoginResponseDTO login(LoginDTO loginDTO) {
         try {
+            System.out.println("Login Processing");
             CustomUser user = (CustomUser) customUserService.loadUserByUsername(loginDTO.getEmail());
             if (passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
                 return new LoginResponseDTO(200, "Logged in successfully", generateJwt(user));

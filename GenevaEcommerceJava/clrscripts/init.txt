@@ -1,0 +1,108 @@
+package com.ecomm.np.genevaecommerce.security;
+
+import com.ecomm.np.genevaecommerce.model.entity.GenderTable;
+import com.ecomm.np.genevaecommerce.model.entity.RoleTable;
+import com.ecomm.np.genevaecommerce.model.entity.UserModel;
+import com.ecomm.np.genevaecommerce.model.enumeration.Gender;
+import com.ecomm.np.genevaecommerce.model.enumeration.Role;
+import com.ecomm.np.genevaecommerce.repository.GenderTableRepository;
+import com.ecomm.np.genevaecommerce.repository.RoleTableRepository;
+import com.ecomm.np.genevaecommerce.repository.UserRepository;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Configuration
+public class BeanConfig
+{
+
+    @Bean
+    public CommandLineRunner commandLineRunner(GenderTableRepository genderTableRepository, RoleTableRepository roleTableRepository, UserRepository userRepository, PasswordEncoder passwordEncoder){
+        return args -> {
+
+            GenderTable g1 = new GenderTable();
+            g1.setGender(Gender.MALE);
+
+            GenderTable g2 = new GenderTable();
+            g2.setGender(Gender.FEMALE);
+
+            GenderTable g3 = new GenderTable();
+            g3.setGender(Gender.UNISEX);
+
+            genderTableRepository.save(g1);
+            genderTableRepository.save(g2);
+            genderTableRepository.save(g3);
+
+            RoleTable r1 = new RoleTable();
+            r1.setRole(Role.ADMIN);
+
+            RoleTable r2 = new RoleTable();
+            r2.setRole(Role.USER);
+
+            RoleTable rx = roleTableRepository.save(r1);
+            RoleTable ry = roleTableRepository.save(r2);
+
+            List<UserModel> users = new ArrayList<>();
+
+            UserModel u1 = new UserModel();
+            u1.setUserName("admin");
+            u1.setEmail("admin@gmail.com");
+            u1.setPassword("admin123");
+            u1.setRoleTable(rx);
+            users.add(u1);
+
+            UserModel admin = new UserModel();
+            admin.setUserName("asnit");
+            admin.setEmail("asnit@gmail.com");
+            admin.setPassword("asnit123");
+            admin.setRoleTable(rx);
+            users.add(admin);
+
+            UserModel admin2 = new UserModel();
+            admin2.setUserName("asnit_bakhati");
+            admin2.setEmail("asnitbakhati@gmail.com");
+            admin2.setPassword("asnit123");
+            admin2.setRoleTable(rx);
+            users.add(admin2);
+
+            UserModel admin3 = new UserModel();
+            admin3.setUserName("anil");
+            admin3.setEmail("anilbakhati@gmail.com");
+            admin3.setPassword("anil123");
+            admin3.setRoleTable(rx);
+            users.add(admin3);
+
+            UserModel biplov = new UserModel();
+            biplov.setUserName("biplov");
+            biplov.setEmail("biplov@gmail.com");
+            biplov.setPassword("biplov123");
+            biplov.setRoleTable(rx);
+            users.add(biplov);
+
+            UserModel samyog = new UserModel();
+            samyog.setUserName("samyog");
+            samyog.setEmail("samyog@gmail.com");
+            samyog.setPassword("samyog123");
+            samyog.setRoleTable(rx);
+            users.add(samyog);
+
+            for(int i = 1 ; i <= 10; ++i){
+                UserModel testUser = new UserModel();
+                testUser.setUserName("test"+i);
+                testUser.setEmail("test"+i+"@gmail.com");
+                testUser.setPassword("test"+i+"123");
+                testUser.setRoleTable(ry);
+                users.add(testUser);
+            }
+
+            users.stream().forEach(e->e.setPassword(passwordEncoder.encode(e.getPassword())));
+
+            userRepository.saveAll(users);
+
+        };
+    }
+}
