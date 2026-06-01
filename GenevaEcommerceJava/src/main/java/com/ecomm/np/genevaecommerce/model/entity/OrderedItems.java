@@ -32,7 +32,6 @@ public class OrderedItems {
     @Column(precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
-
     @Column(precision = 10, scale = 2)
     private BigDecimal paidPrice;
 

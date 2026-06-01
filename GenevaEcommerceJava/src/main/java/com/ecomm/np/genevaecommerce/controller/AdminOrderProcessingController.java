@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/admin")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class AdminOrderProcessingController {
     private final OrderProcessingService orderProcessingService;
 
@@ -25,6 +24,7 @@ public class AdminOrderProcessingController {
     }
 
     @PostMapping("/pack/item/{tracer}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','SYSTEM')")
     public ResponseEntity<BasicDT0> setOrderItemPacked(@PathVariable int tracer){
         try{
             if( orderProcessingService.setPackedByAdmin(tracer)){
@@ -38,6 +38,7 @@ public class AdminOrderProcessingController {
     }
 
     @PostMapping("/deliver/order/{order}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<BasicDT0> setOrderDelivered(@PathVariable int order){
         try{
             if( orderProcessingService.setDeliveredAdmin(order)){
@@ -53,6 +54,7 @@ public class AdminOrderProcessingController {
     }
 
     @PostMapping("/pack/order/{order_id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<BasicDT0> setOrderPacked(@PathVariable int order_id){
         try{
             if( orderProcessingService.setAllPackedAdmin(order_id)){

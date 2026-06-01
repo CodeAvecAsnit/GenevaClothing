@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,6 +27,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
 
+    @Value("${another.system.key}")
+    private String systemKey;
 
     @Autowired
     public JwtFilter(JwtUtils jwtUtils) {
@@ -53,11 +56,21 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            }else{
+                String systemK = parseSystemKey(request);
+                if(systemK!=null && systemK.equals(systemKey)) {
+                    List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("SYSTEM"));
+                    CustomUser user = new CustomUser(992, "another system", "", authorities);
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(user, null, authorities);
+
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
         } catch (Exception e) {
             logger.error("Cannot set user authentication : {}", e.getMessage());
         }
-
         filterChain.doFilter(request, response);
     }
 
@@ -78,5 +91,14 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         logger.debug("JWT not found in header or cookie");
         return null;
+    }
+
+    private String parseSystemKey(HttpServletRequest request){
+        String keyToken = request.getHeader("SystemKey");
+        logger.info(keyToken);
+        if(keyToken!=null && keyToken.startsWith("SystemKey")){
+            return keyToken.substring(10);
+        }
+        else return null;
     }
 }

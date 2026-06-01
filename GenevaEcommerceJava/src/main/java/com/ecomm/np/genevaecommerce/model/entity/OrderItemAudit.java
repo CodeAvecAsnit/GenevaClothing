@@ -3,7 +3,6 @@ package com.ecomm.np.genevaecommerce.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-
 @Entity
 public class OrderItemAudit {
 
@@ -23,6 +22,7 @@ public class OrderItemAudit {
 
     private float itemPrice;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private OrderedItems orderedItems;
 
