@@ -131,4 +131,12 @@ public class OrderItemAudit {
         itemPrice = quantity * items.getPrice();
         return itemPrice;
     }
+
+    public int getItemCode(){
+        return items.getItemCode();
+    }
+
+    public String getItemName(){
+        return items.getItemName();
+    }
 }

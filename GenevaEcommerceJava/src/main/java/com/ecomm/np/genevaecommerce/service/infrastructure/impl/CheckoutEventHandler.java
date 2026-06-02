@@ -28,6 +28,7 @@ public class CheckoutEventHandler {
 
         try {
             orderPublisher.publishOrder(event.userEmail(),event.orderedItems());
+            logger.info("{} published. User Email : {}",event.orderedItems().getoId(),event.userEmail());
         } catch (Exception ex) {
                 logger.info("Cannot publish the event");
         } finally {

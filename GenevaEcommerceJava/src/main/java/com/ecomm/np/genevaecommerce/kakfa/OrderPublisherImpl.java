@@ -1,6 +1,7 @@
 package com.ecomm.np.genevaecommerce.kakfa;
 
 import com.ecomm.np.genevaecommerce.extra.exception.OrderPublishException;
+import com.ecomm.np.genevaecommerce.model.dto.WarehouseData;
 import com.ecomm.np.genevaecommerce.model.entity.OrderedItems;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,10 +37,10 @@ public class OrderPublisherImpl implements OrderPublisher {
     public void publishOrder(String email, OrderedItems orderedItems) {
         Assert.hasText(email, "Email must not be blank");
         Assert.notNull(orderedItems, "OrderedItems must not be null");
-
         String payload;
         try {
-            payload = objectMapper.writeValueAsString(orderedItems);
+            WarehouseData warehouseData = WarehouseData.buildFromOrder(orderedItems);
+            payload = objectMapper.writeValueAsString(warehouseData);
         } catch (JsonProcessingException e) {
             log.error("[Kafka] Failed to serialize OrderedItems for email={}, orderId={}",
                     email, orderedItems.getoId(), e);

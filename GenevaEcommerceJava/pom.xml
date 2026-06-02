@@ -162,6 +162,11 @@
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
         <!--Kafka for Event publishing and Listening-->
         <dependency>
             <groupId>org.springframework.kafka</groupId>

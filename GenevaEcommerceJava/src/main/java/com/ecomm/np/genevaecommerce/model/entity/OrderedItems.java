@@ -18,10 +18,12 @@ public class OrderedItems {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int oId;
 
+    @JsonIgnore
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime orderInitiatedDate;
 
+    @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime orderUpdatedDate;
 
@@ -35,7 +37,6 @@ public class OrderedItems {
     @Column(precision = 10, scale = 2)
     private BigDecimal paidPrice;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "orderedItems", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<OrderItemAudit> orderItemAuditList = new ArrayList<>();
 

@@ -32,3 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 APIKeys.txt
+src/main/resources/application-dev.properties
