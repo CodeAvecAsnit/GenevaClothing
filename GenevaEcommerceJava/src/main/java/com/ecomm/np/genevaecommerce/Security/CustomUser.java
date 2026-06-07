@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class CustomUser implements UserDetails {
-
     private int userId;
     private String email;
     private String password;

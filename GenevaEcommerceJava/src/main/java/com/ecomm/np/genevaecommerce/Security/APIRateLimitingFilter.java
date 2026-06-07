@@ -29,7 +29,7 @@ public class APIRateLimitingFilter extends OncePerRequestFilter {
     private Cache<String, Bucket> bucketCache;
     private Cache<String, Long> prisonCache;
 
-    private static final int MAX_REQUESTS_PER_MINUTE = 20;
+    private static final int MAX_REQUESTS_PER_MINUTE = 200;
     private static final long PRISON_DURATION_HOURS = 1;
 
     public APIRateLimitingFilter() {

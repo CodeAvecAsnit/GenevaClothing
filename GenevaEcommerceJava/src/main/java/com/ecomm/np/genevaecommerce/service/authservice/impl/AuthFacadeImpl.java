@@ -32,6 +32,12 @@ public class AuthFacadeImpl implements AuthFacade {
         return loginService.login(loginDTO);
     }
 
+    @Override
+    public LoginResponseDTO loginAdmin(LoginDTO loginDTO){
+        return loginService.loginAdmin(loginDTO);
+    }
+
+
     @Async
     @Override
     public void signUp(SignUpDTO signUpDTO){

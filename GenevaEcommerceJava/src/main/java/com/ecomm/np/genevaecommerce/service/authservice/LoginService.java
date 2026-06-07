@@ -9,4 +9,5 @@ import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 public interface LoginService {
     LoginResponseDTO login(LoginDTO loginDTO);
     String generateJwt(UserModel user);
+    LoginResponseDTO loginAdmin(LoginDTO loginDTO);
 }

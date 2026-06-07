@@ -36,7 +36,7 @@ public interface OrderItemAuditRepository extends JpaRepository<OrderItemAudit, 
 
     // Total items packed (assuming `is_packed` is TINYINT(1) or BOOLEAN in MySQL)
     @Query(value = """
-        SELECT COALESCE(SUM(quantity), 0)
+        SELECT COUNT(*)
         FROM order_item_audit
         WHERE is_packed = :val
         """, nativeQuery = true)

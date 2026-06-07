@@ -9,6 +9,7 @@ import com.ecomm.np.genevaecommerce.security.JwtUtils;
 import com.ecomm.np.genevaecommerce.service.authservice.LoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,35 @@ public class LoginServiceImpl implements LoginService {
             logger.error("Unexpected error during login", ex);
             throw new RuntimeException("An unexpected error occurred", ex);
         }
+    }
+
+    @Override
+    public LoginResponseDTO loginAdmin(LoginDTO loginDTO) {
+        try {
+            System.out.println("Login Processing");
+            CustomUser user = (CustomUser) customUserService.loadUserByUsername(loginDTO.getEmail());
+            if (passwordEncoder.matches(loginDTO.getPassword(), user.getPassword()) && isAdmin(user)) {
+                return new LoginResponseDTO(200, "Logged in successfully", generateJwt(user));
+            } else {
+                logger.warn("Invalid login attempt for user: {}", loginDTO.getEmail());
+                return new LoginResponseDTO(403, "Invalid Username or Password", "");
+            }
+        } catch (UsernameNotFoundException ex) {
+            logger.error("User not found: {}", loginDTO.getEmail(), ex);
+            throw new UsernameNotFoundException("Invalid Username or Password");
+        } catch (Exception ex) {
+            logger.error("Unexpected error during login", ex);
+            throw new RuntimeException("An unexpected error occurred", ex);
+        }
+    }
+
+    private boolean isAdmin(CustomUser customUser) {
+        for (GrantedAuthority authority : customUser.getAuthorities()) {
+            if (authority.getAuthority().equals("ADMIN")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

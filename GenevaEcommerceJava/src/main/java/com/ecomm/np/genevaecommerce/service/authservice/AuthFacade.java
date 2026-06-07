@@ -4,6 +4,7 @@ import com.ecomm.np.genevaecommerce.model.dto.*;
 
 public interface AuthFacade {
     LoginResponseDTO login(LoginDTO loginDTO);
+    LoginResponseDTO loginAdmin(LoginDTO loginDTO);
     void signUp(SignUpDTO signUpDTO);
     void resendEmail(String email) throws Exception;
     LoginResponseDTO verify(VerificationDTO verificationDTO) throws Exception;
