@@ -37,6 +37,20 @@ public class AdminOrderProcessingController {
         }
     }
 
+    @PostMapping("/approve/item/{tracer}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','SYSTEM')")
+    public ResponseEntity<BasicDT0> setOrderItemApproved(@PathVariable int tracer){
+        try{
+            if( orderProcessingService.setApprovedByAdmin(tracer)){
+                return ResponseEntity.ok(new BasicDT0("Item has been packed"));
+            }else return ResponseEntity.badRequest().build();
+        }catch (ResourceNotFoundException rEx){
+            return ResponseEntity.notFound().build();
+        }catch (Exception ex){
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @PostMapping("/deliver/order/{order}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<BasicDT0> setOrderDelivered(@PathVariable int order){
@@ -58,6 +72,18 @@ public class AdminOrderProcessingController {
     public ResponseEntity<BasicDT0> setOrderPacked(@PathVariable int order_id){
         try{
             if( orderProcessingService.setAllPackedAdmin(order_id)){
+                return ResponseEntity.ok(new BasicDT0("Order has been packed"));
+            }else return ResponseEntity.badRequest().build();
+        }catch (Exception ex){
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("/approve/order/{order_id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<BasicDT0> setOrderApproved(@PathVariable int order_id){
+        try{
+            if( orderProcessingService.setAllApprovedAdmin(order_id)){
                 return ResponseEntity.ok(new BasicDT0("Order has been packed"));
             }else return ResponseEntity.badRequest().build();
         }catch (Exception ex){

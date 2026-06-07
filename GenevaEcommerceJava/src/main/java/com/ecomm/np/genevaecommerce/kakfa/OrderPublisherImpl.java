@@ -2,6 +2,7 @@ package com.ecomm.np.genevaecommerce.kakfa;
 
 import com.ecomm.np.genevaecommerce.extra.exception.OrderPublishException;
 import com.ecomm.np.genevaecommerce.model.dto.WarehouseData;
+import com.ecomm.np.genevaecommerce.model.entity.OrderItemAudit;
 import com.ecomm.np.genevaecommerce.model.entity.OrderedItems;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +14,7 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -34,12 +36,12 @@ public class OrderPublisherImpl implements OrderPublisher {
     }
 
     @Override
-    public void publishOrder(String email, OrderedItems orderedItems) {
+    public void publishOrder(String email, OrderedItems orderedItems,List<OrderItemAudit> list) {
         Assert.hasText(email, "Email must not be blank");
         Assert.notNull(orderedItems, "OrderedItems must not be null");
         String payload;
         try {
-            WarehouseData warehouseData = WarehouseData.buildFromOrder(orderedItems);
+            WarehouseData warehouseData = WarehouseData.buildFromOrder(orderedItems,list);
             payload = objectMapper.writeValueAsString(warehouseData);
         } catch (JsonProcessingException e) {
             log.error("[Kafka] Failed to serialize OrderedItems for email={}, orderId={}",
@@ -67,4 +69,6 @@ public class OrderPublisherImpl implements OrderPublisher {
             }
         });
     }
+
+
 }

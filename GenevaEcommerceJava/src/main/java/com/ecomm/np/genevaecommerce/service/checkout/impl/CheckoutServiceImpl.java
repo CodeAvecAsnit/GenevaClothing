@@ -25,18 +25,14 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final Logger logger = LoggerFactory.getLogger(CheckoutServiceImpl.class);
     private final UserService userService;
     private final OrderCreationService orderCreationService;
-    private final ApplicationEventPublisher eventPublisher;
     private final PaymentService paymentService;
 
     @Autowired
     public CheckoutServiceImpl(@Qualifier("userServiceImpl") UserService userService,
                                @Qualifier("orderCreationServiceImpl") OrderCreationServiceImpl orderCreationServiceImpl,
-                               ApplicationEventPublisher eventPublisher,
                                @Qualifier("stripePaymentService") PaymentService paymentService) {
         this.userService = userService;
-        this.orderCreationService = orderCreationServiceImpl;
-        this.eventPublisher = eventPublisher;
-        this.paymentService = paymentService;
+        this.orderCreationService = orderCreationServiceImpl;this.paymentService = paymentService;
     }
 
     @Override
@@ -47,7 +43,6 @@ public class CheckoutServiceImpl implements CheckoutService {
         try {
             UserModel userModel = userService.findUserById(userId);
             OrderedItems savedOrder = orderCreationService.createOrder(checkDTO, userModel);
-            eventPublisher.publishEvent(new OrderCreatedEvent(userModel.getEmail(), savedOrder));
 
             if(checkDTO.getPaymentMethod().equals("OPENPAY")){
                 String checkoutUrl = redirectToStripe(savedOrder);

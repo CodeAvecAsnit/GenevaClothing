@@ -29,6 +29,8 @@ public class OrderedItems {
 
     private  boolean mainActive;
 
+    private boolean approved;
+
     private boolean processed;
 
     @Column(precision = 10, scale = 2)
@@ -49,8 +51,9 @@ public class OrderedItems {
     public OrderedItems() {
     }
 
-    public OrderedItems(int oId, LocalDateTime orderInitiatedDate, LocalDateTime orderUpdatedDate, boolean mainActive, boolean processed, BigDecimal totalPrice, BigDecimal paidPrice, List<OrderItemAudit> orderItemAuditList, OrderDetails orderDetails) {
+    public OrderedItems(int oId, LocalDateTime orderInitiatedDate, LocalDateTime orderUpdatedDate,boolean approved, boolean mainActive, boolean processed, BigDecimal totalPrice, BigDecimal paidPrice, List<OrderItemAudit> orderItemAuditList, OrderDetails orderDetails) {
         this.oId = oId;
+        this.approved = approved;
         this.orderInitiatedDate = orderInitiatedDate;
         this.orderUpdatedDate = orderUpdatedDate;
         this.mainActive = mainActive;
@@ -126,24 +129,6 @@ public class OrderedItems {
         this.orderUpdatedDate = orderUpdatedDate;
     }
 
-    public boolean findProcessed(){
-        boolean x = true;
-        for(OrderItemAudit oa : this.orderItemAuditList){
-            x=x && oa.isActive();
-        }
-        processed = x;
-        return processed;
-    }
-
-    public boolean findActive(){
-        boolean x = false;
-        for(OrderItemAudit oa : this.orderItemAuditList){
-            x= x || oa.isActive();
-        }
-        mainActive = x;
-        return mainActive;
-    }
-
     public void findTotalOrderPrice() {
         BigDecimal sum = BigDecimal.ZERO;
 
@@ -170,5 +155,17 @@ public class OrderedItems {
 
     public void setPaidPrice(BigDecimal paidPrice) {
         this.paidPrice = paidPrice;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
+    public String getUserEmail(){
+        return orderDetails.getUserMail();
     }
 }

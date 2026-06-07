@@ -16,6 +16,8 @@ public class OrderItemAudit {
 
     private boolean isDelivered;
 
+    private boolean isApproved;
+
     private int quantity;
 
     private String size;
@@ -27,7 +29,7 @@ public class OrderItemAudit {
     private OrderedItems orderedItems;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "item_code")
     private Items items;
 
@@ -130,6 +132,14 @@ public class OrderItemAudit {
     public float setTotalPrice(){
         itemPrice = quantity * items.getPrice();
         return itemPrice;
+    }
+
+    public boolean isApproved() {
+        return isApproved;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
     }
 
     public int getItemCode(){

@@ -11,5 +11,5 @@ public interface OrderItemAuditService {
     Integer totalOrders(int itemId);
     OrderItemAudit findAuditById(int id);
     void saveAllItemOrders(List<OrderItemAudit> orderItemAudits);
-    void saveAudit(OrderItemAudit orderItemAudit);
+    OrderItemAudit saveAudit(OrderItemAudit orderItemAudit);
 }

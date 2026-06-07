@@ -121,4 +121,8 @@ public class OrderDetails {
     public String getFinalLocation(){
         return deliveryLocation+", "+city;
     }
+
+    public String getUserMail(){
+        return user.getEmail();
+    }
 }

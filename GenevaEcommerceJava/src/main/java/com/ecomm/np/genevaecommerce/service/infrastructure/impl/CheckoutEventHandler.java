@@ -27,14 +27,13 @@ public class CheckoutEventHandler {
     public void handleOrderCreated(OrderCreatedEvent event) {
 
         try {
-            orderPublisher.publishOrder(event.userEmail(),event.orderedItems());
-            logger.info("{} published. User Email : {}",event.orderedItems().getoId(),event.userEmail());
+            orderPublisher.publishOrder(event.userEmail(),event.orderedItems(),event.items());
         } catch (Exception ex) {
                 logger.info("Cannot publish the event");
+                logger.error(ex.getMessage());
         } finally {
             try {
                 mailService.sendOrderConfirmationNotice(event.userEmail(), event.orderedItems());
-                logger.info("Order confirmation email sent for order: {}", event.orderedItems().getoId());
             } catch (Exception ex) {
                 logger.error("Failed to send order confirmation email: {}", ex.getMessage(), ex);
             }

@@ -8,7 +8,8 @@ public class HistoryDTO {
     private int orderId;
     private BigDecimal remainingPrice;
     private String orderDate;
-    private boolean isActive;// if passive means order is devlivered show deliverd and grey color prolly
+    private boolean isApproved;
+    private boolean isActive;
     private boolean isProcessed;//this states that order is packed or not color if packed green otherwise a bit dark yellow
 
     public HistoryDTO() {
@@ -58,6 +59,14 @@ public class HistoryDTO {
         return isProcessed;
     }
 
+    public boolean isApproved() {
+        return isApproved;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
+    }
+
     public void setProcessed(boolean processed) {
         isProcessed = processed;
     }
@@ -75,6 +84,8 @@ public class HistoryDTO {
 
         historyDTO.setProcessed(orderedItems.isProcessed());
         historyDTO.setActive(orderedItems.isMainActive());
+        historyDTO.setApproved(orderedItems.isApproved());
+
         return historyDTO;
     }
 }

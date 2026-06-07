@@ -1,5 +1,6 @@
 package com.ecomm.np.genevaecommerce.model.dto;
 
+import com.ecomm.np.genevaecommerce.model.entity.OrderItemAudit;
 import com.ecomm.np.genevaecommerce.model.entity.OrderedItems;
 
 import java.util.List;
@@ -32,10 +33,10 @@ public class WarehouseData {
         this.items = items;
     }
 
-    public static WarehouseData buildFromOrder(OrderedItems orderedItems){
+    public static WarehouseData buildFromOrder(OrderedItems orderedItems, List<OrderItemAudit> list){
         WarehouseData warehouseData = new WarehouseData();
         warehouseData.setoId(orderedItems.getoId());
-        List<WarehouseItemData> wID = orderedItems.getOrderItemAuditList().
+        List<WarehouseItemData> wID = list.
                 stream().
                 map(WarehouseItemData::buildFromOrderItemAudit).
                 toList();
