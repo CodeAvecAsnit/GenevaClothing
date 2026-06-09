@@ -41,5 +41,12 @@ public interface OrderItemAuditRepository extends JpaRepository<OrderItemAudit, 
         WHERE is_packed = :val
         """, nativeQuery = true)
     Integer findTotalItemsPacked(@Param("val") boolean packed);
+
+    @Query(value = """
+        SELECT COUNT(*)
+        FROM order_item_audit
+        WHERE is_approved = true and is_packed = false
+        """, nativeQuery = true)
+    Integer findTotalItemsApprovedAndLeftToPack();
 }
 

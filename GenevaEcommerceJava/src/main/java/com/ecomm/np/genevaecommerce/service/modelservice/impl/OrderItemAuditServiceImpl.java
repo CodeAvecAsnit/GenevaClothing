@@ -62,5 +62,10 @@ public class OrderItemAuditServiceImpl implements OrderItemAuditService {
         return orderItemAuditRepository.save(orderItemAudit);
     }
 
+    @Override
+    public Integer findApprovedCount(){
+        return orderItemAuditRepository.findTotalItemsApprovedAndLeftToPack();
+    }
+
 
 }
