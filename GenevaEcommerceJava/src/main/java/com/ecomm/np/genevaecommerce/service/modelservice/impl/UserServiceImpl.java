@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 @Service
 public class UserServiceImpl implements UserService {
 

@@ -5,6 +5,10 @@ import com.ecomm.np.genevaecommerce.extra.util.NetworkUtils;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 @Component
 public class QRComponent {
 

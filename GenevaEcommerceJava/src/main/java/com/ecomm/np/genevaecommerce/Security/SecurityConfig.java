@@ -28,17 +28,23 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.security.SecureRandom;
 import java.util.List;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
+    private final APIRateLimitingFilter apiRateLimitingFilter;
     private final JwtFilter jwtFilter;
 
     private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
 
     @Autowired
-    public SecurityConfig(JwtFilter jwtFilter, CustomOAuth2SuccessHandler customOAuth2SuccessHandler) {
+    public SecurityConfig(APIRateLimitingFilter apiRateLimitingFilter, JwtFilter jwtFilter, CustomOAuth2SuccessHandler customOAuth2SuccessHandler) {
+        this.apiRateLimitingFilter = apiRateLimitingFilter;
         this.jwtFilter = jwtFilter;
         this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
     }
@@ -80,6 +86,7 @@ public class SecurityConfig {
                         })
                 ).oauth2Login(oauth2 -> oauth2
                 .successHandler(customOAuth2SuccessHandler)).
+                addFilterBefore(apiRateLimitingFilter, UsernamePasswordAuthenticationFilter.class).
                 addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

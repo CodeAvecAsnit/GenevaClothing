@@ -1,11 +1,23 @@
 package com.ecomm.np.genevaecommerce.model.dto;
 
 import com.ecomm.np.genevaecommerce.model.entity.UserModel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 public class SignUpDTO {
+    @Email
     private String email;
+    @NotBlank
     private String password;
+
     private String username;
+
+    @JsonIgnore
+    private int code;
+
+    @JsonIgnore
+    private int mailsSent;
 
     public SignUpDTO(String email, String password, String username) {
         this.email = email;
@@ -14,6 +26,13 @@ public class SignUpDTO {
     }
 
     public SignUpDTO() {
+    }
+
+    public SignUpDTO(String email, String password, String username, int code) {
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.code = code;
     }
 
     public String getEmail() {
@@ -40,6 +59,14 @@ public class SignUpDTO {
         this.username = username;
     }
 
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
     public static UserModel build(SignUpDTO signUpDTO){
         UserModel userModel = new UserModel();
         userModel.setUserName(signUpDTO.getUsername());
@@ -47,4 +74,9 @@ public class SignUpDTO {
         userModel.setEmail(signUpDTO.getEmail());
         return userModel;
     }
+
+    public boolean canSendMail(){
+        return this.mailsSent < 5;
+    }
+
 }

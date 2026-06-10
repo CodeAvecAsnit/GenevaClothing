@@ -5,6 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 @RestController
 @RequestMapping("/test/api")
 public class InterChangeController {
@@ -20,6 +24,7 @@ public class InterChangeController {
     public String onlyAdmin(){
         return "only 4 admin";
     }
+
 
     @GetMapping("/hello")
     public String interchange(){

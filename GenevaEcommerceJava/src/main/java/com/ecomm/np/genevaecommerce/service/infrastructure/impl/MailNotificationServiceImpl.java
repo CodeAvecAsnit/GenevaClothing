@@ -20,6 +20,10 @@ import org.springframework.stereotype.Service;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 @EnableAsync
 @Service
 public class MailNotificationServiceImpl implements PackedNotificationService {

@@ -32,4 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 APIKeys.txt
+<<<<<<< HEAD
 src/main/resources/application-dev.properties
+=======
+APIKeys.txt
+>>>>>>> main

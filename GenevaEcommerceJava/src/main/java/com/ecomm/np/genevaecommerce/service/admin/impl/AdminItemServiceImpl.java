@@ -27,6 +27,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Map;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 @Service
 @PreAuthorize("hasAuthority('ADMIN')")
 public class AdminItemServiceImpl implements AdminItemService {
@@ -51,15 +55,17 @@ public class AdminItemServiceImpl implements AdminItemService {
         this.orderItemAuditService = orderItemAuditService;
     }
 
-
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteItem(int id){
         Items item = itemService.findItemById(id);
     }
 
+
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void saveItem(ListItemDTO item, MultipartFile file) throws Exception {
         Map<?,?> imageMap = uploadImage(file);
         String imageUrl = (String) imageMap.get("secure_url");
@@ -72,6 +78,7 @@ public class AdminItemServiceImpl implements AdminItemService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void updateItemByAdmin(ListItemDTO dto,MultipartFile file,int integerCode) throws IOException,Exception{
         Items items = itemService.findItemById(integerCode);
         Map<?,?> uploadedMap = uploadImage(file);
@@ -86,6 +93,7 @@ public class AdminItemServiceImpl implements AdminItemService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('ADMIN')")
     public AdminReadItemsDTO readDataForAdmin(int id){
         Items item = itemService.findItemById(id);
         AdminReadItemsDTO dto = AdminReadItemsDTO.buildFromItem(item);
@@ -101,6 +109,7 @@ public class AdminItemServiceImpl implements AdminItemService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void createNewCollection(String name, String description){
         collectionService.saveCollection(name,description);
     }

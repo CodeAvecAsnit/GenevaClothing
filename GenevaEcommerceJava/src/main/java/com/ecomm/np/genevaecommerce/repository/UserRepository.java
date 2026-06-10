@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * @author : Asnit Bakhati
+ */
 
 @Repository
 public interface UserRepository extends JpaRepository<UserModel,Integer> {

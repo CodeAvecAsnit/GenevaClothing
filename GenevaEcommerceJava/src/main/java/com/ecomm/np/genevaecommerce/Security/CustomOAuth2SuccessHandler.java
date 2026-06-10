@@ -22,6 +22,10 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 @Component
 public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler {
 

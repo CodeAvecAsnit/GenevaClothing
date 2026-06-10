@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
+
+/**
+ * @author : Asnit Bakhati
+ */
 @Component
 @Order(1)
 public class APIRateLimitingFilter extends OncePerRequestFilter {
@@ -42,6 +46,14 @@ public class APIRateLimitingFilter extends OncePerRequestFilter {
 
         this.prisonCache=Caffeine.newBuilder().expireAfterWrite(PRISON_DURATION_HOURS, TimeUnit.HOURS)
                 .maximumSize(10000).build();
+        this.bucketCache = Caffeine.newBuilder()
+                .expireAfterAccess(2, TimeUnit.MINUTES)
+                .maximumSize(10000)
+                .build();
+        this.prisonCache = Caffeine.newBuilder()
+                .expireAfterWrite(PRISON_DURATION_HOURS, TimeUnit.HOURS)
+                .maximumSize(10000)
+                .build();
     }
 
     @Override
@@ -68,6 +80,15 @@ public class APIRateLimitingFilter extends OncePerRequestFilter {
         if(bucket.tryConsume(1)) {
             filterChain.doFilter(request, response);
         }else{
+                    Math.max(0, remainingTime);
+            ));
+            return;
+        }
+
+        Bucket bucket = bucketCache.get(userIP, this::createNewBucket);
+        if (bucket.tryConsume(1)) {
+            filterChain.doFilter(request, response);
+        } else {
             sendToPrison(userIP);
             response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
             response.setContentType("application/json");
@@ -89,9 +110,6 @@ public class APIRateLimitingFilter extends OncePerRequestFilter {
                 .build();
     }
 
-    /**
-     * Sends IP to prison (blocks for configured duration)
-     */
     private void sendToPrison(String ipAddress) {
         log.warn("IP address sent to prison for rate limit violation: {}", ipAddress);
         prisonCache.put(ipAddress, System.currentTimeMillis());
@@ -105,18 +123,14 @@ public class APIRateLimitingFilter extends OncePerRequestFilter {
         String xForwardedFor = request.getHeader("X-Forwarded-For");
         if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
             return xForwardedFor.split(",")[0].trim();
+            String xRealIp = request.getHeader("X-Real-IP");
+            if (xRealIp != null && !xRealIp.isEmpty()) {
+                return xRealIp;
+            }
+            return request.getRemoteAddr();
         }
-        String xRealIp = request.getHeader("X-Real-IP");
-        if (xRealIp != null && !xRealIp.isEmpty()) {
-            return xRealIp;
-        }
-
-        return request.getRemoteAddr();
     }
 
-    /**
-     * Get remaining prison time in minutes
-     */
     public long getPrisonRemainingMinutes(String ipAddress) {
         Long prisoner= prisonCache.getIfPresent(ipAddress);
         if (prisoner == null) {
@@ -129,8 +143,25 @@ public class APIRateLimitingFilter extends OncePerRequestFilter {
     /**
      * Manually release IP from prison (admin function)
      */
+
+    public boolean isInPrison(String ipAddress) {
+        return prisonCache.getIfPresent(ipAddress) != null;
+    }
+
+    /**
+     * Get remaining prison time in minutes
+     */
+    public long getPrisonRemainingMinutes(String ipAddress) {
+        Long prisonTime = prisonCache.getIfPresent(ipAddress);
+        if (prisonTime == null) {
+            return 0;
+        }
+        long elapsedMinutes = (System.currentTimeMillis() - prisonTime) / (1000 * 60);
+        return Math.max(0, (PRISON_DURATION_HOURS * 60) - elapsedMinutes);
+    }
+
     public void releaseFromPrison(String ipAddress) {
-        log.info("Releasing IP from prison: {}", ipAddress);
+        log.info("Manually releasing IP from prison: {}", ipAddress);
         prisonCache.invalidate(ipAddress);
         bucketCache.invalidate(ipAddress);
     }

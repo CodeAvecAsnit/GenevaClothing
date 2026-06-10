@@ -6,6 +6,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Set;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 public interface UserCartService {
 
     public Set<WishListDTO> getWishListFromUser(int userId)throws UsernameNotFoundException;

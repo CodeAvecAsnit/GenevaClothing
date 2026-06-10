@@ -15,6 +15,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author : Asnit Bakhati
+ */
+
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
     private final UserService userService;
@@ -32,7 +36,14 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public boolean validateUserUniqueness(SignUpDTO signUpDTO) {
+<<<<<<< HEAD
         return userService.userIsNotRegistered(signUpDTO.getEmail());
+=======
+        if(!userService.userIsNotRegistered(signUpDTO.getEmail())){
+            throw new RuntimeException("User is already registered");
+        }
+        return true;
+>>>>>>> main
     }
 
     @Override
