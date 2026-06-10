@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
+
 /**
  * @author : Asnit Bakhati
  */
@@ -32,7 +33,7 @@ public class APIRateLimitingFilter extends OncePerRequestFilter {
     private Cache<String, Bucket> bucketCache;
     private Cache<String, Long> prisonCache;
 
-    private static final int MAX_REQUESTS_PER_MINUTE = 20;
+    private static final int MAX_REQUESTS_PER_MINUTE = 200;
     private static final long PRISON_DURATION_HOURS = 1;
 
     public APIRateLimitingFilter() {
@@ -40,6 +41,11 @@ public class APIRateLimitingFilter extends OncePerRequestFilter {
 
     @PostConstruct
     public void init() {
+        this.bucketCache=Caffeine.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES).maximumSize(10000)
+                .build();
+
+        this.prisonCache=Caffeine.newBuilder().expireAfterWrite(PRISON_DURATION_HOURS, TimeUnit.HOURS)
+                .maximumSize(10000).build();
         this.bucketCache = Caffeine.newBuilder()
                 .expireAfterAccess(2, TimeUnit.MINUTES)
                 .maximumSize(10000)
@@ -58,17 +64,23 @@ public class APIRateLimitingFilter extends OncePerRequestFilter {
         log.debug("Rate limit filter triggered for: {}", request.getRequestURI());
 
         String userIP = getClientIPAddress(request);
-
         Long prisonTime = prisonCache.getIfPresent(userIP);
         if (prisonTime != null) {
-            long elapsedMinutes = (System.currentTimeMillis() - prisonTime) / (1000 * 60);
-            long remainingMinutes = (PRISON_DURATION_HOURS * 60) - elapsedMinutes;
-
+            long goneTime= (System.currentTimeMillis() - prisonTime) / (1000 * 60);
+            long remainingTime= (PRISON_DURATION_HOURS * 60) -goneTime;
             response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
             response.setContentType("application/json");
             response.getWriter().write(String.format(
                     "{\"error\": \"Too many requests. IP blocked. Try again in %d minutes.\"}",
-                    Math.max(0, remainingMinutes)
+                    Math.max(0,remainingTime)
+            ));
+            return;
+        }
+        Bucket bucket=bucketCache.get(userIP, this::createNewBucket);
+        if(bucket.tryConsume(1)) {
+            filterChain.doFilter(request, response);
+        }else{
+                    Math.max(0, remainingTime);
             ));
             return;
         }
@@ -92,14 +104,12 @@ public class APIRateLimitingFilter extends OncePerRequestFilter {
      */
     private Bucket createNewBucket(String ip) {
         log.debug("Creating new rate limit bucket for IP: {}", ip);
-        Bandwidth limit = Bandwidth.builder().capacity(MAX_REQUESTS_PER_MINUTE)
-                .refillGreedy(MAX_REQUESTS_PER_MINUTE, Duration.ofMinutes(1)).build();
-        return Bucket.builder().addLimit(limit).build();
+        Bandwidth limit = Bandwidth.builder().capacity(MAX_REQUESTS_PER_MINUTE).refillGreedy(MAX_REQUESTS_PER_MINUTE, Duration.ofMinutes(1))
+                .build();
+        return Bucket.builder().addLimit(limit)
+                .build();
     }
 
-    /**
-     * Sends IP to prison
-     */
     private void sendToPrison(String ipAddress) {
         log.warn("IP address sent to prison for rate limit violation: {}", ipAddress);
         prisonCache.put(ipAddress, System.currentTimeMillis());
@@ -113,18 +123,27 @@ public class APIRateLimitingFilter extends OncePerRequestFilter {
         String xForwardedFor = request.getHeader("X-Forwarded-For");
         if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
             return xForwardedFor.split(",")[0].trim();
+            String xRealIp = request.getHeader("X-Real-IP");
+            if (xRealIp != null && !xRealIp.isEmpty()) {
+                return xRealIp;
+            }
+            return request.getRemoteAddr();
         }
+    }
 
-        String xRealIp = request.getHeader("X-Real-IP");
-        if (xRealIp != null && !xRealIp.isEmpty()) {
-            return xRealIp;
+    public long getPrisonRemainingMinutes(String ipAddress) {
+        Long prisoner= prisonCache.getIfPresent(ipAddress);
+        if (prisoner == null) {
+            return 0;
         }
-        return request.getRemoteAddr();
+        long timeInPrison = (System.currentTimeMillis() - prisoner) / (1000 * 60);
+        return Math.max(0, (PRISON_DURATION_HOURS * 60) - timeInPrison);
     }
 
     /**
-     * Check if IP is currently in prison (for testing)
+     * Manually release IP from prison (admin function)
      */
+
     public boolean isInPrison(String ipAddress) {
         return prisonCache.getIfPresent(ipAddress) != null;
     }

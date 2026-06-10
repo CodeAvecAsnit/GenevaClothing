@@ -16,6 +16,7 @@ public class OrderDTO {
    private BigDecimal totalPrice;
    private BigDecimal paidPrice;
    private int noOfItems;
+   private boolean isApproved;
    private boolean isActive; //active denotes that the order is not delivered yet or cancelled.
    private boolean isProcessed; // this means packed or not
    private List<DisplayItemsDTO> imageDisplayList;
@@ -133,7 +134,15 @@ public class OrderDTO {
       return phoneNumber;
    }
 
-   public void setPhoneNumber(String phoneNumber) {
+    public boolean isApproved() {
+        return isApproved;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
       this.phoneNumber = phoneNumber;
    }
 
@@ -145,6 +154,7 @@ public class OrderDTO {
       orderDataDTO.setCity(od.getCity());
       orderDataDTO.setProvince(od.getProvince());
       orderDataDTO.setActive(items.isMainActive());
+      orderDataDTO.setApproved(items.isApproved());
       orderDataDTO.setOrderId(items.getoId());
       orderDataDTO.setTotalPrice(items.getTotalPrice());
       orderDataDTO.setPaidPrice(items.getPaidPrice());

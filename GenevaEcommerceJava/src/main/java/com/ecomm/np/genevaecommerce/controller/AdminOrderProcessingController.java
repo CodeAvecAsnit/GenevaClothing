@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/admin")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class AdminOrderProcessingController {
     private final OrderProcessingService orderProcessingService;
 
@@ -29,6 +28,7 @@ public class AdminOrderProcessingController {
     }
 
     @PostMapping("/pack/item/{tracer}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','SYSTEM')")
     public ResponseEntity<BasicDT0> setOrderItemPacked(@PathVariable int tracer){
         try{
             if( orderProcessingService.setPackedByAdmin(tracer)){
@@ -41,7 +41,22 @@ public class AdminOrderProcessingController {
         }
     }
 
+    @PostMapping("/approve/item/{tracer}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','SYSTEM')")
+    public ResponseEntity<BasicDT0> setOrderItemApproved(@PathVariable int tracer){
+        try{
+            if( orderProcessingService.setApprovedByAdmin(tracer)){
+                return ResponseEntity.ok(new BasicDT0("Item has been packed"));
+            }else return ResponseEntity.badRequest().build();
+        }catch (ResourceNotFoundException rEx){
+            return ResponseEntity.notFound().build();
+        }catch (Exception ex){
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @PostMapping("/deliver/order/{order}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<BasicDT0> setOrderDelivered(@PathVariable int order){
         try{
             if( orderProcessingService.setDeliveredAdmin(order)){
@@ -57,9 +72,22 @@ public class AdminOrderProcessingController {
     }
 
     @PostMapping("/pack/order/{order_id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<BasicDT0> setOrderPacked(@PathVariable int order_id){
         try{
             if( orderProcessingService.setAllPackedAdmin(order_id)){
+                return ResponseEntity.ok(new BasicDT0("Order has been packed"));
+            }else return ResponseEntity.badRequest().build();
+        }catch (Exception ex){
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("/approve/order/{order_id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<BasicDT0> setOrderApproved(@PathVariable int order_id){
+        try{
+            if( orderProcessingService.setAllApprovedAdmin(order_id)){
                 return ResponseEntity.ok(new BasicDT0("Order has been packed"));
             }else return ResponseEntity.badRequest().build();
         }catch (Exception ex){

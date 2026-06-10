@@ -1,7 +1,10 @@
 package com.ecomm.np.genevaecommerce.service.application.impl;
 
+import com.ecomm.np.genevaecommerce.model.entity.OrderDetails;
 import com.ecomm.np.genevaecommerce.model.entity.OrderItemAudit;
 import com.ecomm.np.genevaecommerce.model.entity.OrderedItems;
+import com.ecomm.np.genevaecommerce.model.entity.UserModel;
+import com.ecomm.np.genevaecommerce.model.events.OrderCreatedEvent;
 import com.ecomm.np.genevaecommerce.model.events.OrderPackedEvent;
 import com.ecomm.np.genevaecommerce.service.application.OrderProcessingService;
 import com.ecomm.np.genevaecommerce.service.modelservice.OrderItemAuditService;
@@ -49,9 +52,9 @@ public class OrderProcessingServiceImpl implements OrderProcessingService {
         OrderItemAudit oa = orderItemAuditService.findAuditById(orderItemCode);
         if(oa.isPacked()) return true;
         oa.setPacked(true);
-        orderItemAuditService.saveAudit(oa);
-        if(checkAllPacked(oa.getOrderedItems())){
-            setOrderPacked(oa.getOrderedItems());
+        OrderItemAudit updated = orderItemAuditService.saveAudit(oa);
+        if(checkAllPacked(updated.getOrderedItems())){
+            setOrderPacked(updated.getOrderedItems());
         }
         return true;
     }
@@ -70,18 +73,58 @@ public class OrderProcessingServiceImpl implements OrderProcessingService {
         return true;
     }
 
+    @Override
+    public boolean setApprovedByAdmin(int orderItemCode) {
+        OrderItemAudit oa= orderItemAuditService.findAuditById(orderItemCode);
+        if(oa.isApproved()) return true;
+        oa.setApproved(true);
+        OrderItemAudit updated = orderItemAuditService.saveAudit(oa);
+        if(checkAllApproved(updated.getOrderedItems())){
+            setOrderApproved(updated.getOrderedItems());
+        }
+        return true;
+    }
+
+    @Override
+    public boolean setAllApprovedAdmin(int orderCode){
+        OrderedItems oI = orderItemService.findOrderedItemsById(orderCode);
+        if(checkAllApproved(oI)) {
+            setOrderApproved(oI);
+            return true;
+        }
+        List<OrderItemAudit> olList = oI.getOrderItemAuditList();
+        olList.forEach(oa->oa.setApproved(true));
+        orderItemAuditService.saveAllItemOrders(olList);
+        setOrderApproved(oI);
+        return true;
+    }
+
     //checks if all the items of orderItems are packed or not
     private boolean checkAllPacked(OrderedItems orderedItems){
         return orderedItems.getOrderItemAuditList().stream()
                 .allMatch(OrderItemAudit::isPacked);
     }
 
+    private boolean checkAllApproved(OrderedItems orderedItems){
+        return orderedItems.getOrderItemAuditList().stream()
+                .allMatch(OrderItemAudit::isApproved);
+    }
+
     //this method is triggered only once so the packed email is also sent only once
     private void setOrderPacked(OrderedItems orderedItems){
         if(!orderedItems.isProcessed()){
             orderedItems.setProcessed(true);
-            orderItemService.saveOrderedItems(orderedItems);
-            eventPublisher.publishEvent(new OrderPackedEvent(orderedItems.getOrderDetails().getUser().getEmail(),orderedItems));
+            OrderedItems saved = orderItemService.saveOrderedItems(orderedItems);
+            eventPublisher.publishEvent(new OrderPackedEvent(saved.getUserEmail(),saved));
+        }
+    }
+
+    private void setOrderApproved(OrderedItems orderedItems){
+        if(!orderedItems.isApproved()){
+            orderedItems.setApproved(true);
+            OrderedItems saved = orderItemService.saveOrderedItems(orderedItems);
+            List<OrderItemAudit> items = saved.getOrderItemAuditList();
+            eventPublisher.publishEvent(new OrderCreatedEvent(saved.getUserEmail(),saved,items));
         }
     }
 }

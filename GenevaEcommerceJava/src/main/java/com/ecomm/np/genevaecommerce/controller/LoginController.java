@@ -28,7 +28,6 @@ public class LoginController {
         this.loginService = loginService;
     }
 
-
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> LoginUser(@RequestBody LoginDTO loginDTO, HttpServletResponse response){
         try{

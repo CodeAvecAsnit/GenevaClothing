@@ -23,7 +23,7 @@ import java.io.IOException;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class AdminItemController {
 
-    private final Logger logger = LoggerFactory.getLogger(AdminItemServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(AdminItemController.class);
     private final AdminItemService adminItemService;
 
     @Autowired

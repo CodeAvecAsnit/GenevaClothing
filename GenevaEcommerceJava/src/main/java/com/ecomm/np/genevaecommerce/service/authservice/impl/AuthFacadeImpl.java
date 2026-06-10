@@ -30,6 +30,12 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
 
+    @Override
+    public LoginResponseDTO loginAdmin(LoginDTO loginDTO){
+        return loginService.loginAdmin(loginDTO);
+    }
+
+
     @Async
     @Override
     public void signUp(SignUpDTO signUpDTO){
@@ -49,9 +55,13 @@ public class AuthFacadeImpl implements AuthFacade {
     public LoginResponseDTO verify(VerificationDTO verificationDTO,HttpServletResponse response) throws Exception{
         SignUpDTO newUser = emailVerificationService.verifyCode(verificationDTO);
         UserModel user = registrationService.createUser(newUser);
+<<<<<<< HEAD
+        return new LoginResponseDTO(200,"Successfully verified",loginService.generateJwt(user));
+=======
         String token = jwtUtils.generateJwtTokens(CustomUser.build(user));
         setJwtCookie(response,token);
         return new LoginResponseDTO(200,"Successfully verified",token);
+>>>>>>> main
     }
 
     @Transactional

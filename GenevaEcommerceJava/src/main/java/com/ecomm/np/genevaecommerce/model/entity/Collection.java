@@ -17,7 +17,8 @@ public class Collection {
 
     private String collectionName;
 
-    @Column(columnDefinition = "text")
+    @Column
+    @Lob
     private String collectionDescription;
 
     @OneToMany (mappedBy = "collection",fetch = FetchType.LAZY)

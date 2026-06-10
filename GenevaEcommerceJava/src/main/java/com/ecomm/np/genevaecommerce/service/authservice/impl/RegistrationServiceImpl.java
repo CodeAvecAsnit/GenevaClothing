@@ -36,10 +36,14 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public boolean validateUserUniqueness(SignUpDTO signUpDTO) {
+<<<<<<< HEAD
+        return userService.userIsNotRegistered(signUpDTO.getEmail());
+=======
         if(!userService.userIsNotRegistered(signUpDTO.getEmail())){
             throw new RuntimeException("User is already registered");
         }
         return true;
+>>>>>>> main
     }
 
     @Override

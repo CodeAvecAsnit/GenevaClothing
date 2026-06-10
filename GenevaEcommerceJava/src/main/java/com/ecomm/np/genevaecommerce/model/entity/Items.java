@@ -19,7 +19,8 @@ public class Items {
 
     private String itemName;
 
-    @Column(columnDefinition = "text")
+    @Column
+    @Lob
     private String description;
 
     private String imageLink;

@@ -62,7 +62,14 @@ public class OrderItemAuditServiceImpl implements OrderItemAuditService {
     }
     @Override
     @Transactional
-    public void saveAudit(OrderItemAudit orderItemAudit) {
-        orderItemAuditRepository.save(orderItemAudit);
+    public OrderItemAudit saveAudit(OrderItemAudit orderItemAudit) {
+        return orderItemAuditRepository.save(orderItemAudit);
     }
+
+    @Override
+    public Integer findApprovedCount(){
+        return orderItemAuditRepository.findTotalItemsApprovedAndLeftToPack();
+    }
+
+
 }

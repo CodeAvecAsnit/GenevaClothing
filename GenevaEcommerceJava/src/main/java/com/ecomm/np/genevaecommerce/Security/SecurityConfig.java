@@ -2,6 +2,9 @@ package com.ecomm.np.genevaecommerce.security;
 
 import com.ecomm.np.genevaecommerce.extra.util.NetworkUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -70,7 +73,8 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/api/v1/items",
                                 "/swagger-ui/**",
-                                "/v3/api-docs/**"
+                                "/v3/api-docs/**",
+                                "/payment/cancel"
                         ).permitAll()
                         .anyRequest().authenticated()
                 ).cors(Customizer.withDefaults())
@@ -128,7 +132,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public ObjectMapper objectMapper(){
-        return new ObjectMapper();
+    public ObjectMapper objectMapper() {
+        return JsonMapper.builder()
+                .addModule(new JavaTimeModule())
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .build();
     }
 }

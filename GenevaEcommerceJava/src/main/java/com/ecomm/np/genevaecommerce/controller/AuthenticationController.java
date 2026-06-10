@@ -34,6 +34,24 @@ public class AuthenticationController {
     }
 
 
+    @PostMapping("/admin/login")
+    public ResponseEntity<LoginResponseDTO> LoginAdmin(@RequestBody LoginDTO loginDTO, HttpServletResponse response){
+        try{
+            LoginResponseDTO loginAttempt = authFacade.loginAdmin(loginDTO);
+            if(loginAttempt.getResponseCode()==200) {
+                setJwtCookie(response,loginAttempt.getJwtToken());
+                return ResponseEntity.ok(loginAttempt);
+            } else if (loginAttempt.getResponseCode()==403) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginAttempt);
+            }else{
+                return ResponseEntity.notFound().build();
+            }
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+            return ResponseEntity.ok(new LoginResponseDTO(403,"Invalid UserName or Password","No token"));
+        }
+    }
+
 
     @PostMapping("/sign_up/resend")
     public ResponseEntity<BasicDT0> resendCode(@Valid@RequestBody BasicDT0 basicDT0) {

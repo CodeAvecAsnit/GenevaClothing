@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/stats")
-@PreAuthorize("hasAuthority('ADMIN')")
+@PreAuthorize("hasAnyAuthority('ADMIN','SYSTEM')")
 public class AdminStatisticsController {
 
     private final AdminStatisticsService adminStatisticsService;

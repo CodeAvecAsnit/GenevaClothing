@@ -12,5 +12,11 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 
 public interface LoginService {
+<<<<<<< HEAD
+    LoginResponseDTO login(LoginDTO loginDTO);
+    String generateJwt(UserModel user);
+    LoginResponseDTO loginAdmin(LoginDTO loginDTO);
+=======
     LoginResponseDTO login(LoginDTO loginDTO, HttpServletResponse response);
+>>>>>>> main
 }

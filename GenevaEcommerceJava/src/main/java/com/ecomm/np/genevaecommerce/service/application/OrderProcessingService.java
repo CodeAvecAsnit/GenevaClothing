@@ -10,4 +10,8 @@ public interface OrderProcessingService {
     boolean setPackedByAdmin(int orderItemCode);
 
     boolean setAllPackedAdmin(int orderCode);
+
+    boolean setApprovedByAdmin(int orderItemCode);
+
+    boolean setAllApprovedAdmin(int orderCode);
 }

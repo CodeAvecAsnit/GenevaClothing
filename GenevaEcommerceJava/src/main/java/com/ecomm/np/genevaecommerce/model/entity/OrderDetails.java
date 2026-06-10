@@ -12,7 +12,8 @@ public class OrderDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long orderId;
 
-    @Column(columnDefinition = "text")
+    @Column
+    @Lob
     private String deliveryLocation;
 
     private String city;
@@ -115,5 +116,13 @@ public class OrderDetails {
 
     public void setOrderedItems(List<OrderedItems> orderedItems) {
         this.orderedItems = orderedItems;
+    }
+
+    public String getFinalLocation(){
+        return deliveryLocation+", "+city;
+    }
+
+    public String getUserMail(){
+        return user.getEmail();
     }
 }

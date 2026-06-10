@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 /**
  * @author : Asnit Bakhati
  */
@@ -26,11 +27,10 @@ public class OrderController {
     }
 
     @PostMapping("/checkout/register")
-    public ResponseEntity<BasicDT0> registerOrder(@RequestBody CheckoutIncDTO dto, @AuthenticationPrincipal CustomUser customUser){
+    public ResponseEntity<?> registerOrder(@RequestBody CheckoutIncDTO dto, @AuthenticationPrincipal CustomUser customUser){
         try{
-            if (checkoutService.checkoutOrder(dto,customUser.getId())) {
-                return ResponseEntity.ok(new BasicDT0("Success"));
-            }else return ResponseEntity.badRequest().build();
+            Map<String,Object> map = checkoutService.checkoutOrder(dto,customUser.getId());
+            return ResponseEntity.ok(map);
         }catch (Exception ex){
             return ResponseEntity.internalServerError().body(new BasicDT0("Something went wrong"));
         }
