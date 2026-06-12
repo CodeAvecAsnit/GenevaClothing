@@ -22,15 +22,8 @@ public class OIAController {
 
     @PreAuthorize("hasAuthority('SYSTEM')")
     @GetMapping("/order-count")
-    public ResponseEntity<Map<String,Integer>> findItemLeft2Pack(){
+    public ResponseEntity<Map<String,Integer>> findItemPacked(){
         Integer val = orderItemAuditService.findTotalItemsPackedCount(false);
-        return ResponseEntity.ok(Map.of("Count",val));
-    }
-
-    @PreAuthorize("hasAuthority('SYSTEM')")
-    @GetMapping("/approved/order-count")
-    public ResponseEntity<Map<String,Integer>> findItemsApproved(){
-        Integer val = orderItemAuditService.findApprovedCount();
         return ResponseEntity.ok(Map.of("Count",val));
     }
 }
