@@ -6,6 +6,7 @@ import com.ecomm.np.genevaecommerce.model.dto.*;
 import com.ecomm.np.genevaecommerce.model.entity.UserModel;
 import com.ecomm.np.genevaecommerce.service.authservice.AuthFacade;
 import com.ecomm.np.genevaecommerce.service.authservice.EmailVerificationService;
+import com.ecomm.np.genevaecommerce.service.authservice.LoginService;
 import com.ecomm.np.genevaecommerce.service.authservice.RegistrationService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,18 +18,25 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthFacadeImpl implements AuthFacade {
+    private final LoginService loginService;
     private final EmailVerificationService emailVerificationService;
     private final RegistrationService registrationService;
     private final JwtUtils jwtUtils;
 
     @Autowired
-    public AuthFacadeImpl(@Qualifier("emailVerificationServiceImpl") EmailVerificationService emailVerificationService,
+    public AuthFacadeImpl(LoginService loginService, @Qualifier("emailVerificationServiceImpl") EmailVerificationService emailVerificationService,
                           @Qualifier("registrationServiceImpl") RegistrationService registrationService, JwtUtils jwtUtils) {
+        this.loginService = loginService;
         this.emailVerificationService = emailVerificationService;
         this.registrationService = registrationService;
         this.jwtUtils = jwtUtils;
     }
 
+
+    @Override
+    public LoginResponseDTO login(LoginDTO loginDTO) {
+        return loginService.login(loginDTO);
+    }
 
     @Override
     public LoginResponseDTO loginAdmin(LoginDTO loginDTO){
@@ -55,13 +63,9 @@ public class AuthFacadeImpl implements AuthFacade {
     public LoginResponseDTO verify(VerificationDTO verificationDTO,HttpServletResponse response) throws Exception{
         SignUpDTO newUser = emailVerificationService.verifyCode(verificationDTO);
         UserModel user = registrationService.createUser(newUser);
-<<<<<<< HEAD
-        return new LoginResponseDTO(200,"Successfully verified",loginService.generateJwt(user));
-=======
         String token = jwtUtils.generateJwtTokens(CustomUser.build(user));
         setJwtCookie(response,token);
         return new LoginResponseDTO(200,"Successfully verified",token);
->>>>>>> main
     }
 
     @Transactional

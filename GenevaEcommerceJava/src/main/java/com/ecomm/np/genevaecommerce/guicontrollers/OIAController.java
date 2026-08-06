@@ -15,7 +15,6 @@ public class OIAController {
 
     private final OrderItemAuditService orderItemAuditService;
 
-
     public OIAController(OrderItemAuditService orderItemAuditService) {
         this.orderItemAuditService = orderItemAuditService;
     }
